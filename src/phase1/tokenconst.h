@@ -1,6 +1,6 @@
 //========================================================================
 /**
- * @file		css448-compiler/src/phase1/tokenconst.h
+ * @file    css448-compiler/src/phase1/tokenconst.h
  * @author	John Steele <EMAIL:programjsteele {at} gmail {dot} com>
  * @version	1.0.0
  * @date
@@ -9,7 +9,7 @@
  */
 /*------------------------------------------------------------------------
  * Description: Contains the token constants used by the lexical 
- * 						  analyzer.  	 
+ *              analyzer.  	 
  *------------------------------------------------------------------------
  * History:	johns - march 30, 2011
  *========================================================================

@@ -20,6 +20,7 @@
 
 // yacc uses numbers through 256, starts your token count at 257
 // tokens are in alphabetical order, except yunknown, which is last
+// These constants were provided by Dr. Zander.
 int const yand = 257;
 int const yarray = 258;
 int const yassign = 259;

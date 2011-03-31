@@ -15,10 +15,11 @@
  *========================================================================
  */
 
+
 #ifndef _TOKENCONST_H_
 #define _TOKENCONST_H_
 
-// yacc uses numbers through 256, starts your token count at 257
+// yacc uses numbers through 256, starts your token count at 257 testing.
 // tokens are in alphabetical order, except yunknown, which is last
 // These constants were provided by Dr. Zander.
 int const yand = 257;

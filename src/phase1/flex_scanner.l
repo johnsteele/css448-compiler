@@ -12,7 +12,7 @@
      *                                                                         *
      **************************************************************************/
 
-    /* Lets assume yywrap() finish after EOF). */
+    /* Finish after EOF. */
 %option noyywrap 
 
 
@@ -31,32 +31,32 @@
 %% 
 
 "&&"    { return yand;          }
-return yarray;
-return yassign;
-return ybegin;
+    /* return yarray;   */
+    /* return yassign;  */
+    /* return ybegin;   */
 "^"     { return ycaret;        }
 "case"  { return ycase;         }
 ":"     { return ycolon;        }
 ","     { return ycomma;        }
 "const" { return yconst;        }
-return ydispose;
-return ydiv;
+    /* return ydispose; */
+    /* return ydiv;     */
 "/"     { return ydivide;       }
 "do"    { return ydo;           }
 "."     { return ydot;          }
 ".."    { return ydotdot;       }
-return ydownto;
+    /* return ydownto;  */
 "else"  { return yelse;         }
-return yend;
+    /* return yend;     */
 ":="    { return yequal;        }
 "false" { return yfalse;        }
 "for"   { return yfor;          }
 "function" { return yfunction;  }
 ">"     { return ygreater;      }
 ">="    { return ygreaterequal; }
-return yident;
+    /* return yident;   */
 "if"    { return yif;           }
-return yin;
+    /* return yin;      */
 "{"     { return yleftbracket;  }
 "("     { return yleftparen;    }
 "<"     { return yless;         }
@@ -65,33 +65,33 @@ return yin;
 "%"     { return ymod;          }
 "*"     { return ymultiply;     }
 "new"   { return ynew;          }
-return ynil;
+    /* return ynil;     */
 "!"     { return ynot;          }
 "!="    { return ynotequal;     }
-return ynumber;
-return yof;
+    /* return ynumber;  */
+    /* return yof;      */
 "||"    { return yor;           }
 "+"     { return yplus;         }
-return yprocedure;
-return yprogram;
-return yread;
-return yreadln;
-return yrecord;
-return yrepeat;
+    /*return yprocedure;*/
+    /* return yprogram; */
+    /* return yread;    */
+    /* return yreadln;  */
+    /* return yrecord;  */
+    /* return yrepeat;  */
 "}"     { return yrightbracket; }
 ")"     { return yrightparen;   }
 ";"     { return ysemicolon;    }
-return yset;
-return ystring;
-return ythen;
-return yto;
-return ytrue;
-return ytype;
-return yuntil;
-return yvar;
+    /* return yset;     */
+    /* return ystring;  */
+    /* return ythen;    */
+    /* return yto;      */
+    /* return ytrue;    */
+    /* return ytype;    */
+    /* return yuntil;   */
+    /* return yvar;     */
 "while" { return ywhile;        }
-return ywrite;
-return ywriteln;
+    /* return ywrite;   */
+    /* return ywriteln; */
 .       { return yunknown;      }
 
 %%
@@ -103,7 +103,7 @@ return ywriteln;
 /**
  * @brief main processes the input file. 
  */
-int main (argc, char **argv)
+int main (int argc, char **argv)
 {
     /* Skip over the program name. */
     ++argv, --argc; 
@@ -114,10 +114,9 @@ int main (argc, char **argv)
     else          yyin = stdin;
 
 
-    /* Process the file */
-    yylex ();
+    /* Process file until EOF (i.e. yywrap() returns 0) */
+    while (yytext != 0) printf ("Token : %d\n", yylex ()); 
 
 
+    /* Houston we have lift off */
     return 0;
-} /* end main() */ 
-

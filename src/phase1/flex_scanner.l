@@ -10,9 +10,6 @@
      *  a compiler project in css-448. It is to be used with                   *
      *               flex (lexical analyser).                                  *
      *                                                                         *
-     *  Usage: > flex flex_scanner.l                                           *
-     *         > gcc -g -o lex.yy.c scanner                                    * 
-     *         > ./scanner < datafile                                          * 
      **************************************************************************/
 
     /* Lets assume yywrap() finish after EOF). */
@@ -31,7 +28,71 @@
 
 
     /* ======================== Rules Section =============================== */
-%%
+%% 
+
+return yand;
+return yarray;
+return yassign;
+return ybegin;
+return ycaret;
+return ycase;
+return ycolon;
+return ycomma;
+return yconst;
+return ydispose;
+return ydiv;
+return ydivide;
+return ydo;
+return ydot;
+return ydotdot;
+return ydownto;
+return yelse;
+return yend;
+return yequal;
+return yfalse;
+return yfor;
+return yfunction;
+return ygreater;
+return ygreaterequal;
+return yident;
+return yif;
+return yin;
+return yleftbracket;
+return yleftparen;
+return yless;
+return ylessequal;
+return yminus;
+return ymod;
+return ymultiply;
+return ynew;
+return ynil;
+return ynot;
+return ynotequal;
+return ynumber5;
+return yof;
+return yor;
+return yplus;
+return yprocedure;
+return yprogram;
+return yread;
+return yreadln;
+return yrecord;
+return yrepeat;
+return yrightbracket;
+return yrightparen;
+return ysemicolon;
+return yset;
+return ystring;
+return ythen;
+return yto;
+return ytrue;
+return ytype;
+return yuntil;
+return yvar;
+return ywhile;
+return ywrite;
+return ywriteln;
+return yunknown; 
 
 %%
 

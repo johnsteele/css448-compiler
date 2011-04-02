@@ -30,57 +30,57 @@
     /* ======================== Rules Section =============================== */
 %% 
 
-"&&"    { return yand;   }
+"&&"    { return yand;          }
 return yarray;
 return yassign;
 return ybegin;
-"^"     { return ycaret; }
-"case"  { return ycase;
-":"     { return ycolon; }
-","     { return ycomma; }
-"const" { return yconst; }
+"^"     { return ycaret;        }
+"case"  { return ycase;         }
+":"     { return ycolon;        }
+","     { return ycomma;        }
+"const" { return yconst;        }
 return ydispose;
 return ydiv;
-"/"     { return ydivide; }
-"do"    { return ydo;     }
-"."     { return ydot;    }
-".."    { return ydotdot; }
+"/"     { return ydivide;       }
+"do"    { return ydo;           }
+"."     { return ydot;          }
+".."    { return ydotdot;       }
 return ydownto;
-"else"  { return yelse;   }
+"else"  { return yelse;         }
 return yend;
-return yequal;
-return yfalse;
-return yfor;
-return yfunction;
-return ygreater;
-return ygreaterequal;
+":="    { return yequal;        }
+"false" { return yfalse;        }
+"for"   { return yfor;          }
+"function" { return yfunction;  }
+">"     { return ygreater;      }
+">="    { return ygreaterequal; }
 return yident;
-return yif;
+"if"    { return yif;           }
 return yin;
-return yleftbracket;
-return yleftparen;
-return yless;
-return ylessequal;
-return yminus;
-return ymod;
-return ymultiply;
-return ynew;
+"{"     { return yleftbracket;  }
+"("     { return yleftparen;    }
+"<"     { return yless;         }
+"<="    { return ylessequal;    }
+"-"     { return yminus;        }
+"%"     { return ymod;          }
+"*"     { return ymultiply;     }
+"new"   { return ynew;          }
 return ynil;
-return ynot;
-return ynotequal;
-return ynumber5;
+"!"     { return ynot;          }
+"!="    { return ynotequal;     }
+return ynumber;
 return yof;
-return yor;
-return yplus;
+"||"    { return yor;           }
+"+"     { return yplus;         }
 return yprocedure;
 return yprogram;
 return yread;
 return yreadln;
 return yrecord;
 return yrepeat;
-return yrightbracket;
-return yrightparen;
-return ysemicolon;
+"}"     { return yrightbracket; }
+")"     { return yrightparen;   }
+";"     { return ysemicolon;    }
 return yset;
 return ystring;
 return ythen;
@@ -89,10 +89,10 @@ return ytrue;
 return ytype;
 return yuntil;
 return yvar;
-return ywhile;
+"while" { return ywhile;        }
 return ywrite;
 return ywriteln;
-return yunknown; 
+.       { return yunknown;      }
 
 %%
 

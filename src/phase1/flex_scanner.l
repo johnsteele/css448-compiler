@@ -30,23 +30,23 @@
     /* ======================== Rules Section =============================== */
 %% 
 
-return yand;
+"&&"    { return yand;   }
 return yarray;
 return yassign;
 return ybegin;
-return ycaret;
-return ycase;
-return ycolon;
-return ycomma;
-return yconst;
+"^"     { return ycaret; }
+"case"  { return ycase;
+":"     { return ycolon; }
+","     { return ycomma; }
+"const" { return yconst; }
 return ydispose;
 return ydiv;
-return ydivide;
-return ydo;
-return ydot;
-return ydotdot;
+"/"     { return ydivide; }
+"do"    { return ydo;     }
+"."     { return ydot;    }
+".."    { return ydotdot; }
 return ydownto;
-return yelse;
+"else"  { return yelse;   }
 return yend;
 return yequal;
 return yfalse;

@@ -1,6 +1,6 @@
     /***************************************************************************
      *  @file    css448-compiler/src/phase1/tokenconst.h                       *
-     *  @author  John Steele <EMAIL:programjsteele {at} gmail  {dot} com>      *
+     *  @author  John Steele      <EMAIL:programjsteele {at} gmail  {dot} com> *
      *  @author  Alicia Flinchum  <EMAIL:aliciaflinchum {at} yahoot {dot} com> *
      *  @version    1.0.0                                                      *
      *  @date Created: Wed 3 Mar 2011 11:05:24 AM PDT \n                       *
@@ -19,65 +19,44 @@
 %option noyywrap 
 
 
-    /* ======================== Definition Section ========================== */
-DIGIT   [0-9]
-ID      [a-z][a-z0-9]*
-
-
+    /* Header with token declarations. */
+%{
+#include "tokenconst.h"    
+%}
     
+
+    /* ======================== Definition Section ========================== */
+
+
+
+
     /* ======================== Rules Section =============================== */
 %%
-	/* Rules Section */
-	/* Pattern 			Action */
-{DIGIT}+ 		{
-						printf ("An integer: %s (%d)\n", yytext, atoi (yytext));	
-						}
-
-{DIGIT}+"."{DIGIT}*			{
-						printf ("A float: %s (%d)\n", yytext, atof (yytext));	
-						}
-
-xxx					return 55;
-
-if|then|begin|end|procedure|function 		{
-						printf ("A keyword: %s\n", yytext);	
-						}
-
-{ID}				printf ("An identifier: %s\n", yytext);
-
-
-"+"|"-"|"*"|"/"		printf ("An operator: %s\n", yytext);
-
-"{"[\^{}}\n]*"}" 		/* eat up one-line comments */
-
-[ \t\n]+						/* eat up whitespace */
-
-.						printf ("Uncrecognized character: %s\n", yytext); 
 
 %%
-
-    
 
     /* ======================== Subroutine Section ========================== */
 
-int main (int argc, char **argv)
+
+
+/**
+ * @brief main processes the input file. 
+ */
+int main (argc, char **argv)
 {
-	++argv, --argc; /* Skip over program name */
-
-	if (argc > 0)
-			yyin = fopen (argv [0], "r");
-
-	else
-			yyin = stdin;
-
-	int temp;
-
-	temp = yylex ();	
-
-	printf ("The returned value: %i\n\n", temp);
-	return 0;
-} /* end main () */
+    /* Skip over the program name. */
+    ++argv, --argc; 
 
 
+    /* Open the file. */
+    if (argc > 0) yyin = fopen (argv [0], "r");
+    else          yyin = stdin;
 
+
+    /* Process the file */
+    yylex ();
+
+
+    return 0;
+} /* end main() */ 
 

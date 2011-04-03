@@ -11,22 +11,28 @@
      *               flex (lexical analyser).                                  *
      **************************************************************************/
 
+
+
     /* Finish after EOF. */
 %option noyywrap 
 
 
-    /* ======================== Headers ===================================== */
+
+    /* ======================== Token Header ================================= */
 %{
 #include "tokenconst.h"    
 %}
+
     
 
     /* ======================== Definition Section ========================== */
-INTEGER 
-REAL 
-DIGIT 
-LETTER 
+INTEGER         [0-9]  
+REAL            
+DIGIT           [0-9]
+LETTER          [a-zA-Z]
 CHARACTER 
+
+
 
     /* ======================== Rules Section =============================== */
 %% 
@@ -39,12 +45,9 @@ CHARACTER
 ":"             { return ycolon;        }
 ","             { return ycomma;        }
 "const"         { return yconst;        }
-    /* return ydispose;  --> Function */
-
-    /* TODO: Not sure if I have the division ass backwards */
+"Dispose"       { return ydispose;      } 
 "div"           { return ydiv;          }
-"/"             { return ydivide;       }
-
+"/"             { return ydivide;       } 
 "do"            { return ydo;           }
 "."             { return ydot;          }
 ".."            { return ydotdot;       }
@@ -77,8 +80,8 @@ CHARACTER
 "+"             { return yplus;         }
 "procedure"     { return yprocedure;    }
 "program"       { return yprogram;      }
-    /* return yread;    */
-    /* return yreadln;  */
+"Read"          { return yread;         }
+"Readln"        { eturn yreadln;        }
 "record"        { return yrecord;       }
 "repeat"        { return yrepeat;       }
 "}"             { return yrightbracket; }
@@ -93,33 +96,24 @@ CHARACTER
 "unit"          { return yuntil;        } 
 "var"           { return yvar;          } 
 "while"         { return ywhile;        }
-    /* return ywrite;   --> Function */
-    /* return ywriteln; --> Function */
+"Write"         { return ywrite;        } 
+"Writelen"      { return ywriteln;      } 
 .               { return yunknown;      } 
 %%
 
-    /* ======================== Subroutine Section ========================== */
 
 
-
+/*======================== main ======================================== */ 
 /**
- * @brief main processes the input file. 
- */
+* @brief Processes stdin, and prints the token's string representation
+*        and its associated value.  
+*/
+/*====================================================================== */ 
 int main (int argc, char **argv)
-{
-    /* Skip over the program name. */
-    ++argv, --argc; 
-
-
-    /* Open the file. */
-    if (argc > 0) yyin = fopen (argv [0], "r");
-    else          yyin = stdin;
-
-
+{ 
     /* Process file until EOF (i.e. yywrap() returns 0) */
     int token;
     while ((token = yylex()) != 0) printf ("Token : %s (%i)\n", yytext, token); 
-
 
     /* Houston we have lift off */
     return 0;

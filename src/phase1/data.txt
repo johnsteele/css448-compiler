@@ -33,19 +33,19 @@ in
 mod
 *
 new
-
+nil
 not
 <>
 
 of
 or
 +
+procedure
+program
 
 
-
-
-
-
+record
+repeat
 }
 )
 ;

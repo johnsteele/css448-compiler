@@ -7,8 +7,8 @@
      *  Last Update:   Wed 30 Mar 2011 11:05:24 AM PDT                         *
      *                                                                         * 
      *  Description: This is a scanner for a Pascal-like language used for     *
-     *  a compiler project in css-448. It is to be used with                   *
-     *               flex (lexical analyser).                                  *
+     *               a compiler project in css-448. It is to be used with      *
+     *               the (f)lex lexical analyser.                              *
      **************************************************************************/
 
 
@@ -26,12 +26,24 @@
     
 
     /* ======================== Definition Section ========================== */
-INTEGER         [0-9]  
-REAL            
-DIGIT           [0-9]
-LETTER          [a-zA-Z]
-CHARACTER 
 
+    /* The language is not case sensitive. */    
+LETTER          [a-zA-Z] 
+
+    /* Numbers are unsigned. */
+DIGIT           [0-9]
+
+    /* Spaces, tabs, and newlines. */
+WHITESPACE      [ \t\n]
+
+    /* Anything EXCEPT whitespace or newline. */
+CHARACTER       [^ \t\n] 
+
+    /* A sequence of digits, and must not contain spaces. */
+    /* INTEGER */
+
+    /* One-or-more digits, decimal, one-or-more digits, optional exponent. */
+REAL            [0-9]+"."[0-9]+([eE][0-9]+)* 
 
 
     /* ======================== Rules Section =============================== */
@@ -81,7 +93,7 @@ CHARACTER
 "procedure"     { return yprocedure;    }
 "program"       { return yprogram;      }
 "Read"          { return yread;         }
-"Readln"        { eturn yreadln;        }
+"Readln"        { return yreadln;       }
 "record"        { return yrecord;       }
 "repeat"        { return yrepeat;       }
 "}"             { return yrightbracket; }
@@ -103,19 +115,19 @@ CHARACTER
 
 
 
-/*======================== main ======================================== */ 
-/**
-* @brief Processes stdin, and prints the token's string representation
-*        and its associated value.  
-*/
-/*====================================================================== */ 
-int main (int argc, char **argv)
-{ 
+ /* ======================== main ======================================== */ 
+ /**
+  * @brief Processes stdin, and prints the token's string representation
+  *        and its associated value.  
+  */
+ /* ====================================================================== */ 
+ int main (int argc, char **argv)
+ { 
     /* Process file until EOF (i.e. yywrap() returns 0) */
     int token;
     while ((token = yylex()) != 0) printf ("Token : %s (%i)\n", yytext, token); 
 
     /* Houston we have lift off */
     return 0;
-} /* end main () */
+ } /* end main () */
 

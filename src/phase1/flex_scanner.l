@@ -30,9 +30,9 @@
     /* ======================== Rules Section =============================== */
 %% 
 
-"&&"    { return yand;          }
-    /* return yarray;   */
-    /* return yassign;  */
+"and"   { return yand;          }
+"array" { return yarray;        } 
+":="    { return yassign;       } 
     /* return ybegin;   */
 "^"     { return ycaret;        }
 "case"  { return ycase;         }
@@ -40,7 +40,7 @@
 ","     { return ycomma;        }
 "const" { return yconst;        }
     /* return ydispose; */
-    /* return ydiv;     */
+"div"   { return ydiv;          } 
 "/"     { return ydivide;       }
 "do"    { return ydo;           }
 "."     { return ydot;          }
@@ -48,7 +48,7 @@
     /* return ydownto;  */
 "else"  { return yelse;         }
     /* return yend;     */
-":="    { return yequal;        }
+"="    { return yequal;        }
 "false" { return yfalse;        }
 "for"   { return yfor;          }
 "function" { return yfunction;  }
@@ -56,21 +56,21 @@
 ">="    { return ygreaterequal; }
     /* return yident;   */
 "if"    { return yif;           }
-    /* return yin;      */
+"in"    { return yin;           } 
 "{"     { return yleftbracket;  }
 "("     { return yleftparen;    }
 "<"     { return yless;         }
 "<="    { return ylessequal;    }
 "-"     { return yminus;        }
-"%"     { return ymod;          }
+"mod"     { return ymod;          }
 "*"     { return ymultiply;     }
 "new"   { return ynew;          }
     /* return ynil;     */
-"!"     { return ynot;          }
-"!="    { return ynotequal;     }
+"not"   { return ynot;          }
+"<>"    { return ynotequal;     }
     /* return ynumber;  */
     /* return yof;      */
-"||"    { return yor;           }
+"or"    { return yor;           }
 "+"     { return yplus;         }
     /*return yprocedure;*/
     /* return yprogram; */
@@ -115,8 +115,10 @@ int main (int argc, char **argv)
 
 
     /* Process file until EOF (i.e. yywrap() returns 0) */
-    while (yytext != 0) printf ("Token : %d\n", yylex ()); 
+    while (yylex() != 0) printf ("Token : %s\n", yytext); 
 
 
     /* Houston we have lift off */
     return 0;
+} /* end main () */
+

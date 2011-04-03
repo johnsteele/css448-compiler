@@ -30,57 +30,60 @@
     /* ======================== Rules Section =============================== */
 %% 
 
-"and"   { return yand;          }
-"array" { return yarray;        } 
-":="    { return yassign;       } 
-    /* return ybegin;   */
-"^"     { return ycaret;        }
-"case"  { return ycase;         }
-":"     { return ycolon;        }
-","     { return ycomma;        }
-"const" { return yconst;        }
+"and"           { return yand;          }
+"array"         { return yarray;        } 
+":="            { return yassign;       } 
+"begin"         { return ybegin;        } 
+"^"             { return ycaret;        }
+"case"          { return ycase;         }
+":"             { return ycolon;        }
+","             { return ycomma;        }
+"const"         { return yconst;        }
     /* return ydispose; */
-"div"   { return ydiv;          } 
-"/"     { return ydivide;       }
-"do"    { return ydo;           }
-"."     { return ydot;          }
-".."    { return ydotdot;       }
+
+    /* TODO: Not sure if I have the division ass backwards */
+"div"           { return ydiv;          } 
+"/"             { return ydivide;       }
+
+"do"            { return ydo;           }
+"."             { return ydot;          }
+".."            { return ydotdot;       }
     /* return ydownto;  */
-"else"  { return yelse;         }
+"else"          { return yelse;         }
     /* return yend;     */
-"="    { return yequal;        }
-"false" { return yfalse;        }
-"for"   { return yfor;          }
-"function" { return yfunction;  }
-">"     { return ygreater;      }
-">="    { return ygreaterequal; }
+"="             { return yequal;        }
+"false"         { return yfalse;        }
+"for"           { return yfor;          }
+"function"      { return yfunction;     }
+">"             { return ygreater;      }
+">="            { return ygreaterequal; }
     /* return yident;   */
-"if"    { return yif;           }
-"in"    { return yin;           } 
-"{"     { return yleftbracket;  }
-"("     { return yleftparen;    }
-"<"     { return yless;         }
-"<="    { return ylessequal;    }
-"-"     { return yminus;        }
-"mod"     { return ymod;          }
-"*"     { return ymultiply;     }
-"new"   { return ynew;          }
+"if"            { return yif;           }
+"in"            { return yin;           } 
+"{"             { return yleftbracket;  }
+"("             { return yleftparen;    }
+"<"             { return yless;         }
+"<="            { return ylessequal;    }
+"-"             { return yminus;        }
+"mod"           { return ymod;          }
+"*"             { return ymultiply;     }
+"new"           { return ynew;          }
     /* return ynil;     */
-"not"   { return ynot;          }
-"<>"    { return ynotequal;     }
+"not"           { return ynot;          }
+"<>"            { return ynotequal;     }
     /* return ynumber;  */
     /* return yof;      */
-"or"    { return yor;           }
-"+"     { return yplus;         }
+"or"            { return yor;           }
+"+"             { return yplus;         }
     /*return yprocedure;*/
     /* return yprogram; */
     /* return yread;    */
     /* return yreadln;  */
     /* return yrecord;  */
     /* return yrepeat;  */
-"}"     { return yrightbracket; }
-")"     { return yrightparen;   }
-";"     { return ysemicolon;    }
+"}"             { return yrightbracket; }
+")"             { return yrightparen;   }
+";"             { return ysemicolon;    }
     /* return yset;     */
     /* return ystring;  */
     /* return ythen;    */
@@ -89,10 +92,10 @@
     /* return ytype;    */
     /* return yuntil;   */
     /* return yvar;     */
-"while" { return ywhile;        }
+"while"         { return ywhile;        }
     /* return ywrite;   */
     /* return ywriteln; */
-.       { return yunknown;      }
+.               { return yunknown;      }
 
 %%
 

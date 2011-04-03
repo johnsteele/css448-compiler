@@ -1,5 +1,5 @@
     /***************************************************************************
-     *  @file    css448-compiler/src/phase1/tokenconst.h                       *
+     *  @file    css448-compiler/src/phase1/flex_scanner.l                     *
      *  @author  John Steele      <EMAIL:programjsteele {at} gmail  {dot} com> *
      *  @author  Alicia Flinchum  <EMAIL:aliciaflinchum {at} yahoot {dot} com> *
      *  @version    1.0.0                                                      *
@@ -22,13 +22,14 @@
     
 
     /* ======================== Definition Section ========================== */
-
-
-
+INTEGER 
+REAL 
+DIGIT 
+LETTER 
+CHARACTER 
 
     /* ======================== Rules Section =============================== */
 %% 
-
 "and"           { return yand;          }
 "array"         { return yarray;        } 
 ":="            { return yassign;       } 
@@ -38,7 +39,7 @@
 ":"             { return ycolon;        }
 ","             { return ycomma;        }
 "const"         { return yconst;        }
-    /* return ydispose; */
+    /* return ydispose;  --> Function */
 
     /* TODO: Not sure if I have the division ass backwards */
 "div"           { return ydiv;          }
@@ -56,7 +57,7 @@
 "function"      { return yfunction;     }
 ">"             { return ygreater;      }
 ">="            { return ygreaterequal; }
-    /* return yident;   */
+    /* return yident;  identifier --> letter { letter | digit } */
 "if"            { return yif;           }
 "in"            { return yin;           } 
 "{"             { return yleftbracket;  }
@@ -70,21 +71,21 @@
 "nil"           { return ynil;          }  
 "not"           { return ynot;          }
 "<>"            { return ynotequal;     }
-    /* return ynumber;  */
+    /* return ynumber; number --> integer | real  */
 "of"            { return yof;           }
 "or"            { return yor;           }
 "+"             { return yplus;         }
-    /*return yprocedure;*/
-    /* return yprogram; */
+"procedure"     { return yprocedure;    }
+"program"       { return yprogram;      }
     /* return yread;    */
     /* return yreadln;  */
-    /* return yrecord;  */
-    /* return yrepeat;  */
+"record"        { return yrecord;       }
+"repeat"        { return yrepeat;       }
 "}"             { return yrightbracket; }
 ")"             { return yrightparen;   }
 ";"             { return ysemicolon;    }
 "set"           { return yset;          } 
-    /* return ystring;  */
+    /* return ystring;  string --> ' " ' {character} ' " ' | " ' " {character} " ' " */
 "then"          { return ythen;         }
 "to"            { return yto;           } 
 "True"          { return ytrue;         } 
@@ -92,10 +93,9 @@
 "unit"          { return yuntil;        } 
 "var"           { return yvar;          } 
 "while"         { return ywhile;        }
-    /* return ywrite;   */
-    /* return ywriteln; */
-.               { return yunknown;      }
-
+    /* return ywrite;   --> Function */
+    /* return ywriteln; --> Function */
+.               { return yunknown;      } 
 %%
 
     /* ======================== Subroutine Section ========================== */
@@ -117,7 +117,8 @@ int main (int argc, char **argv)
 
 
     /* Process file until EOF (i.e. yywrap() returns 0) */
-    while (yylex() != 0) printf ("Token : %s\n", yytext); 
+    int token;
+    while ((token = yylex()) != 0) printf ("Token : %s (%i)\n", yytext, token); 
 
 
     /* Houston we have lift off */

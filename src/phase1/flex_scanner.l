@@ -9,14 +9,13 @@
      *  Description: This is a scanner for a Pascal-like language used for     *
      *  a compiler project in css-448. It is to be used with                   *
      *               flex (lexical analyser).                                  *
-     *                                                                         *
      **************************************************************************/
 
     /* Finish after EOF. */
 %option noyywrap 
 
 
-    /* Header with token declarations. */
+    /* ======================== Headers ===================================== */
 %{
 #include "tokenconst.h"    
 %}
@@ -42,17 +41,17 @@
     /* return ydispose; */
 
     /* TODO: Not sure if I have the division ass backwards */
-"div"           { return ydiv;          } 
+"div"           { return ydiv;          }
 "/"             { return ydivide;       }
 
 "do"            { return ydo;           }
 "."             { return ydot;          }
 ".."            { return ydotdot;       }
-    /* return ydownto;  */
+"downto"        { return ydownto;       }
 "else"          { return yelse;         }
-    /* return yend;     */
+"end"           { return yend;          }
 "="             { return yequal;        }
-"false"         { return yfalse;        }
+"False"         { return yfalse;        }
 "for"           { return yfor;          }
 "function"      { return yfunction;     }
 ">"             { return ygreater;      }
@@ -68,11 +67,11 @@
 "mod"           { return ymod;          }
 "*"             { return ymultiply;     }
 "new"           { return ynew;          }
-    /* return ynil;     */
+"nil"           { return ynil;          }  
 "not"           { return ynot;          }
 "<>"            { return ynotequal;     }
     /* return ynumber;  */
-    /* return yof;      */
+"of"            { return yof;           }
 "or"            { return yor;           }
 "+"             { return yplus;         }
     /*return yprocedure;*/
@@ -84,14 +83,14 @@
 "}"             { return yrightbracket; }
 ")"             { return yrightparen;   }
 ";"             { return ysemicolon;    }
-    /* return yset;     */
+"set"           { return yset;          } 
     /* return ystring;  */
-    /* return ythen;    */
-    /* return yto;      */
-    /* return ytrue;    */
-    /* return ytype;    */
-    /* return yuntil;   */
-    /* return yvar;     */
+"then"          { return ythen;         }
+"to"            { return yto;           } 
+"True"          { return ytrue;         } 
+"type"          { return ytype;         }
+"unit"          { return yuntil;        } 
+"var"           { return yvar;          } 
 "while"         { return ywhile;        }
     /* return ywrite;   */
     /* return ywriteln; */

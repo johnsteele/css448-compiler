@@ -30,20 +30,36 @@
     /* The language is not case sensitive. */    
 LETTER          [a-zA-Z] 
 
-    /* Numbers are unsigned. */
+    /* One single digit. */
 DIGIT           [0-9]
 
-    /* Spaces, tabs, and newlines. */
-WHITESPACE      [ \t\n]
+    /* Spaces, tabs, newlines, and returns */
+WHITESPACE      [ \t\n\r] 
 
-    /* Anything EXCEPT whitespace or newline. */
-CHARACTER       [^ \t\n] 
+    /* Any letter or digit. */
+CHARACTER       [a-zA-Z0-9] 
 
-    /* A sequence of digits, and must not contain spaces. */
-    /* INTEGER */
+    /* One-or-more sequence of digits, and must not contain spaces. */
+INTEGER         {DIGIT}+
 
-    /* One-or-more digits, decimal, one-or-more digits, optional exponent. */
-REAL            [0-9]+"."[0-9]+([eE][0-9]+)* 
+    /* e or E, zero-or-one sign, one-or-more digits. */
+EXPONENT        [eE][+\-]?[0-9]+
+
+    /* One-or-more digits, decimal, one-or-more digits, zero-or-one exponent. */
+REAL            {DIGIT}+"."{DIGIT}+{EXPONENT}?
+
+    /* An integer, or a real. */
+NUMBER          {INTEGER}|{REAL}
+
+    /* Quote-Characters-Quote or Apostrophy-Characters-Apostrophy */
+D_QUOTE         \"
+S_QUOTE         \'
+STRING          {D_QUOTE}{CHARACTER}*{D_QUOTE}|{S_QUOTE}{CHARACTER}*{S_QUOTE} 
+    
+    /* One-or-more letters, followed by zoro-or-more letters, digits, or underscores. */
+    /* Flex throws a bitch fit over this, haven't figured it out yet. */
+    /* IDENTIFIER      {LETTER}+|({LETTER}|[0-9_])* */
+
 
 
     /* ======================== Rules Section =============================== */
@@ -71,8 +87,8 @@ REAL            [0-9]+"."[0-9]+([eE][0-9]+)*
 "for"           { return yfor;          }
 "function"      { return yfunction;     }
 ">"             { return ygreater;      }
-">="            { return ygreaterequal; }
-    /* return yident;  identifier --> letter { letter | digit } */
+">="            { return ygreaterequal; } 
+    /* {IDENTIFIER}    { return yident;        }     */
 "if"            { return yif;           }
 "in"            { return yin;           } 
 "{"             { return yleftbracket;  }
@@ -85,8 +101,8 @@ REAL            [0-9]+"."[0-9]+([eE][0-9]+)*
 "new"           { return ynew;          }
 "nil"           { return ynil;          }  
 "not"           { return ynot;          }
-"<>"            { return ynotequal;     }
-    /* return ynumber; number --> integer | real  */
+"<>"            { return ynotequal;     } 
+{NUMBER}        { return ynumber;       } 
 "of"            { return yof;           }
 "or"            { return yor;           }
 "+"             { return yplus;         }
@@ -100,7 +116,7 @@ REAL            [0-9]+"."[0-9]+([eE][0-9]+)*
 ")"             { return yrightparen;   }
 ";"             { return ysemicolon;    }
 "set"           { return yset;          } 
-    /* return ystring;  string --> ' " ' {character} ' " ' | " ' " {character} " ' " */
+{STRING}        { return ystring;       }  
 "then"          { return ythen;         }
 "to"            { return yto;           } 
 "True"          { return ytrue;         } 
@@ -110,6 +126,7 @@ REAL            [0-9]+"."[0-9]+([eE][0-9]+)*
 "while"         { return ywhile;        }
 "Write"         { return ywrite;        } 
 "Writelen"      { return ywriteln;      } 
+{WHITESPACE}    { /* discard     */     }
 .               { return yunknown;      } 
 %%
 

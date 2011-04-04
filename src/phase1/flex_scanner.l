@@ -64,7 +64,7 @@ STRING          {D_QUOTE}{CHARACTER}*{D_QUOTE}|{S_QUOTE}{CHARACTER}*{S_QUOTE}
 
     /* ======================== Rules Section =============================== */
 %% 
-"and"           { return yand;          }
+(?i:and)          { return yand;          }
 "array"         { return yarray;        } 
 ":="            { return yassign;       } 
 "begin"         { return ybegin;        } 

@@ -58,7 +58,7 @@ STRING          {D_QUOTE}{CHARACTER}*{D_QUOTE}|{S_QUOTE}{CHARACTER}*{S_QUOTE}
     
     /* One-or-more letters, followed by zoro-or-more letters, digits, or underscores. */
     /* Flex throws a bitch fit over this, haven't figured it out yet. */
-    /* IDENTIFIER      {LETTER}+|({LETTER}|[0-9_])* */
+    /* IDENTIFIER      {LETTER}({LETTER}|{DIGIT})* */
 
 
 
@@ -122,7 +122,7 @@ STRING          {D_QUOTE}{CHARACTER}*{D_QUOTE}|{S_QUOTE}{CHARACTER}*{S_QUOTE}
 "True"          { return ytrue;         } 
 "type"          { return ytype;         }
 "unit"          { return yuntil;        } 
-"var"           { return yvar;          } 
+var|VAR|V           { return yvar;          } 
 "while"         { return ywhile;        }
 "Write"         { return ywrite;        } 
 "Writelen"      { return ywriteln;      } 

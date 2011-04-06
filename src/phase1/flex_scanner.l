@@ -58,76 +58,76 @@ STRING          {D_QUOTE}{CHARACTER}*{D_QUOTE}|{S_QUOTE}{CHARACTER}*{S_QUOTE}
     
     /* One-or-more letters, followed by zoro-or-more letters, digits, or underscores. */
     /* Flex throws a bitch fit over this, haven't figured it out yet. */
-    /* IDENTIFIER      {LETTER}+|({LETTER}|[0-9_])* */
+    /* IDENTIFIER      {LETTER}({LETTER}|{DIGIT})* */
 
 
 
     /* ======================== Rules Section =============================== */
 %% 
-"and"           { return yand;          }
-"array"         { return yarray;        } 
-":="            { return yassign;       } 
-"begin"         { return ybegin;        } 
-"^"             { return ycaret;        }
-"case"          { return ycase;         }
-":"             { return ycolon;        }
-","             { return ycomma;        }
-"const"         { return yconst;        }
-"Dispose"       { return ydispose;      } 
-"div"           { return ydiv;          }
-"/"             { return ydivide;       } 
-"do"            { return ydo;           }
-"."             { return ydot;          }
-".."            { return ydotdot;       }
-"downto"        { return ydownto;       }
-"else"          { return yelse;         }
-"end"           { return yend;          }
-"="             { return yequal;        }
-"False"         { return yfalse;        }
-"for"           { return yfor;          }
-"function"      { return yfunction;     }
-">"             { return ygreater;      }
-">="            { return ygreaterequal; } 
-    /* {IDENTIFIER}    { return yident;        }     */
-"if"            { return yif;           }
-"in"            { return yin;           } 
-"{"             { return yleftbracket;  }
-"("             { return yleftparen;    }
-"<"             { return yless;         }
-"<="            { return ylessequal;    }
-"-"             { return yminus;        }
-"mod"           { return ymod;          }
-"*"             { return ymultiply;     }
-"new"           { return ynew;          }
-"nil"           { return ynil;          }  
-"not"           { return ynot;          }
-"<>"            { return ynotequal;     } 
-{NUMBER}        { return ynumber;       } 
-"of"            { return yof;           }
-"or"            { return yor;           }
-"+"             { return yplus;         }
-"procedure"     { return yprocedure;    }
-"program"       { return yprogram;      }
-"Read"          { return yread;         }
-"Readln"        { return yreadln;       }
-"record"        { return yrecord;       }
-"repeat"        { return yrepeat;       }
-"}"             { return yrightbracket; }
-")"             { return yrightparen;   }
-";"             { return ysemicolon;    }
-"set"           { return yset;          } 
-{STRING}        { return ystring;       }  
-"then"          { return ythen;         }
-"to"            { return yto;           } 
-"True"          { return ytrue;         } 
-"type"          { return ytype;         }
-"unit"          { return yuntil;        } 
-"var"           { return yvar;          } 
-"while"         { return ywhile;        }
-"Write"         { return ywrite;        } 
-"Writelen"      { return ywriteln;      } 
-{WHITESPACE}    { /* discard     */     }
-.               { return yunknown;      } 
+[aA][nN][dD]				{ return yand; }
+[aA][rR][rR][aA][yY] 			{ return yarray; }
+":=" 					        { return yassign; }
+[bB][eE][gG][iI][nN] 			{ return ybegin; }
+"^" 					        { return ycaret; }
+[cC][aA][sS][eE] 			{ return ycase; }
+":" 					        { return ycolon; }
+"," 					        { return ycomma; }
+[cC][oO][nN][sS][tT]			{ return yconst; }
+[dD][iI][sS][pP][oO][sS][eE]	 	{ return ydispose; }
+[dD][iI][vV] 				{ return ydiv; }
+"/" 					{ return ydivide; }
+[dD][oO] 				{ return ydo; }
+"." 					{ return ydot; }
+".." 					{ return ydotdot; }
+[dD][oO][wW][nN][tT][oO] 		{ return ydownto; }
+[eE][lL][sS][eE] 			{ return yelse; }
+[eE][nN][dD] 				{ return yend; }
+"=" 					{ return yequal; }
+[fF][aA][lL][sS][eE] 			{ return yfalse; }
+[fF][oO][rR] 				{ return yfor; }
+[fF][uU][nN][cC][tT][iI][oO][nN]	{ return yfunction; }
+">" 					{ return ygreater; }
+">=" 					{ return ygreaterequal; }
+[iI][fF] 				{ return yif; }
+[iI][nN]				{ return yin; }
+"{" 					{ return yleftbracket; }
+"(" 					{ return yleftparen; }
+"<" 					{ return yless; }
+"<=" 					{ return ylessequal; }
+"-" 					{ return yminus; }
+[mM][oO][dD] 				{ return ymod; }
+"*" 					{ return ymultiply; }
+[nN][eE][wW] 				{ return ynew; }
+[nN][iI][lL] 				{ return ynil; }
+[nN][oO][tT] 				{ return ynot; }
+"<>" 					{ return ynotequal; }
+{NUMBER} 				{ return ynumber; }
+[rR][eE][cC][oO][rR][dD]  		{ return yrecord; }
+[oO][fF]	 			{ return yof; }
+[oO][rR]				{ return yor; }
+"+" 					{ return yplus; }
+[pP][rR][oO][cC][eE][dD][uU][rR][eE] 	{ return yprocedure; }
+[pP][rR][oO][gG][rR][aA][mM] 		{ return yprogram; }
+[rR][eE][aA][dD] 			{ return yread; }
+[rR][eE][aA][dD][lL][nN]	 	{ return yreadln; }
+[rR][eE][pP][eE][aA][tT] 		{ return yrepeat; }
+"}" 					{ return yrightbracket; }
+")" 					{ return yrightparen; }
+";" 					{ return ysemicolon; }
+[sS][eE][tT] 				{ return yset; }
+{STRING} 				{ return ystring; }
+[tT][hH][eE][nN] 			{ return ythen; }
+[tT][oO] 				{ return yto; }
+[tT][rR][uU][eE] 			{ return ytrue; }
+[tT][yY][pP][eE] 			{ return ytype; }
+[uU][nN][iI][tT]			{ return yuntil; }
+var|VAR|V { return yvar; }
+[wW][hH][iI][lL][eE]		{ return ywhile; }
+[wW][rR][iI][tT][eE]	{ return ywrite; }
+[wW][rR][iI][tT][eE][lL][eE][nN] { return ywriteln; }
+	/*{IDENTIFIER} 	{ return yident; }*/
+{WHITESPACE} 				{ /* discard */ }
+. 					{ return yunknown; }
 %%
 
 

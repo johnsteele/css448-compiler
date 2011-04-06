@@ -1,4 +1,4 @@
-//========================================================================
+//=======================================================================
 /**
  * @file    css448-compiler/src/phase1/tokenconst.h
  * @author	John Steele <EMAIL:programjsteele {at} gmail {dot} com>
@@ -14,12 +14,9 @@
  * History:	johns - march 30, 2011
  *========================================================================
  */
-
-
 #ifndef _TOKENCONST_H_
 #define _TOKENCONST_H_
-
-// yacc uses numbers through 256, starts your token count at 257 testing.
+// yacc uses numbers through 256, starts your token count at 257.
 // tokens are in alphabetical order, except yunknown, which is last
 // These constants were provided by Dr. Zander.
 int const yand = 257;
@@ -84,7 +81,6 @@ int const yvar = 315;
 int const ywhile = 316;
 int const ywrite = 317;
 int const ywriteln = 318;
-int const yunknown = 319; 
-
-#endif /* _TOKENCONST_H_ */ 
+int const yunknown = 319;
+#endif /* _TOKENCONST_H_ */
 

@@ -1,3 +1,15 @@
+/***************************************************************************
+ *   @file   css448-compiler/src/phase1/flex_scanner.l                     *
+ *   @author   John Steele <EMAIL:programjsteele   {at} gmail {dot} com>   *
+ *   @author   Alicia Flinchum <EMAIL:aliciaflinchum {at} yahoo {dot} com> *
+ *   @version   1.0.0                                                      *
+ *   @date  Created: Wed 3 Mar 2011 11:05:24 AM PDT \n                     *
+ *   Last Update: Wed 30 Mar 2011 11:05:24 AM PDT                          *
+ *                                                                         *
+ *   Description: This is a scanner for a Pascal-like Language used for    *
+ *               a compiler project in css-448. It is to be used with      *
+ *               the (f)lex lexical analyser.                              *
+ **************************************************************************/
 
 /* Finish after EOF. */
 %option   noyywrap   

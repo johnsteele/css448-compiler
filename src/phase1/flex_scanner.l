@@ -60,9 +60,8 @@ STRING          {D_QUOTE}{CHARACTER}*{D_QUOTE}|{S_QUOTE}{CHARACTER}*{S_QUOTE}
     /* Flex throws a bitch fit over this, haven't figured it out yet. */
 IDENTIFIER      {LETTER}({LETTER}|{DIGIT})* 
 
-S_COMMENT       \(\*
-E_COMMENT       \*\)
-COMMENT     {S_COMMENT}({WHITESPACE}|{CHARACTER}|{D_QUOTE}|{S_QUOTE}|\*)+{E_COMMENT}
+S_COMMENT       \(\*(.)*
+COMMENT     {S_COMMENT}({WHITESPACE}|{CHARACTER}|{D_QUOTE}|{S_QUOTE}|\*)*\*\)
 
 
     /* ======================== Rules Section =============================== */
@@ -171,7 +170,7 @@ COMMENT     {S_COMMENT}({WHITESPACE}|{CHARACTER}|{D_QUOTE}|{S_QUOTE}|\*)+{E_COMM
                                                                   printf("%i   ", yin);
                                                                   printf("yin\n");
                                                                   return yin; }
-"{"                                                      { 
+\[                                                      { 
                                                                   printf("%i   ", yleftbracket);
                                                                   printf("yleftbracket\n");
                                                                   return yleftbracket; }
@@ -256,7 +255,7 @@ COMMENT     {S_COMMENT}({WHITESPACE}|{CHARACTER}|{D_QUOTE}|{S_QUOTE}|\*)+{E_COMM
                                                                   printf("%i   ", yrepeat);
                                                                   printf("yrepeat\n");
                                                                   return yrepeat; }
-"}"                                                      { 
+\]                                                      { 
                                                                   printf("%i   ", yrightbracket);
                                                                   printf("yrightbracket\n");
                                                                   return yrightbracket; }

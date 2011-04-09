@@ -37,7 +37,7 @@ DIGIT           [0-9]
 WHITESPACE      [ \t\n\r] 
 
     /* Any letter or digit. */
-CHARACTER       [a-zA-Z0-9] 
+CHARACTER       [^(\"\')] 
 
     /* One-or-more sequence of digits, and must not contain spaces. */
 INTEGER         {DIGIT}+
@@ -54,7 +54,7 @@ NUMBER          {INTEGER}|{REAL}
     /* Quote-Characters-Quote or Apostrophy-Characters-Apostrophy */
 D_QUOTE         \"
 S_QUOTE         \'
-STRING          {D_QUOTE}{CHARACTER}*{D_QUOTE}|{S_QUOTE}{CHARACTER}*{S_QUOTE} 
+STRING          (\"({CHARACTER})*\")|(\'({CHARACTER})*\') 
     
     /* One-or-more letters, followed by zoro-or-more letters, digits, or underscores. */
     /* Flex throws a bitch fit over this, haven't figured it out yet. */

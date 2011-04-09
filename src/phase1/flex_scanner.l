@@ -130,16 +130,14 @@ var|VAR|V                                           { return yvar; }
 {IDENTIFIER} 	                                    { return yident; } 
 "*)"                                                { return -5; }
 "(*"                                                { 
-                                                      printf ("Comment: ");
                                                       while (1) {
                                                         int token  = yylex (); 
                                                         if (token == -5) break; 
                                                         printf ("%s", yytext);
-                                                        // if (yytext == " ") printf (" ");
+                                                        if (*yytext == ' ') printf (" ");
                                                       } 
                                                       printf ("\n");
                                                     }
-[ ]                                                 { printf (" "); }
 {WHITESPACE} 				                        { /* discard */ }
 . 					                                { return yunknown; }
 %%
@@ -156,7 +154,7 @@ var|VAR|V                                           { return yvar; }
  { 
     /* Process file until EOF (i.e. yywrap() returns 0) */
     int token;
-    while ((token = yylex()) != 0) printf ("Token : %s (%i)\n", yytext, token); 
+    while ((token = yylex()) != 0) printf ("%i %s\n", token, yytext); 
 
     /* Houston we have lift off */
     return 0;

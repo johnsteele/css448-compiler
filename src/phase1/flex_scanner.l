@@ -135,7 +135,7 @@ var|VAR|V                                           { return yvar; }
                                                         if (token == -5) break; 
                                                         printf ("%s", yytext);
                                                         if (*yytext == ' ') printf (" ");
-                                                      } 
+                                                    } 
                                                       printf ("\n");
                                                     }
 {WHITESPACE} 				                        { /* discard */ }

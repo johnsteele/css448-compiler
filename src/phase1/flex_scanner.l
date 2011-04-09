@@ -376,7 +376,7 @@ var|VAR|V                                 {
                                              printf("ywrite\n");
                                              return ywrite;   
                                           }
-[wW][rR][iI][tT][eE][lL][eE][nN]          {   
+[wW][rR][iI][tT][eE][lL][nN]              {   
                                              printf("%i   ", ywriteln);
                                              printf("ywriteln\n");
                                              return ywriteln;   

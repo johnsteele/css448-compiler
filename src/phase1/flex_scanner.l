@@ -60,282 +60,273 @@ STRING          {D_QUOTE}{CHARACTER}*{D_QUOTE}|{S_QUOTE}{CHARACTER}*{S_QUOTE}
     /* Flex throws a bitch fit over this, haven't figured it out yet. */
 IDENTIFIER      {LETTER}({LETTER}|{DIGIT})* 
 
-S_COMMENT       (*
-E_COMMENT       *) 
+S_COMMENT       \(\*
+E_COMMENT       \*\)
+COMMENT     {S_COMMENT}({WHITESPACE}|{CHARACTER}|{D_QUOTE}|{S_QUOTE}|\*)+{E_COMMENT}
 
 
     /* ======================== Rules Section =============================== */
 %% 
 [aA][nN][dD]                                             { 
                                                                   printf("%i   ", yand);
-                                                                  printf("yand");
+                                                                  printf("yand\n");
                                                                   return yand; 
                                                                 }
 [aA][rR][rR][aA][yY]                                     { 
                                                                   printf("%i   ", yarray);
-                                                                  printf("yarray");
+                                                                  printf("yarray\n");
                                                                   return yarray; }
 ":="                                                     {  printf("%i   ", yassign);
-                                                                  printf("yassign");
+                                                                  printf("yassign\n");
                                                                   return yassign; }
 [bB][eE][gG][iI][nN]                                     { 
                                                                   printf("%i   ", ybegin);
-                                                                  printf("ybegin");
+                                                                  printf("ybegin\n");
                                                                   return ybegin; }
 "^"                                                      { 
                                                                   printf("%i   ", ycaret);
-                                                                  printf("ycaret");
+                                                                  printf("ycaret\n");
                                                                   return ycaret; }
 [cC][aA][sS][eE]                                         { 
                                                                   printf("%i   ", ycase);
-                                                                  printf("ycase");
+                                                                  printf("ycase\n");
                                                                   return ycase; }
 ":"                                                      { 
                                                                   printf("%i   ", ycolon);
-                                                                  printf("ycolon");
+                                                                  printf("ycolon\n");
                                                                   return ycolon; }
 ","                                                      { 
                                                                   printf("%i   ", ycomma);
-                                                                  printf("ycomma");
+                                                                  printf("ycomma\n");
                                                                   return ycomma; }
 [cC][oO][nN][sS][tT]                                     { 
                                                                   printf("%i   ", yconst);
-                                                                  printf("yconst");
+                                                                  printf("yconst\n");
                                                                   return yconst; }
 [dD][iI][sS][pP][oO][sS][eE]                             { 
                                                                   printf("%i   ", ydispose);
-                                                                  printf("ydispose");
+                                                                  printf("ydispose\n");
                                                                   return ydispose; }
 [dD][iI][vV]                                             { 
                                                                   printf("%i   ", ydiv);
-                                                                  printf("ydiv");
+                                                                  printf("ydiv\n");
                                                                   return ydiv; }
 "/"                                                      { 
                                                                   printf("%i   ", ydivide);
-                                                                  printf("ydivide");
+                                                                  printf("ydivide\n");
                                                                   return ydivide; }
 [dD][oO]                                                 { 
                                                                   printf("%i   ", ydo);
-                                                                  printf("ydo");
+                                                                  printf("ydo\n");
                                                                   return ydo; }
 "."                                                      { 
                                                                   printf("%i   ", ydot);
-                                                                  printf("ydot");
+                                                                  printf("ydot\n");
                                                                   return ydot; }
 ".."                                                     { 
                                                                   printf("%i   ", ydotdot);
-                                                                  printf("ydotdot");
+                                                                  printf("ydotdot\n");
                                                                   return ydotdot; }
 [dD][oO][wW][nN][tT][oO]                                 {  
                                                                   printf("%i   ", ydownto);
-                                                                  printf("ydownto");
+                                                                  printf("ydownto\n");
                                                                   return ydownto; }
 [eE][lL][sS][eE]                                         { 
                                                                   printf("%i   ", yelse);
-                                                                  printf("yelse");
+                                                                  printf("yelse\n");
                                                                   return yelse; }
 [eE][nN][dD]                                             { 
                                                                   printf("%i   ", yend);
-                                                                  printf("yend");
+                                                                  printf("yend\n");
                                                                   return yend; }
 "="                                                      { 
                                                                   printf("%i   ", yequal);
-                                                                  printf("yequal");
+                                                                  printf("yequal\n");
                                                                   return yequal; }
 [fF][aA][lL][sS][eE]                                     { 
                                                                   printf("%i   ", yfalse);
-                                                                  printf("yfalse");
+                                                                  printf("yfalse\n");
                                                                   return yfalse; }
 [fF][oO][rR]                                             { 
                                                                   printf("%i   ", yfor);
-                                                                  printf("yfor");
+                                                                  printf("yfor\n");
                                                                   return yfor; }
 [fF][uU][nN][cC][tT][iI][oO][nN]                         { 
                                                                   printf("%i   ", yfunction);
-                                                                  printf("yfunction");
+                                                                  printf("yfunction\n");
                                                                   return yfunction; }
 ">"                                                      { 
                                                                   printf("%i   ", ygreater);
-                                                                  printf("ygreater");
+                                                                  printf("ygreater\n");
                                                                   return ygreater; }
 ">="                                                     { 
                                                                   printf("%i   ", ygreaterequal);
-                                                                  printf("ygreaterequal");
+                                                                  printf("ygreaterequal\n");
                                                                   return ygreaterequal; }
 [iI][fF]                                                 { 
                                                                   printf("%i   ", yif);
-                                                                  printf("yif");
+                                                                  printf("yif\n");
                                                                   return yif; }
 [iI][nN]                                                 { 
                                                                   printf("%i   ", yin);
-                                                                  printf("yin");
+                                                                  printf("yin\n");
                                                                   return yin; }
 "{"                                                      { 
                                                                   printf("%i   ", yleftbracket);
-                                                                  printf("yleftbracket");
+                                                                  printf("yleftbracket\n");
                                                                   return yleftbracket; }
 "("                                                      { 
                                                                   printf("%i   ", yleftparen);
-                                                                  printf("yleftparen");
+                                                                  printf("yleftparen\n");
                                                                   return yleftparen; }
 "<"                                                      { 
                                                                   printf("%i   ", yless);
-                                                                  printf("yless");
+                                                                  printf("yless\n");
                                                                   return yless; }
 "<="                                                     {  
                                                                   printf("%i   ", ylessequal);
-                                                                  printf("ylessequal");
+                                                                  printf("ylessequal\n");
                                                                   return ylessequal; }
 "-"                                                      {  
                                                                   printf("%i   ", yminus);
-                                                                  printf("yminus");
+                                                                  printf("yminus\n");
                                                                   return yminus; }
 [mM][oO][dD]                                             { 
                                                                   printf("%i   ", ymod);
-                                                                  printf("ymod");
+                                                                  printf("ymod\n");
                                                                   return ymod; }
 "*"                                                      { 
                                                                   printf("%i   ", ymultiply);
-                                                                  printf("ymultiply");
+                                                                  printf("ymultiply\n");
                                                                   return ymultiply; }
 [nN][eE][wW]                                             { 
                                                                   printf("%i   ", yand);
-                                                                  printf("ynew");
+                                                                  printf("ynew\n");
                                                                   return ynew; }
 [nN][iI][lL]                                             { 
                                                                   printf("%i   ", ynil);
-                                                                  printf("ynil");
+                                                                  printf("ynil\n");
                                                                   return ynil; }
 [nN][oO][tT]                                             { 
                                                                   printf("%i   ", ynot);
-                                                                  printf("ynot");
+                                                                  printf("ynot\n");
                                                                   return ynot; }
 "<>"                                                     { 
                                                                   printf("%i   ", ynotequal);
-                                                                  printf("ynotequal");
+                                                                  printf("ynotequal\n");
                                                                   return ynotequal; }
 {NUMBER}                                                 { 
                                                                   printf("%i   ", ynumber);
                                                                   printf("ynumber");
-                                                                  printf("   %s", yytext);
+                                                                  printf("   %s\n", yytext);
                                                                   return ynumber; }
 [rR][eE][cC][oO][rR][dD]                                 { 
                                                                   printf("%i   ", yrecord);
-                                                                  printf("yrecord");
+                                                                  printf("yrecord\n");
                                                                   return yrecord; }
 [oO][fF]                                                 { 
                                                                   printf("%i   ", yof);
-                                                                  printf("yof");
+                                                                  printf("yof\n");
                                                                   return yof; }
 [oO][rR]                                                 { 
                                                                   printf("%i   ", yor);
-                                                                  printf("yor");
+                                                                  printf("yor\n");
                                                                   return yor; }
 "+"                                                      { 
                                                                   printf("%i   ", yplus);
-                                                                  printf("yplus");
+                                                                  printf("yplus\n");
                                                                   return yplus; }
 [pP][rR][oO][cC][eE][dD][uU][rR][eE]                     { 
                                                                   printf("%i   ", yprocedure);
-                                                                  printf("yprocedure");
+                                                                  printf("yprocedure\n");
                                                                   return yprocedure; }
 [pP][rR][oO][gG][rR][aA][mM]                             { 
                                                                   printf("%i   ", yprogram);
-                                                                  printf("yprogram");
+                                                                  printf("yprogram\n");
                                                                   return yprogram; }
 [rR][eE][aA][dD]                                         { 
                                                                   printf("%i   ", yread);
-                                                                  printf("yread");
+                                                                  printf("yread\n");
                                                                   return yread; }
 [rR][eE][aA][dD][lL][nN]                                 { 
                                                                   printf("%i   ", yreadln);
-                                                                  printf("yreadln");
+                                                                  printf("yreadln\n");
                                                                   return yreadln; }
 [rR][eE][pP][eE][aA][tT]                                 { 
                                                                   printf("%i   ", yrepeat);
-                                                                  printf("yrepeat");
+                                                                  printf("yrepeat\n");
                                                                   return yrepeat; }
 "}"                                                      { 
                                                                   printf("%i   ", yrightbracket);
-                                                                  printf("yrightbracket");
+                                                                  printf("yrightbracket\n");
                                                                   return yrightbracket; }
 ")"                                                      { 
                                                                   printf("%i   ", yrightparen);
-                                                                  printf("yrightparen");
+                                                                  printf("yrightparen\n");
                                                                   return yrightparen; }
 ";"                                                      { 
                                                                   printf("%i   ", ysemicolon);
-                                                                  printf("ysemicolon");
+                                                                  printf("ysemicolon\n");
                                                                   return ysemicolon; }
 [sS][eE][tT]                                             { 
                                                                   printf("%i   ", yset);
-                                                                  printf("yset");
+                                                                  printf("yset\n");
                                                                   return yset; }
 {STRING}                                                 { 
                                                                   printf("%i   ", ystring);
                                                                   printf("ystring");
-                                                                  printf("   %s", yytext);
+                                                                  printf("   %s\n", yytext);
                                                                   return ystring; }
 [tT][hH][eE][nN]                                         { 
                                                                   printf("%i   ", ythen);
-                                                                  printf("ythen");
+                                                                  printf("ythen\n");
                                                                   return ythen; }
 [tT][oO]                                                 { 
                                                                   printf("%i   ", yto);
-                                                                  printf("yto");
+                                                                  printf("yto\n");
                                                                   return yto; }
 [tT][rR][uU][eE]                                         { 
                                                                   printf("%i   ", ytrue);
-                                                                  printf("ytrue");
+                                                                  printf("ytrue\n");
                                                                   return ytrue; }
 [tT][yY][pP][eE]                                         { 
                                                                   printf("%i   ", ytype);
-                                                                  printf("ytype");
+                                                                  printf("ytype\n");
                                                                   return ytype; }
 [uU][nN][iI][tT]                                         { 
                                                                   printf("%i   ", yuntil);
-                                                                  printf("yuntil");
+                                                                  printf("yuntil\n");
                                                                   return yuntil; }
 var|VAR|V                                                { 
                                                                   printf("%i   ", yvar);
-                                                                  printf("yvar");
+                                                                  printf("yvar\n");
                                                                   return yvar; }
 [wW][hH][iI][lL][eE]                                     { 
                                                                   printf("%i   ", ywhile);
-                                                                  printf("ywhile");
+                                                                  printf("ywhile\n");
                                                                   return ywhile; }
 [wW][rR][iI][tT][eE]                                     { 
                                                                   printf("%i   ", ywrite);
-                                                                  printf("ywrite");
+                                                                  printf("ywrite\n");
                                                                   return ywrite; }
 [wW][rR][iI][tT][eE][lL][eE][nN]                         { 
                                                                   printf("%i   ", ywriteln);
-                                                                  printf("ywriteln");
+                                                                  printf("ywriteln\n");
                                                                   return ywriteln; }
 {IDENTIFIER}                                             { 
                                                                   printf("%i   ", yident);
                                                                   printf("yident");
-                                                                  printf("   %s", yytext);
+                                                                  printf("   %s\n", yytext);
                                                                   return yident; } 
-"*)"                                                     {  return -5; }
-"(*"                                                     { 
-                                                             while (1) {
-                                                                int token  = yylex (); 
-                                                                    if (token == -5)
-                                                                    {
-                                                                      printf("*)");
-                                                                      break;
-                                                                    }
-                                                                    printf ("%s", yytext);
-                                                                   // if (yytext == " ") printf (" ");
-                                                             } 
-                                                             printf ("\n");
+{COMMENT}                                                { 
+                                                                  printf("%s   \n", yytext);
+                                                                  return -1;
                                                          }
 [ ]                                                      { printf (" "); }
 {WHITESPACE}                                             { /* discard */ }
 .                                                        { 
                                                                   printf("%i   ", yunknown);
-                                                                  printf("yunknown");
+                                                                  printf("yunknown\n");
                                                                   return yunknown; }
 %%
 
@@ -351,7 +342,7 @@ var|VAR|V                                                {
  { 
     /* Process file until EOF (i.e. yywrap() returns 0) */
     int token;
-    while ((token = yylex()) != 0) printf ("%i %s\n", token, yytext); 
+    while ((token = yylex()) != 0); 
 
     /* Houston we have lift off */
     return 0;

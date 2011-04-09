@@ -20,12 +20,14 @@
 
     /* ======================== Token Header ================================= */
 %{
-#include "tokenconst.h"    
+#include "tokenconst.h"  
+  
 %}
 
     
 
     /* ======================== Definition Section ========================== */
+
 
     /* The language is not case sensitive. */    
 LETTER          [a-zA-Z] 
@@ -54,7 +56,7 @@ NUMBER          {INTEGER}|{REAL}
     /* Quote-Characters-Quote or Apostrophy-Characters-Apostrophy */
 D_QUOTE         \"
 S_QUOTE         \'
-STRING          (\"({CHARACTER})*\")|(\'({CHARACTER})*\') 
+STRING          (\"({CHARACTER}|\')*\")|(\'({CHARACTER}|\")*\') 
     
     /* One-or-more letters, followed by zoro-or-more letters, digits, or underscores. */
     /* Flex throws a bitch fit over this, haven't figured it out yet. */
@@ -272,6 +274,8 @@ COMMENT     {S_COMMENT}({WHITESPACE}|{CHARACTER}|{D_QUOTE}|{S_QUOTE}|\*)*\*\)
                                                                   printf("yset\n");
                                                                   return yset; }
 {STRING}                                                 { 
+                                                                  yytext++;
+                                                                  yytext[yyleng - 2] = '\0';
                                                                   printf("%i   ", ystring);
                                                                   printf("ystring");
                                                                   printf("   %s\n", yytext);

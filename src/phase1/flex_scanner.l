@@ -66,6 +66,7 @@ E_COMMENT       *)
 
     /* ======================== Rules Section =============================== */
 %% 
+<<<<<<< HEAD
 [aA][nN][dD]				                        { return yand; }
 [aA][rR][rR][aA][yY] 			                    { return yarray; }
 ":=" 					                            { return yassign; }

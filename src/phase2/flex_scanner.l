@@ -145,15 +145,18 @@ var|VAR|V                                 { return yvar; }
 %%
 
 
-/* ======================== main ======================================== */ 
- /**
- *   @brief Processes stdin, and prints the token's string representation
- *   and its associated value.
- */
-/* ====================================================================== */
 
-void printToken(int tkn, char data[], char* txt){
-       switch (tkn){
+    /* ======================== printToken ================================== */ 
+    /**
+     *   @brief A helper method that prints the provided token and it's 
+     *          associated string representation. 
+     */
+    /* ====================================================================== */ 
+    void printToken(int tkn, char data[], char* txt)
+    { 
+        char dat[50];
+        
+        switch (tkn){
          case 257:
             data = "yand";
             break;
@@ -359,13 +362,19 @@ void printToken(int tkn, char data[], char* txt){
       if(tkn == -1){
          printf("%s   \n", txt);
       }
-   }
+   } /* end printToken () */
 
+
+    /* ======================== main ======================================== */ 
+    /**
+     *   @brief Processes stdin, and prints the token's string representation
+     *   and its associated value.
+     */
+    /* ====================================================================== */ 
    int main (int argc, char **argv)
    {   
       /* Process file until EOF (i.e. yywrap() returns 0) */
       int token;
-      char dat[50];
       while ((token = yylex()) != 0)
          printToken(token, dat, yytext);
    

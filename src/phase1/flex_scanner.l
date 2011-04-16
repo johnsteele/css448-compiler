@@ -4,7 +4,7 @@
  *   @author   Alicia Flinchum <EMAIL:aliciaflinchum {at} yahoo {dot} com> *
  *   @version   1.0.0                                                      *
  *   @date  Created: Wed 3 Mar 2011 11:05:24 AM PDT \n                     *
- *   Last Update: Wed 30 Mar 2011 11:05:24 AM PDT                          *
+ *   Last Update: Wed 30 Mar 2011 11:05:24 AM PDT                      *
  *                                                                         *
  *   Description: This is a scanner for a Pascal-like Language used for    *
  *               a compiler project in css-448. It is to be used with      *
@@ -70,333 +70,78 @@ S_COMMENT         \(\*(.)*
 COMMENT      {S_COMMENT}({WHITESPACE}|{CHARACTER}|{D_QUOTE}|{S_QUOTE}|\*)*\*\)
 
 
-   /* ======================== Rules Section =============================== */
+ /* ======================== Rules Section =============================== */
 %%   
-[aA][nN][dD]                              { 
-                                             printf("%i   ", yand);
-                                             printf("yand\n");
-                                             return yand;
-                                          }
-[aA][rR][rR][aA][yY]                      {
-                                             printf("%i   ", yarray);
-                                             printf("yarray\n");
-                                             return yarray;   
-                                          }
-":="                                      {   
-                                             printf("%i   ", yassign);
-                                             printf("yassign\n");
-                                             return yassign;
-                                          }
-[bB][eE][gG][iI][nN]                      {   
-                                             printf("%i   ", ybegin);
-                                             printf("ybegin\n");
-                                             return ybegin;   
-                                          }
-"^"                                       {   
-                                             printf("%i   ", ycaret);
-                                             printf("ycaret\n");
-                                             return ycaret;
-                                          }
-[cC][aA][sS][eE]                          {   
-                                             printf("%i   ", ycase);
-                                             printf("ycase\n");
-                                             return ycase;
-                                          }
-":"                                       {   
-                                             printf("%i   ", ycolon);
-                                             printf("ycolon\n");
-                                             return ycolon;  
-                                          }
-","                                       {   
-                                             printf("%i   ", ycomma);
-                                             printf("ycomma\n");
-                                             return ycomma;   
-                                          }
-[cC][oO][nN][sS][tT]                      {   
-                                             printf("%i   ", yconst);
-                                             printf("yconst\n");
-                                             return yconst;
-                                          }
-[dD][iI][sS][pP][oO][sS][eE]              {   
-                                             printf("%i   ", ydispose);
-                                             printf("ydispose\n");
-                                             return ydispose;   
-                                          }
-[dD][iI][vV]                              {   
-                                             printf("%i   ", ydiv);
-                                             printf("ydiv\n");
-                                             return ydiv;   
-                                          }
-"/"                                       {   
-                                             printf("%i   ", ydivide);
-                                             printf("ydivide\n");
-                                             return ydivide;  
-                                          }
-[dD][oO]                                  {   
-                                             printf("%i   ", ydo);
-                                             printf("ydo\n");
-                                             return ydo;  
-                                          }
-"."                                       {   
-                                             printf("%i   ", ydot);
-                                             printf("ydot\n");
-                                             return ydot;   
-                                          }
-".."                                      {   
-                                             printf("%i   ", ydotdot);
-                                             printf("ydotdot\n");
-                                             return ydotdot;   
-                                          }
-[dD][oO][wW][nN][tT][oO]                  {   
-                                             printf("%i   ", ydownto);
-                                             printf("ydownto\n");
-                                             return ydownto;   
-                                          }
-[eE][lL][sS][eE]                          {   
-                                             printf("%i   ", yelse);
-                                             printf("yelse\n");
-                                             return yelse;  
-                                          }
-[eE][nN][dD]                              {   
-                                             printf("%i   ", yend);
-                                             printf("yend\n");
-                                             return yend;   
-                                          }
-"="                                       {   
-                                             printf("%i   ", yequal);
-                                             printf("yequal\n");
-                                             return yequal;   
-                                          }
-[fF][aA][lL][sS][eE]                      {   
-                                             printf("%i   ", yfalse);
-                                             printf("yfalse\n");
-                                             return yfalse;   
-                                          }
-[fF][oO][rR]                              {   
-                                             printf("%i   ", yfor);
-                                             printf("yfor\n");
-                                             return yfor;   
-                                          }
-[fF][uU][nN][cC][tT][iI][oO][nN]          {   
-                                             printf("%i   ", yfunction);
-                                             printf("yfunction\n");
-                                             return yfunction;   
-                                          }
-">"                                       {   
-                                             printf("%i   ", ygreater);
-                                             printf("ygreater\n");
-                                             return ygreater;   
-                                          }
-">="                                      {   
-                                             printf("%i   ", ygreaterequal);
-                                             printf("ygreaterequal\n");
-                                             return ygreaterequal;   
-                                          }
-[iI][fF]                                  {   
-                                             printf("%i   ", yif);
-                                             printf("yif\n");
-                                             return yif;   
-                                          }
-[iI][nN]                                  {   
-                                             printf("%i   ", yin);
-                                             printf("yin\n");
-                                             return yin;   
-                                          }
-\[                                        {   
-                                             printf("%i   ", yleftbracket);
-                                             printf("yleftbracket\n");
-                                             return   yleftbracket;   
-                                          }
-"("                                       {   
-                                             printf("%i   ", yleftparen);
-                                             printf("yleftparen\n");
-                                             return yleftparen;   
-                                          }
-"<"                                       {   
-                                             printf("%i   ", yless);
-                                             printf("yless\n");
-                                             return yless;   
-                                          }
-"<="                                      {   
-                                             printf("%i   ", ylessequal);
-                                             printf("ylessequal\n");
-                                             return ylessequal;  
-                                          }
-"-"                                       {   
-                                             printf("%i   ", yminus);
-                                             printf("yminus\n");
-                                             return yminus;   
-                                          }
-[mM][oO][dD]                              {   
-                                             printf("%i   ", ymod);
-                                             printf("ymod\n");
-                                             return ymod;   
-                                          }
-"*"                                       {   
-                                             printf("%i   ", ymultiply);
-                                             printf("ymultiply\n");
-                                             return ymultiply;   
-                                          }
-[nN][eE][wW]                              {   
-                                             printf("%i   ", ynew);
-                                             printf("ynew\n");
-                                             return   ynew;   
-                                          }
-[nN][iI][lL]                              {   
-                                             printf("%i   ", ynil);
-                                             printf("ynil\n");
-                                             return   ynil;   
-                                          }
-[nN][oO][tT]                              {   
-                                             printf("%i   ", ynot);
-                                             printf("ynot\n");
-                                             return ynot;   
-                                          }
-"<>"                                      {   
-                                             printf("%i   ", ynotequal);
-                                             printf("ynotequal\n");
-                                             return ynotequal;   }
-{NUMBER}                                  {   
-                                             printf("%i   ", ynumber);
-                                             printf("ynumber");
-                                             printf("   %s\n",   yytext);
-                                             return ynumber;   
-                                          }
-[rR][eE][cC][oO][rR][dD]                  {   
-                                             printf("%i   ", yrecord);
-                                             printf("yrecord\n");
-                                             return yrecord;   
-                                          }
-[oO][fF]                                  {   
-                                             printf("%i   ", yof);
-                                             printf("yof\n");
-                                             return yof;   
-                                          }
-[oO][rR]                                  {   
-                                             printf("%i   ", yor);
-                                             printf("yor\n");
-                                             return yor;   
-                                          }
-"+"                                       {   
-                                             printf("%i   ", yplus);
-                                             printf("yplus\n");
-                                             return yplus;   
-                                          }
-[pP][rR][oO][cC][eE][dD][uU][rR][eE]      {   
-                                             printf("%i   ", yprocedure);
-                                             printf("yprocedure\n");
-                                             return yprocedure;   
-                                          }
-[pP][rR][oO][gG][rR][aA][mM]              {   
-                                             printf("%i   ", yprogram);
-                                             printf("yprogram\n");
-                                             return yprogram;  
-                                          }
-[rR][eE][aA][dD]                          {   
-                                             printf("%i   ", yread);
-                                             printf("yread\n");
-                                             return yread;   
-                                          }
-[rR][eE][aA][dD][lL][nN]                  {   
-                                             printf("%i   ", yreadln);
-                                             printf("yreadln\n");
-                                             return yreadln;
-                                          }
-[rR][eE][pP][eE][aA][tT]                  {   
-                                             printf("%i   ", yrepeat);
-                                             printf("yrepeat\n");
-                                             return yrepeat;   
-                                          }
-\]                                        {   
-                                             printf("%i   ", yrightbracket);
-                                             printf("yrightbracket\n");
-                                             return yrightbracket;   
-                                          }
-")"                                       {   
-                                             printf("%i   ", yrightparen);
-                                             printf("yrightparen\n");
-                                             return yrightparen;   
-                                          }
-";"                                       {   
-                                             printf("%i   ", ysemicolon);
-                                             printf("ysemicolon\n");
-                                             return ysemicolon;   
-                                          }
-[sS][eE][tT]                              {   
-                                             printf("%i   ", yset);
-                                             printf("yset\n");
-                                             return yset;   
-                                          }
+[aA][nN][dD]                              { return yand;}
+[aA][rR][rR][aA][yY]                      { return yarray;}
+":="                                      { return yassign;}
+[bB][eE][gG][iI][nN]                      { return ybegin;}
+"^"                                       { return ycaret;}
+[cC][aA][sS][eE]                          { return ycase;}
+":"                                       { return ycolon;}
+","                                       { return ycomma; }
+[cC][oO][nN][sS][tT]                      { return yconst;}
+[dD][iI][sS][pP][oO][sS][eE]              { return ydispose;}
+[dD][iI][vV]                              { return ydiv; }
+"/"                                       { return ydivide;}
+[dD][oO]                                  { return ydo; }
+"."                                       { return ydot;}
+".."                                      { return ydotdot; }
+[dD][oO][wW][nN][tT][oO]                  { return ydownto; }
+[eE][lL][sS][eE]                          { return yelse;}
+[eE][nN][dD]                              { return yend; }
+"="                                       { return yequal;}
+[fF][aA][lL][sS][eE]                      { return yfalse; }
+[fF][oO][rR]                              { return yfor; }
+[fF][uU][nN][cC][tT][iI][oO][nN]          { return yfunction; }
+">"                                       { return ygreater; }
+">="                                      { return ygreaterequal; }
+[iI][fF]                                  { return yif; }
+[iI][nN]                                  { return yin;}
+\[                                        { return yleftbracket; }
+"("                                       { return yleftparen; }
+"<"                                       { return yless; }
+"<="                                      { return ylessequal;}
+"-"                                       { return yminus; }
+[mM][oO][dD]                              { return ymod; }
+"*"                                       { return ymultiply;}
+[nN][eE][wW]                              { return ynew; }
+[nN][iI][lL]                              { return ynil; }
+[nN][oO][tT]                              { return ynot; }
+"<>"                                      { return ynotequal; }
+{NUMBER}                                  { return ynumber; }
+[rR][eE][cC][oO][rR][dD]                  { return yrecord; }
+[oO][fF]                                  { return yof; }
+[oO][rR]                                  { return yor; }
+"+"                                       { return yplus; }
+[pP][rR][oO][cC][eE][dD][uU][rR][eE]      { return yprocedure; }
+[pP][rR][oO][gG][rR][aA][mM]              { return yprogram;}
+[rR][eE][aA][dD]                          { return yread; }
+[rR][eE][aA][dD][lL][nN]                  { return yreadln;}
+[rR][eE][pP][eE][aA][tT]                  { return yrepeat; }
+\]                                        { return yrightbracket; }
+")"                                       { return yrightparen; }
+";"                                       { return ysemicolon; }
+[sS][eE][tT]                              { return yset; }
 {STRING}                                  {   
-                                             /*next 2 lines remove quotes*/
-                                             yytext++;
-                                             yytext[yyleng - 2] = '\0';
-                                             printf("%i   ", ystring);
-                                             printf("ystring");
-                                             printf("   %s\n", yytext);
-                                             return ystring;   
+                                            /*next 2 lines remove quotes*/
+                                            yytext++;
+                                            yytext[yyleng - 2] = '\0';
+                                            return ystring;   
                                           }
-[tT][hH][eE][nN]                          {   
-                                             printf("%i   ", ythen);
-                                             printf("ythen\n");
-                                             return ythen;   
-                                          }
-[tT][oO]                                  {   
-                                             printf("%i   ", yto);
-                                             printf("yto\n");
-                                             return yto;   
-                                          }
-[tT][rR][uU][eE]                          {   
-                                             printf("%i   ", ytrue);
-                                             printf("ytrue\n");
-                                             return ytrue;   
-                                          }
-[tT][yY][pP][eE]                          {   
-                                             printf("%i   ", ytype);
-                                             printf("ytype\n");
-                                             return ytype;   
-                                          }
-[uU][nN][iI][tT]                          {   
-                                             printf("%i   ", yuntil);
-                                             printf("yuntil\n");
-                                             return yuntil;   
-                                          }
-var|VAR|V                                 {   
-                                             printf("%i   ", yvar);
-                                             printf("yvar\n");
-                                             return yvar;   
-                                          }
-[wW][hH][iI][lL][eE]                      {   
-                                             printf("%i   ", ywhile);
-                                             printf("ywhile\n");
-                                             return ywhile;   
-                                          }
-[wW][rR][iI][tT][eE]                      {   
-                                             printf("%i   ", ywrite);
-                                             printf("ywrite\n");
-                                             return ywrite;   
-                                          }
-[wW][rR][iI][tT][eE][lL][nN]              {   
-                                             printf("%i   ", ywriteln);
-                                             printf("ywriteln\n");
-                                             return ywriteln;   
-                                          }
-{IDENTIFIER}                              {   
-                                             printf("%i   ", yident);
-                                             printf("yident");
-                                             printf("   %s\n", yytext);
-                                             return yident;
-                                          }   
-{COMMENT}                                 {   
-                                             printf("%s   \n", yytext);
-                                             return   -1;
-                                          }
+[tT][hH][eE][nN]                          { return ythen; }
+[tT][oO]                                  { return yto; }
+[tT][rR][uU][eE]                          { return ytrue; }
+[tT][yY][pP][eE]                          { return ytype; }
+[uU][nN][iI][tT]                          { return yuntil; }
+var|VAR|V                                 { return yvar; }
+[wW][hH][iI][lL][eE]                      { return ywhile; }
+[wW][rR][iI][tT][eE]                      { return ywrite; }
+[wW][rR][iI][tT][eE][lL][nN]              { return ywriteln; }
+{IDENTIFIER}                              { return yident; }   
+{COMMENT}                                 { return   -1; }
 {WHITESPACE}                              { /* discard */ }
-.                                         {   
-                                             printf("%i   ", yunknown);
-                                             printf("yunknown\n");
-                                             return yunknown;
-                                          }
+.                                         { return yunknown; }
 %%
 
 
@@ -406,13 +151,224 @@ var|VAR|V                                 {
  *   and its associated value.
  */
 /* ====================================================================== */
+
+void printToken(int tkn, char data[], char* txt){
+       switch (tkn){
+         case 257:
+            data = "yand";
+            break;
+         case 258:
+            data = "yarray";
+            break;
+         case 259:
+            data = "yassign";
+            break;
+         case 260: 
+            data = "ybegin";
+            break;
+         case 261:
+            data = "ycarat";
+            break;
+         case 262:
+            data = "ycase";
+            break;
+         case 263:
+            data = "ycolon";
+            break;
+         case 264:
+            data = "ycomma";
+            break;
+         case 265:
+            data = "yconst";
+            break;
+         case 266:
+            data = "ydispose";
+            break;
+         case 267:
+            data = "ydiv";
+            break;
+         case 268:
+            data = "ydivide";
+            break;
+         case 269:
+            data = "ydo";
+            break;
+         case 270:
+            data = "ydot";
+            break;
+         case 271:
+            data = "ydotdot";
+            break;
+         case 272:
+            data = "ydownto";
+            break;
+         case 273:
+            data = "yelse";
+            break;
+         case 274:
+            data = "yend";
+            break;
+         case 275:
+            data = "yequal";
+            break;
+         case 276:
+            data = "yfalse";
+            break;
+         case 277:
+            data = "yfor";
+            break;
+         case 278:
+            data = "yfunction";
+            break;
+         case 279:
+            data = "ygreater";
+            break;
+         case 280:
+            data = "ygreaterequal";
+            break;
+         case 281:
+            data = "yident";
+            break;
+         case 282:
+            data = "yif";
+            break;
+         case 283:
+            data = "yin";
+            break;
+         case 284:
+            data = "yleftbracket";
+            break;
+         case 285:
+            data = "yleftparen";
+            break;
+         case 286:
+            data = "yless";
+            break;
+         case 287:
+            data = "ylessequal";
+            break;
+         case 288:
+            data = "yminus ";
+            break;
+         case 289:
+            data = "ymod ";
+            break;
+         case 290:
+            data = "ymultiply";
+            break;
+         case 291:
+            data = "ynew";
+            break;
+         case 292:
+            data = "ynil";
+            break;
+         case 293:
+            data = "ynot";
+            break;
+         case 294:
+            data = "ynotequal";
+            break;
+         case 295:
+            data = "ynumber";
+            break;
+         case 296:
+            data = "yof";
+            break;
+         case 297:
+            data = "yor";
+            break;
+         case 298:
+            data = "yplus";
+            break;
+         case 299:
+            data = "yprocdure";
+            break;
+         case 300:
+            data = "yprogram";
+            break;
+         case 301:
+            data = "yread";
+            break;
+         case 302:
+            data = "yreadln";
+            break;
+         case 303:
+            data = "yrecord";
+            break;
+         case 304:
+            data = "yrepeat";
+            break;
+         case 305:
+            data = "yrightbracket";
+            break;
+         case 306:
+            data = "yrightparen";
+            break;
+         case 307:
+            data = "ysemicolon";
+            break;
+         case 308:
+            data = "yset";
+            break;
+         case 309:
+            data = "ystring";
+            break;
+         case 310:
+            data = "ythen";
+            break;
+         case 311:
+            data = "yto";
+            break;
+         case 312:
+            data = "ytrue";
+            break;
+         case 313:
+            data = "ytype";
+            break;   
+         case 314:
+            data = "yuntil";
+            break;
+         case 315:
+            data = "yvar";
+            break;
+         case 316:
+            data = "ywhile";
+            break;
+         case 317:
+            data = "ywrite";
+            break;
+         case 318:
+            data = "ywriteln";
+            break;
+         case 319:
+            data = "yunknown";
+            break;
+         default:
+            data = "";
+            break;
+      }
+
+      if(tkn != -1){
+         printf("%i   %s   ", tkn, data);
+         if(tkn == 295 || tkn == 281 || tkn == 309 )
+            printf("%s", txt);
+         printf(" \n");
+      }
+
+      
+      if(tkn == -1){
+         printf("%s   \n", txt);
+      }
+   }
+
    int main (int argc, char **argv)
    {   
       /* Process file until EOF (i.e. yywrap() returns 0) */
       int token;
-      while ((token = yylex()) != 0);
-
+      char dat[50];
+      while ((token = yylex()) != 0)
+         printToken(token, dat, yytext);
+   
       /* Houston we have lift off */
       return 0;
    }   /* end main() */
-

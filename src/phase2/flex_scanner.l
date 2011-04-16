@@ -153,7 +153,7 @@ var|VAR|V                                 { return yvar; }
      *          to a number, string, or identifier it is printed as well.  
      */
     /* ====================================================================== */ 
-    void printToken(int tkn, char *data, char* txt);
+    void printToken(int tkn, char* data, char* txt);
 
 
     /* ======================== main ======================================== */ 
@@ -162,8 +162,8 @@ var|VAR|V                                 { return yvar; }
      *   and its associated value.
      */
     /* ====================================================================== */ 
-   int main (int argc, char **argv)
-   {   
+    int main (int argc, char **argv)
+    {   
       
       char data[50];
       /* Process file until EOF (i.e. yywrap() returns 0) */
@@ -173,7 +173,7 @@ var|VAR|V                                 { return yvar; }
    
       /* Houston we have lift off */
       return 0;
-   }   /* end main() */
+    } /* end main() */
 
 
     /* ======================== printToken ================================== */ 
@@ -183,7 +183,7 @@ var|VAR|V                                 { return yvar; }
      *          to a number, string, or identifier it is printed as well.  
      */
     /* ====================================================================== */ 
-    void printToken(int tkn, char data[], char* txt)
+    void printToken(int tkn, char* data, char* txt)
     { 
         
         switch (tkn){

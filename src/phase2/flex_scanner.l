@@ -154,7 +154,6 @@ var|VAR|V                                 { return yvar; }
     /* ====================================================================== */ 
     void printToken(int tkn, char data[], char* txt)
     { 
-        char dat[50];
         
         switch (tkn){
          case 257:
@@ -373,11 +372,15 @@ var|VAR|V                                 { return yvar; }
     /* ====================================================================== */ 
    int main (int argc, char **argv)
    {   
+      
+      char data[50];
       /* Process file until EOF (i.e. yywrap() returns 0) */
       int token;
       while ((token = yylex()) != 0)
-         printToken(token, dat, yytext);
+         printToken(token, data, yytext);
    
       /* Houston we have lift off */
       return 0;
    }   /* end main() */
+
+

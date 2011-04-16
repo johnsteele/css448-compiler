@@ -1,6 +1,6 @@
     /***************************************************************************
      *   @file   css448-compiler/src/phase2/bison_parser.y                     *
-     *   @author John Steele <EMAIL:programjsteele   {at} gmail {dot} com>     *
+     *   @author John Steele     <EMAIL:programjsteele {at} gmail {dot} com>   *
      *   @author Alicia Flinchum <EMAIL:aliciaflinchum {at} yahoo {dot} com>   *
      *   @version 1.0.0                                                        *
      *   @date  Created: Fri 15 Apr 2011 11:05:24 AM PDT \n                    *

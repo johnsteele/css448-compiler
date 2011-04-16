@@ -148,8 +148,39 @@ var|VAR|V                                 { return yvar; }
 
     /* ======================== printToken ================================== */ 
     /**
-     *   @brief A helper method that prints the provided token and it's 
-     *          associated string representation. 
+     *   @brief A helper method to print the provided token and it's 
+     *          associated string representation. If the token corresponds
+     *          to a number, string, or identifier it is printed as well.  
+     */
+    /* ====================================================================== */ 
+    void printToken(int tkn, char data[], char* txt);
+
+
+    /* ======================== main ======================================== */ 
+    /**
+     *   @brief Processes stdin, and prints the token's string representation
+     *   and its associated value.
+     */
+    /* ====================================================================== */ 
+   int main (int argc, char **argv)
+   {   
+      
+      char data[50];
+      /* Process file until EOF (i.e. yywrap() returns 0) */
+      int token;
+      while ((token = yylex()) != 0)
+         printToken(token, data, yytext);
+   
+      /* Houston we have lift off */
+      return 0;
+   }   /* end main() */
+
+
+    /* ======================== printToken ================================== */ 
+    /**
+     *   @brief A helper method to print the provided token and it's 
+     *          associated string representation. If the token corresponds
+     *          to a number, string, or identifier it is printed as well.  
      */
     /* ====================================================================== */ 
     void printToken(int tkn, char data[], char* txt)
@@ -352,7 +383,9 @@ var|VAR|V                                 { return yvar; }
 
       if(tkn != -1){
          printf("%i   %s   ", tkn, data);
+    
          if(tkn == 295 || tkn == 281 || tkn == 309 )
+            /* Number, Identifier, or String.  */
             printf("%s", txt);
          printf(" \n");
       }
@@ -362,25 +395,4 @@ var|VAR|V                                 { return yvar; }
          printf("%s   \n", txt);
       }
    } /* end printToken () */
-
-
-    /* ======================== main ======================================== */ 
-    /**
-     *   @brief Processes stdin, and prints the token's string representation
-     *   and its associated value.
-     */
-    /* ====================================================================== */ 
-   int main (int argc, char **argv)
-   {   
-      
-      char data[50];
-      /* Process file until EOF (i.e. yywrap() returns 0) */
-      int token;
-      while ((token = yylex()) != 0)
-         printToken(token, data, yytext);
-   
-      /* Houston we have lift off */
-      return 0;
-   }   /* end main() */
-
 

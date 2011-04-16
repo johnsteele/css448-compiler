@@ -153,7 +153,7 @@ var|VAR|V                                 { return yvar; }
      *          to a number, string, or identifier it is printed as well.  
      */
     /* ====================================================================== */ 
-    void printToken(int tkn, char data[], char* txt);
+    void printToken(int tkn, char *data, char* txt);
 
 
     /* ======================== main ======================================== */ 

@@ -11,16 +11,15 @@
      *               the (f)lex scanner built in phase1                        *
      **************************************************************************/
 
-%{
 
-/* declarations section */
-#include <iostream>
-using namespace std; 
-
+    /************************ C-Declarations Section **************************/
+%{ 
+#include <stdio.h> 
 %}
 
-/* definition section */
 
+
+    /*********************** Yacc-Declarations Section ************************/ 
 %start  CompilationUnit
 %token  yand yarray yassign ybegin ycaret ycase ycolon ycomma yconst ydispose 
         ydiv ydivide ydo  ydot ydotdot ydownto yelse yend yequal yfalse
@@ -31,8 +30,10 @@ using namespace std;
         ythen  yto ytrue ytype  yuntil  yvar ywhile ywrite ywriteln ystring
         yunknown
 
+
+
+    /************************* Grammar Rules Section *************************/ 
 %%
-/* rules section */
 
 /**************************  Pascal program **********************************/
 
@@ -265,16 +266,14 @@ AddOperator        :  yplus | yminus | yor
                    ;
 Relation           :  yequal  | ynotequal | yless | ygreater 
                    |  ylessequal | ygreaterequal | yin
-                   ;
-
+                   ; 
 %%
 
-/* program section */
+    /************************ Program Section *********************************/ 
 
 void yyerror(char *s) {
-   cout << s << endl;
+    printf ("%s\n" s);
 }
 
-extern int yylex();
-
+extern int yylex(); 
 

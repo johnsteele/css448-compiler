@@ -49,12 +49,12 @@ IdentList          :  yident
 
 /**************************  Declarations section ***************************/
 
-Block              :  Declarations  ybegin  StatementSequence  yend
+Block              :  Declarations  ybegin  StatementSequence  yend 
                    ;
-Declarations       :  [ConstantDefBlock]              /* you do this one */
-                      TypeDefBlock
-                      [VariableDeclBlock]             /* you finish this one */
-                      SubprogDeclList  
+Declarations       :  /* [ConstantDefBlock]*/             /* you do this one */
+/*                       TypeDefBlock  */
+/*                      [VariableDeclBlock]  */           /* you finish this one */
+/*                      SubprogDeclList  */
                    ;
 ConstantDefBlock   :                                  /* you finish it */
                    ;
@@ -272,8 +272,12 @@ Relation           :  yequal  | ynotequal | yless | ygreater
     /************************ Program Section *********************************/ 
 
 void yyerror(char *s) {
-    printf ("%s\n" s);
+    printf ("%s\n", s);
 }
 
 extern int yylex(); 
+
+int yylex () {
+    return 0;
+}
 

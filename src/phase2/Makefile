@@ -2,23 +2,33 @@
 # Author: John Steele
 # Date:	  March 2, 2011
 # Description: Makefile for flex_scanner and yacc_parser used in CSS448.
-BIN_1=flex_scanner
-BIN_2=yacc_parser
 
 CC=gcc
 LEXER=flex
 PARSER=yacc 
-CFLAGS=-g -o
 
-SRCS=$(BIN_1).l
-OBJS=lex.yy
 
-$(BIN_1): $(OBJS)
-	$(CC) $(CFLAGS) $(BIN) $(OBJS).c 
+# bison_scanner depends on everything.
+bison_parser.out: y.tab.o main.o flex_scanner.o y.tab.h 
+	gcc y.tab.o main.o -o bison_parser.out 
 
-%.o:%.c  
-	$(LEXER) $(SRCS)
+# main.o depends on main.c
+main.o: main.c
+	gcc -c main.c
 
-clean:
-	rm -f $(OBJS) $(BIN) lex.yy.c 
+# lex.yy.o depends on lex.yy.c
+lex.yy.o: lex.yy.c
+	gcc -c lex.yy.c
+
+# lex.yy.c depends on the flex file.
+lex.yy.c: y.tab.h flex_scanner.l
+	flex flex_scanner.l
+
+# y.tab.o depends on y.tab.c.
+y.tab.o: y.tab.c
+	gcc -c y.tab.c
+
+# y.tab.c depends on bison_parser.
+y.tab.c: bison_parser.y
+	yacc -d -v bison_parser.y
 

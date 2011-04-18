@@ -51,12 +51,10 @@ IdentList          :  yident
 
 Block              :  Declarations  ybegin  StatementSequence  yend 
                    ;
-Declarations       :  /* [ConstantDefBlock]*/             /* you do this one */
-/*                       TypeDefBlock  */
-/*                      [VariableDeclBlock]  */           /* you finish this one */
-/*                      SubprogDeclList  */
+Declarations       :  ConstantDefBlock TypeDefBlock VariableDeclBlock SubprogDeclList  
                    ;
-ConstantDefBlock   :                                  /* you finish it */
+ConstantDefBlock   :  yconst ConstantDef 
+		           |  ConstantDef ';'}                /* you finish it */
                    ;
 TypeDefBlock       :  /*** empty ***/
                    |  ytype  TypeDefList          

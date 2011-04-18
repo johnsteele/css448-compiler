@@ -53,8 +53,10 @@ Block              :  Declarations  ybegin  StatementSequence  yend
                    ;
 Declarations       :  ConstantDefBlock TypeDefBlock VariableDeclBlock SubprogDeclList  
                    ;
-ConstantDefBlock   :  yconst ConstantDef 
-		           |  ConstantDef ';'}                /* you finish it */
+ConstantDefBlock   :  /*** empty ***/                           /*** john ***/
+                   |  yconst ConstantDefList             
+ConstantDefList    :  ConstantDef ysemicolon
+                   |  ConstantDefList ConstantDef ysemicolon 
                    ;
 TypeDefBlock       :  /*** empty ***/
                    |  ytype  TypeDefList          

@@ -20,14 +20,15 @@
 
 /* ======================== Token Header ================================= */
 %{
-#include "tokenconst.h"   
+#include "y.tab.h"
 
+/* Bison does this automatically, not sure about yacc. */
+extern YYSTYPE yylval; 
 %}
 
 
 
-/* ======================== Definition Section ========================== */
-
+/* ======================== Definition Section ========================== */ 
 
    /* The language is not case sensitive. */      
 LETTER       [a-zA-Z]   

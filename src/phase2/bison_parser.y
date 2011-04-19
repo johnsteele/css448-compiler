@@ -57,7 +57,7 @@ IdentList          :  yident
 /**************************  Declarations section ***************************/
 
 Block              :  Declarations  ybegin  StatementSequence  yend 
-                   ;
+                   ;                                        
 Declarations       :  ConstantDefBlock TypeDefBlock VariableDeclBlock SubprogDeclList  
                    ;
 ConstantDefBlock   :  /*** empty ***/                           /*** john ***/
@@ -72,10 +72,10 @@ TypeDefList        :  TypeDef  ysemicolon
                    |  TypeDefList TypeDef ysemicolon  
                    ;
 VariableDeclBlock  :  /*** empty ***/                           /*** john ***/
-                   |  yvar VariableDecList 
+                   |  yvar VariableDeclList 
                    ;
 VariableDeclList   :  VariableDecl ysemicolon                   /*** john ***/ 
-                   |  VariableDecList VariableDec ysemicolon
+                   |  VariableDeclList VariableDecl ysemicolon
                    ;  
 ConstantDef        :  yident  yequal  ConstExpression
                    ;
@@ -86,7 +86,8 @@ VariableDecl       :  IdentList  ycolon  Type
 
 /***************************  Const/Type Stuff  ******************************/
 
-ConstExpression    :                                            /** john ***/ 
+ConstExpression    :  UnaryOperator  ConstFactor               /*** john ***/
+                   |  ynil 
                    |  ystring
                    ;
 ConstFactor        :  yident

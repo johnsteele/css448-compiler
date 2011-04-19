@@ -18,7 +18,6 @@
 %}
 
 
-
     /*********************** Yacc-Declarations Section ************************/ 
 %start  CompilationUnit
 %token  yand yarray yassign ybegin ycaret ycase ycolon ycomma yconst ydispose 
@@ -29,6 +28,14 @@
         yrecord yrepeat yrightbracket yrightparen  ysemicolon yset ystring
         ythen  yto ytrue ytype  yuntil  yvar ywhile ywrite ywriteln ystring
         yunknown
+
+
+%union 
+{
+    /* The identifier set from within the lexer.  */
+    char *string;
+}
+
 
 
 
@@ -64,7 +71,8 @@ TypeDefBlock       :  /*** empty ***/
 TypeDefList        :  TypeDef  ysemicolon
                    |  TypeDefList TypeDef ysemicolon  
                    ;
-VariableDeclBlock  :                                  /* you finish it */
+VariableDeclBlock  :  /*** empty ***/                           /*** john ***/
+                   |   
                    ;
 VariableDeclList   :                                  /* you finish it */
                    ;  

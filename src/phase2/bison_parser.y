@@ -32,7 +32,7 @@
 
 %union 
 {
-    /* The identifier set from within the lexer.  */
+    /* The identifier wich is set from within the lexer. */
     char *string;
 }
 
@@ -72,9 +72,10 @@ TypeDefList        :  TypeDef  ysemicolon
                    |  TypeDefList TypeDef ysemicolon  
                    ;
 VariableDeclBlock  :  /*** empty ***/                           /*** john ***/
-                   |   
+                   |  yvar VariableDecList 
                    ;
-VariableDeclList   :                                  /* you finish it */
+VariableDeclList   :  VariableDecl ysemicolon                   /*** john ***/ 
+                   |  VariableDecList VariableDec ysemicolon
                    ;  
 ConstantDef        :  yident  yequal  ConstExpression
                    ;
@@ -85,7 +86,7 @@ VariableDecl       :  IdentList  ycolon  Type
 
 /***************************  Const/Type Stuff  ******************************/
 
-ConstExpression    :                                  /* you finish it */
+ConstExpression    :                                            /** john ***/ 
                    |  ystring
                    ;
 ConstFactor        :  yident

@@ -154,7 +154,7 @@ var|VAR|V                                 { return yvar; }
      *          to a number, string, or identifier it is printed as well.  
      */
     /* ====================================================================== */ 
-    void printToken(int tkn, char* data, char* txt);
+    void printToken(int tkn);
 
 
     /* ======================== main ======================================== */ 
@@ -166,13 +166,11 @@ var|VAR|V                                 { return yvar; }
     int main (int argc, char **argv)
     {   
       
-      char data[50];
       /* Process file until EOF (i.e. yywrap() returns 0) */
       int token;
       while ((token = yylex()) != 0)
-         printToken(token, data, yytext);
+         printToken(token);
    
-      /* Houston we have lift off */
       return 0;
     } /* end main() */
 
@@ -184,8 +182,9 @@ var|VAR|V                                 { return yvar; }
      *          to a number, string, or identifier it is printed as well.  
      */
     /* ====================================================================== */ 
-    void printToken(int tkn, char* data, char* txt)
+    void printToken(int tkn)
     { 
+      char data[50];
         
         switch (tkn){
          case 257:

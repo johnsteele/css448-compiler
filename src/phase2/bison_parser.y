@@ -229,7 +229,7 @@ Factor             :  ynumber
 /*  to handle that in FunctionCall because it is handled by Designator.     */
 /*  A FunctionCall has at least one parameter in parens, more are           */
 /*  separated with commas.                                                  */
-FunctionCall       :     /* you finish it, Expressions are valid parameters */
+FunctionCall       :  yident ActualParameters                   /*** john ***/
                    ;
 Setvalue           :  yleftbracket ElementList  yrightbracket
                    |  yleftbracket yrightbracket

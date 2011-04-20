@@ -20,10 +20,10 @@
 
 /* ======================== Token Header ================================= */
 %{
-#include "y.tab.h"
-
+#include <string.h>
+#include "y.tab.h" 
 /* Bison does this automatically, not sure about yacc. */
-extern YYSTYPE yylval; 
+// extern YYSTYPE yylval; 
 %}
 
 
@@ -37,7 +37,7 @@ LETTER       [a-zA-Z]
 DIGIT        [0-9]
 
    /* Spaces, tabs, newlines, and returns */
-WHITESPACE   [ \t\n\r]   
+WHITESPACE   [ \t\r]
 
    /* Any letter or digit. */
 CHARACTER    [^(\"\')]   
@@ -139,23 +139,15 @@ var|VAR|V                                 { return yvar; }
 [wW][hH][iI][lL][eE]                      { return ywhile; }
 [wW][rR][iI][tT][eE]                      { return ywrite; }
 [wW][rR][iI][tT][eE][lL][nN]              { return ywriteln; }
-{IDENTIFIER}                              { return yident; }   
-{COMMENT}                                 { return   -1; }
+{IDENTIFIER}                              { 
+					    yylval.str = strdup (yytext); 
+					    return yident; 
+					  }   
+{COMMENT}                                 { /* This needs to be fixed to printf(the comment) return   -1; */ }
+"\n"					  { printf ("\n"); }
 {WHITESPACE}                              { /* discard */ }
 .                                         { return yunknown; }
 %%
-
-
-
-    /* ======================== printToken ================================== */ 
-    /**
-     *   @brief A helper method to print the provided token and it's 
-     *          associated string representation. If the token corresponds
-     *          to a number, string, or identifier it is printed as well.  
-     */
-    /* ====================================================================== */ 
-    void printToken(int tkn);
-
 
     /* ======================== main ======================================== */ 
     /**
@@ -164,235 +156,9 @@ var|VAR|V                                 { return yvar; }
      */
     /* ====================================================================== */ 
     int main (int argc, char **argv)
-    {   
-      
-      /* Process file until EOF (i.e. yywrap() returns 0) */
-      int token;
-      while ((token = yylex()) != 0)
-         printToken(token);
-   
-      return 0;
-    } /* end main() */
-
-
-    /* ======================== printToken ================================== */ 
-    /**
-     *   @brief A helper method to print the provided token and it's 
-     *          associated string representation. If the token corresponds
-     *          to a number, string, or identifier it is printed as well.  
-     */
-    /* ====================================================================== */ 
-    void printToken(int tkn)
-    { 
-      char data[50];
-        
-        switch (tkn){
-         case 257:
-            data = "yand";
-            break;
-         case 258:
-            data = "yarray";
-            break;
-         case 259:
-            data = "yassign";
-            break;
-         case 260: 
-            data = "ybegin";
-            break;
-         case 261:
-            data = "ycarat";
-            break;
-         case 262:
-            data = "ycase";
-            break;
-         case 263:
-            data = "ycolon";
-            break;
-         case 264:
-            data = "ycomma";
-            break;
-         case 265:
-            data = "yconst";
-            break;
-         case 266:
-            data = "ydispose";
-            break;
-         case 267:
-            data = "ydiv";
-            break;
-         case 268:
-            data = "ydivide";
-            break;
-         case 269:
-            data = "ydo";
-            break;
-         case 270:
-            data = "ydot";
-            break;
-         case 271:
-            data = "ydotdot";
-            break;
-         case 272:
-            data = "ydownto";
-            break;
-         case 273:
-            data = "yelse";
-            break;
-         case 274:
-            data = "yend";
-            break;
-         case 275:
-            data = "yequal";
-            break;
-         case 276:
-            data = "yfalse";
-            break;
-         case 277:
-            data = "yfor";
-            break;
-         case 278:
-            data = "yfunction";
-            break;
-         case 279:
-            data = "ygreater";
-            break;
-         case 280:
-            data = "ygreaterequal";
-            break;
-         case 281:
-            data = "yident";
-            break;
-         case 282:
-            data = "yif";
-            break;
-         case 283:
-            data = "yin";
-            break;
-         case 284:
-            data = "yleftbracket";
-            break;
-         case 285:
-            data = "yleftparen";
-            break;
-         case 286:
-            data = "yless";
-            break;
-         case 287:
-            data = "ylessequal";
-            break;
-         case 288:
-            data = "yminus ";
-            break;
-         case 289:
-            data = "ymod ";
-            break;
-         case 290:
-            data = "ymultiply";
-            break;
-         case 291:
-            data = "ynew";
-            break;
-         case 292:
-            data = "ynil";
-            break;
-         case 293:
-            data = "ynot";
-            break;
-         case 294:
-            data = "ynotequal";
-            break;
-         case 295:
-            data = "ynumber";
-            break;
-         case 296:
-            data = "yof";
-            break;
-         case 297:
-            data = "yor";
-            break;
-         case 298:
-            data = "yplus";
-            break;
-         case 299:
-            data = "yprocdure";
-            break;
-         case 300:
-            data = "yprogram";
-            break;
-         case 301:
-            data = "yread";
-            break;
-         case 302:
-            data = "yreadln";
-            break;
-         case 303:
-            data = "yrecord";
-            break;
-         case 304:
-            data = "yrepeat";
-            break;
-         case 305:
-            data = "yrightbracket";
-            break;
-         case 306:
-            data = "yrightparen";
-            break;
-         case 307:
-            data = "ysemicolon";
-            break;
-         case 308:
-            data = "yset";
-            break;
-         case 309:
-            data = "ystring";
-            break;
-         case 310:
-            data = "ythen";
-            break;
-         case 311:
-            data = "yto";
-            break;
-         case 312:
-            data = "ytrue";
-            break;
-         case 313:
-            data = "ytype";
-            break;   
-         case 314:
-            data = "yuntil";
-            break;
-         case 315:
-            data = "yvar";
-            break;
-         case 316:
-            data = "ywhile";
-            break;
-         case 317:
-            data = "ywrite";
-            break;
-         case 318:
-            data = "ywriteln";
-            break;
-         case 319:
-            data = "yunknown";
-            break;
-         default:
-            data = "";
-            break;
-      }
-
-      if(tkn != -1){
-         printf("%i   %s   ", tkn, data);
-    
-         if(tkn == 295 || tkn == 281 || tkn == 309 )
-            /* Number, Identifier, or String.  */
-            printf("%s", txt);
-         printf(" \n");
-      }
-
-      
-      if(tkn == -1){
-         printf("%s   \n", txt);
-      }
-   } /* end printToken () */
+    {
+      yyparse (); 
+      printf ("Parsed!\n");
+      return 0; 
+    }  /* end main() */
 

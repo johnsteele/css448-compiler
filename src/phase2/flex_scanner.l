@@ -23,7 +23,7 @@
 #include <string.h>
 #include "y.tab.h" 
 /* Bison does this automatically, not sure about yacc. */
-// extern YYSTYPE yylval; 
+ extern YYSTYPE yylval; 
 %}
 
 
@@ -65,14 +65,25 @@ STRING       (\"({CHARACTER}|\')*\")|(\'({CHARACTER}|\")*\')
 IDENTIFIER   {LETTER}({LETTER}|{DIGIT})*   
 
    /*Start of a comment. */
-S_COMMENT         \(\*(.)*
+S_COMMENT \(\*
 
    /* A full comment, beginning with "(*" and ending with "*)"*/
-COMMENT      {S_COMMENT}({WHITESPACE}|{CHARACTER}|{D_QUOTE}|{S_QUOTE}|\*)*\*\)
+COMMENT {S_COMMENT}({WHITESPACE}|{CHARACTER}|{D_QUOTE}|{S_QUOTE}|\*)*\*\)
 
 
  /* ======================== Rules Section =============================== */
-%%   
+%x comment
+%%
+        int line_num = 1;
+
+"(*"								BEGIN(comment);
+
+<comment>[^*\n]*									ECHO;
+<comment>"*"+[^*)\n]*							ECHO;
+<comment>\n             ECHO; ++line_num;
+<comment>"*"+")"        BEGIN(INITIAL);
+
+ /*{COMMENT}                                 { printf("%s", yytext);}*/
 [aA][nN][dD]                              { return yand;}
 [aA][rR][rR][aA][yY]                      { return yarray;}
 ":="                                      { return yassign;}
@@ -140,12 +151,10 @@ var|VAR|V                                 { return yvar; }
 [wW][rR][iI][tT][eE]                      { return ywrite; }
 [wW][rR][iI][tT][eE][lL][nN]              { return ywriteln; }
 {IDENTIFIER}                              { 
-					    yylval.str = strdup (yytext); 
-					    return yident; 
-					  }   
-{COMMENT}                                 { /* This needs to be fixed to printf(the comment) return   -1; */ }
-"\n"					  { printf ("\n"); }
+					                            /*yylval.str = strdup (yytext); */
+					                            return yident;
+					                           }
+"\n"					                        { printf ("\n"); }
 {WHITESPACE}                              { /* discard */ }
 .                                         { return yunknown; }
 %%
-

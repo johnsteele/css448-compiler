@@ -33,11 +33,8 @@
 %union 
 {
     /* The identifier wich is set from within the lexer. */
-    char *string;
+    char *str;
 }
-
-
-
 
     /************************* Grammar Rules Section *************************/ 
 %%
@@ -50,17 +47,19 @@ ProgramModule      :  yprogram yident ProgramParameters ysemicolon Block ydot
                    ;
 ProgramParameters  :  yleftparen  IdentList  yrightparen
                    ;
-IdentList          :  yident 
-                   |  IdentList ycomma yident
+IdentList          :  Identifier 
+                   |  IdentList ycomma Identifier 
                    ;
-
+Identifier         :  yident { printf("%s", yylval.str); free (yylval.str); }
+		   ; 
+/* We need to put the print Identifier here. */
 /**************************  Declarations section ***************************/
 
 Block              :  Declarations  ybegin  StatementSequence  yend 
                    ;                                        
 Declarations       :  ConstantDefBlock TypeDefBlock VariableDeclBlock SubprogDeclList  
                    ;
-ConstantDefBlock   :  /*** empty ***/                           /*** john ***/
+ConstantDefBlock   :  /*** empty ***/                        
                    |  yconst ConstantDefList             
 ConstantDefList    :  ConstantDef ysemicolon
                    |  ConstantDefList ConstantDef ysemicolon 
@@ -71,10 +70,10 @@ TypeDefBlock       :  /*** empty ***/
 TypeDefList        :  TypeDef  ysemicolon
                    |  TypeDefList TypeDef ysemicolon  
                    ;
-VariableDeclBlock  :  /*** empty ***/                           /*** john ***/
+VariableDeclBlock  :  /*** empty ***/                         
                    |  yvar VariableDeclList 
                    ;
-VariableDeclList   :  VariableDecl ysemicolon                   /*** john ***/ 
+VariableDeclList   :  VariableDecl ysemicolon                  
                    |  VariableDeclList VariableDecl ysemicolon
                    ;  
 ConstantDef        :  yident  yequal  ConstExpression
@@ -86,7 +85,8 @@ VariableDecl       :  IdentList  ycolon  Type
 
 /***************************  Const/Type Stuff  ******************************/
 
-ConstExpression    :  UnaryOperator  ConstFactor               /*** john ***/
+ConstExpression    :  UnaryOperator  ConstFactor               
+	           |  ConstFactor
                    |  ynil 
                    |  ystring
                    ;
@@ -229,7 +229,7 @@ Factor             :  ynumber
 /*  to handle that in FunctionCall because it is handled by Designator.     */
 /*  A FunctionCall has at least one parameter in parens, more are           */
 /*  separated with commas.                                                  */
-FunctionCall       :  yident ActualParameters                   /*** john ***/
+FunctionCall       :  yident ActualParameters                   
                    ;
 Setvalue           :  yleftbracket ElementList  yrightbracket
                    |  yleftbracket yrightbracket
@@ -283,11 +283,7 @@ Relation           :  yequal  | ynotequal | yless | ygreater
 
 void yyerror(char *s) {
     printf ("%s\n", s);
-}
+} 
 
-extern int yylex(); 
-
-int yylex () {
-    return 0;
-}
+extern int yylex();
 

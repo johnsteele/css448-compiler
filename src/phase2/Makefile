@@ -10,19 +10,19 @@ PARSER=yacc
 
 # bison_scanner depends on everything.
 bison_parser.out: y.tab.o main.o flex_scanner.o y.tab.h 
-	gcc y.tab.o main.o -o bison_parser.out 
+	gcc y.tab.o lex.yy.o -o bison_parser.out 
 
-# main.o depends on main.c
+# main.o depends on main.c 
 main.o: main.c
 	gcc -c main.c
 
 # lex.yy.o depends on lex.yy.c
 lex.yy.o: lex.yy.c
-	gcc -c lex.yy.c
+	gcc -c lex.yy.c 
 
 # lex.yy.c depends on the flex file.
-lex.yy.c: y.tab.h flex_scanner.l
-	flex flex_scanner.l
+lex.yy.c: flex_scanner.l
+	flex flex_scanner.l 
 
 # y.tab.o depends on y.tab.c.
 y.tab.o: y.tab.c

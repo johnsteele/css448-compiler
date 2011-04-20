@@ -149,16 +149,3 @@ var|VAR|V                                 { return yvar; }
 .                                         { return yunknown; }
 %%
 
-    /* ======================== main ======================================== */ 
-    /**
-     *   @brief Processes stdin, and prints the token's string representation
-     *   and its associated value.
-     */
-    /* ====================================================================== */ 
-    int main (int argc, char **argv)
-    {
-      yyparse (); 
-      printf ("Parsed!\n");
-      return 0; 
-    }  /* end main() */
-

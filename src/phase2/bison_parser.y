@@ -43,8 +43,8 @@
 
 CompilationUnit    :  ProgramModule        
                    ;
-ProgramModule      :  yprogram
-							Identifier ProgramParameters ysemicolon Block ydot
+ProgramModule      :  yprogram Identifier ProgramParameters ysemicolon Block 
+                             ydot
                    ;
 ProgramParameters  :  yleftparen  IdentList  yrightparen
                    ;

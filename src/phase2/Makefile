@@ -3,14 +3,11 @@
 # Date:	  March 2, 2011
 # Description: Makefile for flex_scanner and yacc_parser used in CSS448.
 
-CC=gcc
-LEXER=flex
-PARSER=yacc 
 
 
 # bison_scanner depends on everything.
 bison_parser.out: y.tab.o main.o flex_scanner.o y.tab.h 
-	gcc y.tab.o lex.yy.o -o bison_parser.out 
+	gcc y.tab.o lex.yy.o main.o -o bison_parser.out 
 
 # main.o depends on main.c 
 main.o: main.c

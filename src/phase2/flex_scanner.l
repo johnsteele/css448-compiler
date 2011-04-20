@@ -151,7 +151,7 @@ var|VAR|V                                 { return yvar; }
 [wW][rR][iI][tT][eE]                      { return ywrite; }
 [wW][rR][iI][tT][eE][lL][nN]              { return ywriteln; }
 {IDENTIFIER}                              { 
-					                            /*yylval.str = strdup (yytext); */
+					                            yylval.str = strdup (yytext); 
 					                            return yident;
 					                           }
 "\n"					                        { printf ("\n"); }

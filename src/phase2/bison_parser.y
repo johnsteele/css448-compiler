@@ -22,7 +22,7 @@
 %start  CompilationUnit
 %token  yand yarray yassign ybegin ycaret ycase ycolon ycomma yconst ydispose 
         ydiv ydivide ydo  ydot ydotdot ydownto yelse yend yequal yfalse
-        yfor yfunction ygreater ygreaterequal yident  yif yin yleftbracket
+        yfor yfunction ygreater ygreaterequal yident yif yin yleftbracket
         yleftparen yless ylessequal yminus ymod ymultiply ynew ynil ynot 
         ynotequal ynumber yof  yor yplus yprocedure yprogram yread yreadln  
         yrecord yrepeat yrightbracket yrightparen  ysemicolon yset ystring
@@ -43,15 +43,16 @@
 
 CompilationUnit    :  ProgramModule        
                    ;
-ProgramModule      :  yprogram yident ProgramParameters ysemicolon Block ydot
+ProgramModule      :  yprogram
+							Identifier ProgramParameters ysemicolon Block ydot
                    ;
 ProgramParameters  :  yleftparen  IdentList  yrightparen
                    ;
 IdentList          :  Identifier 
                    |  IdentList ycomma Identifier 
                    ;
-Identifier         :  yident { printf("%s", yylval.str); free (yylval.str); }
-		   ; 
+Identifier         :  yident { printf("%s ", yylval.str); free (yylval.str); }
+						;
 /* We need to put the print Identifier here. */
 /**************************  Declarations section ***************************/
 
@@ -76,36 +77,39 @@ VariableDeclBlock  :  /*** empty ***/
 VariableDeclList   :  VariableDecl ysemicolon                  
                    |  VariableDeclList VariableDecl ysemicolon
                    ;  
-ConstantDef        :  yident  yequal  ConstExpression
+ConstantDef        :  Identifier   yequal  ConstExpression
                    ;
-TypeDef            :  yident  yequal  Type
+TypeDef            :  Identifier   yequal  Type
                    ;
 VariableDecl       :  IdentList  ycolon  Type
                    ;
 
 /***************************  Const/Type Stuff  ******************************/
 
-ConstExpression    :  UnaryOperator  ConstFactor               
-	           |  ConstFactor
-                   |  ynil 
+ConstExpression    :  UnaryOperator  ynumber /*only number can have unary op*/
+						 |  ConstFactor
                    |  ystring
+						 /* Alicia - Removed the ynil. Causes reduce/reduce errors.
+						 /*ynil is in the ConstFactor also, so not needed here. */
                    ;
-ConstFactor        :  yident
+ConstFactor        :  Identifier
                    |  ynumber
                    |  ytrue
                    |  yfalse
                    |  ynil
                    ;
-Type               :  yident
+Type               :  Identifier
                    |  ArrayType
                    |  PointerType
                    |  RecordType
                    |  SetType
                    ;
-ArrayType          :  yarray yleftbracket Subrange SubrangeList 
+
+ArrayType          :  yarray yleftbracket SubrangeList
+							/*Alicia - took out subrange*/
                       yrightbracket  yof Type
                    ;
-SubrangeList       :  /*** empty ***/
+SubrangeList       :  Subrange /* Alicia - Combined subrange into list*/
                    |  SubrangeList ycomma Subrange 
                    ;
 Subrange           :  ConstFactor ydotdot ConstFactor
@@ -115,7 +119,7 @@ RecordType         :  yrecord  FieldListSequence  yend
                    ;
 SetType            :  yset  yof  Subrange
                    ;
-PointerType        :  ycaret  yident 
+PointerType        :  ycaret  Identifier
                    ;
 FieldListSequence  :  FieldList  
                    |  FieldListSequence  ysemicolon  FieldList
@@ -142,8 +146,8 @@ Statement          :  Assignment
                    ;
 Assignment         :  Designator yassign Expression
                    ;
-ProcedureCall      :  yident 
-                   |  yident ActualParameters
+ProcedureCall      :  Identifier
+                   |  Identifier  ActualParameters
                    ;
 IfStatement        :  yif  Expression  ythen  Statement  ElsePart
                    ;
@@ -164,7 +168,7 @@ WhileStatement     :  ywhile  Expression  ydo  Statement
                    ;
 RepeatStatement    :  yrepeat  StatementSequence  yuntil  Expression
                    ;
-ForStatement       :  yfor  yident  yassign  Expression  WhichWay  Expression
+ForStatement       :  yfor  Identifier    yassign  Expression  WhichWay  Expression
                             ydo  Statement
                    ;
 WhichWay           :  yto  |  ydownto
@@ -182,12 +186,12 @@ IOStatement        :  yread  yleftparen  DesignatorList  yrightparen
 DesignatorList     :  Designator  
                    |  DesignatorList  ycomma  Designator 
                    ;
-Designator         :  yident  DesignatorStuff 
+Designator         :  Identifier   DesignatorStuff
                    ;
 DesignatorStuff    :  /*** empty ***/
                    |  DesignatorStuff  theDesignatorStuff
                    ;
-theDesignatorStuff :  ydot yident 
+theDesignatorStuff :  ydot Identifier
                    |  yleftbracket ExpList yrightbracket 
                    |  ycaret 
                    ;
@@ -196,8 +200,8 @@ ActualParameters   :  yleftparen  ExpList  yrightparen
 ExpList            :  Expression   
                    |  ExpList  ycomma  Expression       
                    ;
-MemoryStatement    :  ynew  yleftparen  yident  yrightparen  
-                   |  ydispose yleftparen  yident  yrightparen
+MemoryStatement    :  ynew  yleftparen  Identifier   yrightparen
+                   |  ydispose yleftparen  Identifier   yrightparen
                    ;
 
 /***************************  Expression Stuff  ******************************/
@@ -206,7 +210,7 @@ Expression         :  SimpleExpression
                    |  SimpleExpression  Relation  SimpleExpression 
                    ;
 SimpleExpression   :  TermExpr
-                   |  UnaryOperator  TermExpr
+                   |  UnaryOperator TermExpr
                    ;
 TermExpr           :  Term  
                    |  TermExpr  AddOperator  Term
@@ -229,7 +233,7 @@ Factor             :  ynumber
 /*  to handle that in FunctionCall because it is handled by Designator.     */
 /*  A FunctionCall has at least one parameter in parens, more are           */
 /*  separated with commas.                                                  */
-FunctionCall       :  yident ActualParameters                   
+FunctionCall       :  Identifier  ActualParameters
                    ;
 Setvalue           :  yleftbracket ElementList  yrightbracket
                    |  yleftbracket yrightbracket
@@ -249,21 +253,21 @@ SubprogDeclList    :  /*** empty ***/
                    ;
 ProcedureDecl      :  ProcedureHeading  ysemicolon  Block 
                    ;
-FunctionDecl       :  FunctionHeading  ycolon  yident  ysemicolon  Block
+FunctionDecl       :  FunctionHeading  ycolon  Identifier   ysemicolon  Block
                    ;
-ProcedureHeading   :  yprocedure  yident  
-                   |  yprocedure  yident  FormalParameters
+ProcedureHeading   :  yprocedure  Identifier
+                   |  yprocedure  Identifier   FormalParameters
                    ;
-FunctionHeading    :  yfunction  yident  
-                   |  yfunction  yident  FormalParameters
+FunctionHeading    :  yfunction  Identifier
+                   |  yfunction  Identifier   FormalParameters
                    ;
 FormalParameters   :  yleftparen FormalParamList yrightparen 
                    ;
 FormalParamList    :  OneFormalParam 
                    |  FormalParamList ysemicolon OneFormalParam
                    ;
-OneFormalParam     :  yvar  IdentList  ycolon  yident
-                   |  IdentList  ycolon  yident
+OneFormalParam     :  yvar  IdentList  ycolon  Identifier
+                   |  IdentList  ycolon  Identifier
                    ;
 
 /***************************  More Operators  ********************************/
@@ -276,7 +280,8 @@ AddOperator        :  yplus | yminus | yor
                    ;
 Relation           :  yequal  | ynotequal | yless | ygreater 
                    |  ylessequal | ygreaterequal | yin
-                   ; 
+                   ;
+
 %%
 
     /************************ Program Section *********************************/ 

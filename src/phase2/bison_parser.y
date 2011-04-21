@@ -52,7 +52,6 @@ IdentList          :  Identifier
                    ;
 Identifier         :  yident { printf("%s", yylval.str); free (yylval.str); }
 		   ; 
-/* We need to put the print Identifier here. */
 /**************************  Declarations section ***************************/
 
 Block              :  Declarations  ybegin  StatementSequence  yend 
@@ -86,7 +85,7 @@ VariableDecl       :  IdentList  ycolon  Type
 /***************************  Const/Type Stuff  ******************************/
 
 ConstExpression    :  UnaryOperator ynumber
-		   |  ConstFactor               
+		           |  ConstFactor               
                    |  ystring
                    ;
 ConstFactor        :  Identifier 
@@ -99,8 +98,7 @@ Type               :  Identifier
                    |  ArrayType
                    |  PointerType
                    |  RecordType
-                   |  SetType
-                   ;
+                   |  SetType ;
 ArrayType          :  yarray yleftbracket Subrange SubrangeList 
                       yrightbracket  yof Type
                    ;

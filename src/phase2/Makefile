@@ -6,8 +6,8 @@
 
 
 # bison_scanner depends on everything.
-a.out: y.tab.o main.o flex_scanner.o y.tab.h 
-	gcc y.tab.o lex.yy.o main.o 
+bison_parser.out: y.tab.o main.o flex_scanner.o y.tab.h 
+	gcc y.tab.o lex.yy.o -o bison_parser.out 
 
 # main.o depends on main.c 
 main.o: main.c

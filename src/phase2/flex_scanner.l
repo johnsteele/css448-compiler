@@ -22,8 +22,6 @@
 %{
 #include <string.h>
 #include "y.tab.h" 
-/* Bison does this automatically, not sure about yacc. */
-// extern YYSTYPE yylval; 
 %}
 
 
@@ -140,11 +138,11 @@ var|VAR|V                                 { return yvar; }
 [wW][rR][iI][tT][eE]                      { return ywrite; }
 [wW][rR][iI][tT][eE][lL][nN]              { return ywriteln; }
 {IDENTIFIER}                              { 
-					    yylval.str = strdup (yytext); 
-					    return yident; 
-					  }   
+					                        yylval.str = strdup (yytext); 
+					                        return yident; 
+					                      }   
 {COMMENT}                                 { printf ("%s", yytext); }
-"\n"					  { printf ("\n"); }
+"\n"					                  { printf ("\n"); }
 {WHITESPACE}                              { /* discard */ }
 .                                         { return yunknown; }
 %%

@@ -51,7 +51,7 @@ IdentList          :  Identifier
                    |  IdentList ycomma Identifier 
                    ;
 Identifier         :  yident { printf("%s", yylval.str); free (yylval.str); }
-		   ; 
+		           ; 
 /**************************  Declarations section ***************************/
 
 Block              :  Declarations  ybegin  StatementSequence  yend 
@@ -84,7 +84,7 @@ VariableDecl       :  IdentList  ycolon  Type
 
 /***************************  Const/Type Stuff  ******************************/
 
-ConstExpression    :  UnaryOperator ynumber
+ConstExpression    :  UnaryOperator ConstFactor 
 		           |  ConstFactor               
                    |  ystring
                    ;
@@ -98,12 +98,12 @@ Type               :  Identifier
                    |  ArrayType
                    |  PointerType
                    |  RecordType
-                   |  SetType ;
-ArrayType          :  yarray yleftbracket Subrange SubrangeList 
-                      yrightbracket  yof Type
+                   |  SetType
                    ;
-SubrangeList       :  /*** empty ***/
-                   |  SubrangeList ycomma Subrange 
+ArrayType          :  yarray yleftbracket SubrangeList yrightbracket  yof Type
+                   ;
+SubrangeList       :  Subrange
+		           |  SubrangeList ycomma Subrange 
                    ;
 Subrange           :  ConstFactor ydotdot ConstFactor
                    |  ystring ydotdot  ystring

@@ -21,6 +21,8 @@
 /* ======================== Token Header ================================= */
 %{
 #include <string.h>
+#include <iostream>
+using namespace std;
 #include "y.tab.h" 
 %}
 
@@ -141,8 +143,8 @@ var|VAR|V                                 { return yvar; }
 					    yylval.str = strdup (yytext); 
 					    return yident; 
 					  }   
-{COMMENT}                                 { printf ("%s", yytext); }
-"\n"					  { printf ("\n"); }
+{COMMENT}                                 { cout << yytext << endl; /* printf ("%s", yytext); */ }
+"\n"					  { cout << endl; /* printf ("\n"); */ }
 {WHITESPACE}                              { /* discard */ }
 .                                         { return yunknown; }
 %%

@@ -27,7 +27,7 @@ using namespace std;
         yleftparen yless ylessequal yminus ymod ymultiply ynew ynil ynot 
         ynotequal ynumber yof  yor yplus yprocedure yprogram yread yreadln  
         yrecord yrepeat yrightbracket yrightparen  ysemicolon yset ystring
-        ythen  yto ytrue ytype  yuntil  yvar ywhile ywrite ywriteln ystring
+        ythen  yto ytrue ytype  yuntil  yvar ywhile ywrite ywriteln 
         yunknown
 
 
@@ -51,7 +51,7 @@ ProgramParameters  :  yleftparen  IdentList  yrightparen
 IdentList          :  Identifier 
                    |  IdentList ycomma Identifier 
                    ;
-Identifier         :  yident { printf("%s", yylval.str); free (yylval.str); }
+Identifier         :  yident { cout << yylval.str; delete yylval.str; /* printf("%s", yylval.str); free (yylval.str); */ }
 		   ; 
 /* We need to put the print Identifier here. */
 /**************************  Declarations section ***************************/

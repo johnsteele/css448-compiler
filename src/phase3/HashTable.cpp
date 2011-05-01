@@ -11,7 +11,7 @@
  *  
  * @version 1.0.0
  * @date April 30, 2011
- */ 
+ */
 //--------------------------------------------------------------------
 /**
  * Includes following features:
@@ -35,13 +35,25 @@
  * 
  * Postconditions: This HashTable was created with the default size.
  */
-HashTable::HashTable () 
-{
-	my_array    = new IdentifierRecord *[DEFAULT_SIZE + 1];
-	my_size     = DEFAULT_SIZE + 1;
-	init_table ();
-} 
+HashTable::HashTable() {
+	my_array = new IdentifierRecord *[DEFAULT_SIZE + 1];
+	my_size = DEFAULT_SIZE + 1;
+	init_table();
+}
 
+//---------------------Destructor-----------------------------
+/**
+ * @brief Deletes all dynamically allocated memory.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: All dynamic memory has been released.
+ */
+HashTable::~HashTable() {
+	// TODO: Decide if the table is responsible for the
+	//       identifier memory.
+	delete [] my_array;
+}
 
 //---------------------init_table-------------------------------------
 /**
@@ -51,13 +63,11 @@ HashTable::HashTable ()
  *
  * Postconditions: The values of each index have been initialized.
  */
-void HashTable::init_table()
-{
+void HashTable::init_table() {
 	int i;
 	for (i = 0; i < my_size; i++)
 		my_array[i] = NULL;
 }
-
 
 //---------------------put--------------------------------------------
 /**
@@ -71,15 +81,13 @@ void HashTable::init_table()
  * @param key The HashTable key.
  * @param value The value to insert.
  */
-void HashTable::add (char key, IdentifierRecord *value)
-{
-	int index = hashCode (key);
+void HashTable::add(char key, IdentifierRecord *value) {
+	int index = hashCode(key);
 	if (index > my_size)
-		makeBigger (index);
+		makeBigger(index);
 
-	my_array [index] = value; 
+	my_array[index] = value;
 }
-
 
 //---------------------hashCode-------------------------------
 /**
@@ -91,12 +99,10 @@ void HashTable::add (char key, IdentifierRecord *value)
  * 
  * @param key The key to hash.
  * @return The hash code for the key.
- */	
-int HashTable::hashCode (char key) const
-{
+ */
+int HashTable::hashCode(char key) const {
 	return key - '0';
 }
-
 
 //---------------------get--------------------------------------------
 /**
@@ -113,17 +119,13 @@ int HashTable::hashCode (char key) const
  *	   NULL if the key is not mapped to any value in this
  *	   HashTable.
  */
-IdentifierRecord * HashTable::get (char key) const
-{
-	if (((hashCode (key)) < my_size) && 
-			((hashCode (key)) >= 0)) {
-			return my_array [hashCode (key)];
-	}	
-	else  {
+IdentifierRecord * HashTable::get(char key) const {
+	if (((hashCode(key)) < my_size) && ((hashCode(key)) >= 0)) {
+		return my_array[hashCode(key)];
+	} else {
 		return NULL;
 	}
 }
-
 
 //---------------------resize-----------------------------------------
 /**
@@ -134,8 +136,7 @@ IdentifierRecord * HashTable::get (char key) const
  * Postconditions: my_array has been increased to size, and the data 
  *		   has been copied over. 
  */
-void HashTable::makeBigger (int size)
-{
+void HashTable::makeBigger(int size) {
 	int index;
 
 	// The bigger array.
@@ -143,22 +144,22 @@ void HashTable::makeBigger (int size)
 
 	// Initialize the pointers.
 	for (index = 0; index <= size; index++)
-		copy [index] = NULL;
+		copy[index] = NULL;
 
 	// Copy over old data.
 	for (index = 0; index <= my_size; index++)
-		copy [index] = my_array [index]; 
+		copy[index] = my_array[index];
 
 	// Delete the old array.	
 	delete my_array;
 
 	// Now hold her hand.
-	my_array = copy;	
-	
+	my_array = copy;
+
 	// Now set our new size.
 	my_size = size + 1;
 
 	// Stay away dangly leaches!
 	copy = NULL;
-} 
+}
 

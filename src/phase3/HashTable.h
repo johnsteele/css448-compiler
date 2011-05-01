@@ -21,9 +21,17 @@
  *	- Allows making the HashTable empty.
  * 
  * Assumptions:
- * 	- The objects stored in the HashTable are non-NULL.
+ * 	- The IdentifierRecord stored in the HashTable are non-NULL.
+ * 	- TODO: More assumptions
  */
 //--------------------------------------------------------------------
+
+/**
+ * TODO: Methods
+ * 			-
+ */
+
+
 #ifndef HASH_TABLE_H
 #define HASH_TABLE_H
 
@@ -58,6 +66,17 @@ public:
 	HashTable ();
 
 
+	//---------------------Destructor-----------------------------
+	/**
+ 	 * @brief Deletes all dynamically allocated memory.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: All dynamic memory has been released.
+ 	 */
+	~HashTable();
+
+
 	//---------------------put------------------------------------
 	/**
 	 * @brief Maps the specified key to the specified value in 	
@@ -84,6 +103,7 @@ public:
 	 * Postconditions: A pointer to the value was returned.
 	 *
 	 * @param key A key in the HashTable.
+	 *
 	 * @return The value to which the key is mapped in this 
 	 *	   HashTable; NULL if the key is not mapped to any
 	 *	   value in this HashTable.

@@ -1,7 +1,7 @@
 /******************************************************************************
- * @file IntRecord.h                                                          *
+ * @file FunctionRecord.h                                                     *
  *                                                                            *
- * @brief CSS 448 - Compiler Phase 3 - IdentRecord                            *
+ * @brief CSS 448 - Compiler Phase 3 - FunctionRecord                         *
  *                                                                            *
  * @author John Steele      \<steelejr@u.washington.edu\>                     *
  * @author Alicia Flinchum  \<aliciaflinchum@yahoo.com\>                      *
@@ -9,51 +9,53 @@
  * @version 1.0.0                                                             *
  * @date May 1, 2011                                                          *
  *                                                                            *
- * @brief IntRecord represents an integer identifier. 				          *
+ * @brief FunctionRecord represents a function or procedure identifier.       *
  *****************************************************************************/
 //-----------------------------------------------------------------------------
 /**
  * Includes following features:
- *	- Allows client to << an IntRecord.
- * 	- Allows clients to compare IntRecord for equality.
- * 	- Allows clients to compare IntRecords for less than value.
- *	- Allows clients to print the IntRecord.
+ *	- Allows client to << an FunctionRecord.
+ * 	- Allows clients to compare FunctionRecord for equality.
+ * 	- Allows clients to compare FunctionRecords for less than value.
+ *	- Allows clients to print the FunctionRecord.
  */
 //-----------------------------------------------------------------------------
-#ifndef INTRECORD_H_
-#define INTRECORD_H_
+#ifndef FUNCTIONRECORD_H_
+#define FUNCTIONRECORD_H_
 
+#include <vector>
 #include "IdentifierRecord.h"
 
-class IntRecord : public IdentifierRecord  {
+class FunctionRecord: public IdentifierRecord {
 
 public:
 
 	//---------------------Constructor-----------------------------------------
 	/**
-	 * @brief Creates a IntRecord with default values.
+	 * @brief Creates a FunctionRecord with default values.
 	 *
 	 * Preconditions: None.
 	 *
-	 * Postconditions: This IntRecord was instantiated.
+	 * Postconditions: This FunctionRecord was instantiated.
 	 */
-	IntRecord();
+	FunctionRecord();
 
 
 	//---------------------Destructor------------------------------------------
 	/**
-	 * @brief Deletes all dynamically allocated objects within the IntRecord.
+	 * @brief Deletes all dynamically allocated objects within the
+	 *        FunctionRecord.
 	 *
 	 * Preconditions: None.
 	 *
 	 * Postconditions: Resources were released.
 	 */
-	virtual ~IntRecord();
+	virtual ~FunctionRecord();
 
 
 	//---------------------clone-----------------------------------------------
 	/**
-	 * @brief Clones this IdentifierRecord.
+	 * @brief Clones this FunctionRecord.
 	 *
 	 * Preconditions: None.
 	 *
@@ -61,7 +63,7 @@ public:
 	 *
 	 * @return The pointer to the cloned object.
 	 */
-	virtual IntRecord * clone () const;
+	virtual FunctionRecord * clone() const;
 
 
 	//---------------------operator<-------------------------------------------
@@ -79,7 +81,7 @@ public:
 	 * @return True if this IdentfierRecord is less than the_other,
 	 *	       false otherwise.
 	 */
-	virtual bool operator< (const IdentifierRecord &the_other) const;
+	virtual bool operator<(const IdentifierRecord &the_other) const;
 
 
 	//---------------------operator==------------------------------------------
@@ -98,7 +100,7 @@ public:
 	 * @return True if the_other is equal to this IdentifierRecord,
 	 *	       false otherwise.
 	 */
-	virtual bool operator== (const IdentifierRecord &the_other) const;
+	virtual bool operator==(const IdentifierRecord &the_other) const;
 
 
 	//---------------------print-----------------------------------------------
@@ -112,8 +114,15 @@ public:
 	 *
 	 * @param output The output stream.
 	 */
-	virtual void print (ostream &output) const;
+	virtual void print(ostream &output) const;
 
+
+/**
+ * @private
+ */
+private:
+
+	vector<string> * args;
 };
 
-#endif /* INTRECORD_H_ */
+#endif /* FUNCTIONRECORD_H_ */

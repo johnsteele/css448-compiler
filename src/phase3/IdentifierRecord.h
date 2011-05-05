@@ -19,7 +19,6 @@
  * 	- Allows clients to compare IdentifierRecords for equality.
  * 	- Allows clients to compare IdentifierRecords for less than value.
  *	- Allows clients to print the IdentifierRecord.
- *	- Allows cloning an IdentifierRecord.
  *
  * Assumptions:
  * 	- All derived classes of IdentifierRecord implement getNewInstance,
@@ -110,11 +109,11 @@ public:
 
 	//---------------------clone-----------------------------------------------
 	/**
-	 * @brief Clones this IdentfierRecords.
+	 * @brief Clones this IdentifierRecord.
 	 *
 	 * Preconditions: None.
 	 *
- 	 * Postconditions: A pointer to a new IdentfierRecord is returned.
+ 	 * Postconditions: A pointer to a cloned identfifier is returned.
 	 *
 	 * @return The pointer to the cloned object.
 	 */

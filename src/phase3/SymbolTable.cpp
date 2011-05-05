@@ -46,7 +46,9 @@
  *
  * Assumptions:
  * 	- The IdentifierRecord objects are not NULL when adding them.
- * 	- TODO: More assumptions
+ * 	- When adding, removing, or searching for an identifier, an identifier
+ * 	  is equal if the name and type match (if procedure, params must match).
+ * 	  TODO: Not sure, this needs to get figured out.
  */
 //-----------------------------------------------------------------------------
 
@@ -61,7 +63,7 @@
  * Postconditions: This SymbolTable was created with the default values.
  */
 SymbolTable::SymbolTable() {
-	root = new Node;
+	init_symbolTable();
 }
 
 
@@ -74,9 +76,33 @@ SymbolTable::SymbolTable() {
  * Postconditions: All dynamic memory has been released.
  */
 SymbolTable::~SymbolTable() {
+
 	// TODO: Delete the table.
 
-	root = NULL;
+	delete root;
+	root    = NULL;
+	current = NULL;
+}
+
+
+//---------------------init_symbolTable----------------------------------------
+/**
+ * @brief Initializes this symbol table by instantiating the root of the
+ *        identifiers, and initializing it's members. The scope of the root
+ *        is 0.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: The root of the identifiers has been initialized.
+ */
+void SymbolTable::init_symbolTable() {
+	root              = new Node;
+	root->scope       = 0;
+	root->child       = NULL;
+	root->identifiers = NULL;
+	root->parent      = NULL;
+	root->sibling     = NULL;
+	current = root;
 }
 
 
@@ -86,12 +112,12 @@ SymbolTable::~SymbolTable() {
  *        If the identifier already exists within the same scope false is
  *        returned.
  *
- * Preconditions: The ident_name is non-NULL.
+ * Preconditions: ident is non-NULL.
  *
  * Postconditions: True is returned if the identifier was added, false
  *                 otherwise.
  *
- * @param ident_name A pointer to the name of the identifier.
+ * @param ident A pointer to the name of the identifier.
  * @param scope  The scope of the identifier (0 for global).
  * @return True if identifier was added, false otherwise.
  */
@@ -99,6 +125,47 @@ bool SymbolTable::addSymbol(const IdentifierRecord* ident, int scope) {
 	bool result = false;
 
 	return result;
+}
+
+
+//---------------------lookup----------------------------------------------
+/**
+ * @brief Does a lookup for the provided IdentifierRecord. If it is not
+ *        in the current scope, a lookup is done on all the scopes above
+ *        the current. Returns false if the identifier is not in the
+ *        current or above scopes.
+ *
+ * Preconditions: ident is non-NULL.
+ *
+ * Postconditions: Returns true if the identifier is found in either the
+ *                 current or above scopes.
+ *
+ * @param ident A pointer to an IdentifierRecord.
+ * @return True if the identifier was found, false otherwise.
+ */
+bool SymbolTable::lookup (const IdentifierRecord* ident, int scope) const {
+	bool result = false;
+
+	return result;
+}
+
+
+//---------------------retrieve------------------------------------------------
+/**
+ * @brief Retrieves the provided identifier from this symbol table. Returns
+ *        NULL if the identifier was not found.
+ *
+ * Preconditions: ident is non-NULL.
+ *
+ * Postconditions: Returns the identifier if found, NULL otherwise.
+ *
+ * @param ident A pointer to an IdentifierRecord.
+ * @return The identifier if found, NULL otherwise.
+ */
+IdentifierRecord * SymbolTable::retrieve (
+		const IdentifierRecord* ident, int scope) const {
+
+	return NULL;
 }
 
 
@@ -111,18 +178,21 @@ bool SymbolTable::addSymbol(const IdentifierRecord* ident, int scope) {
  * Postconditions: This symbol table was printed to the standard output.
  */
 void SymbolTable::printTable() const {
-
+	cout << "*********** SymbolTable::printTable() - Start  ***************";
+	printTableHelper ();
+	cout << "*********** SymbolTable::printTable() - Finish ***************";
 }
 
 
-//---------------------init_symbolTable----------------------------------------
+//---------------------printTableHelper------------------------------------
 /**
- * @brief Initializes this symbol table.
+ * @brief A helper method that prints this symbol table.
  *
- * Preconditions:
+ * Preconditions: None.
  *
- * Postconditions:
+ * Postconditions: This symbol table was printed to the standard output.
  */
-void SymbolTable::init_symbolTable() {
+void SymbolTable::printTableHelper () const {
 
 }
+

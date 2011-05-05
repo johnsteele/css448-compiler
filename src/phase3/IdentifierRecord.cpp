@@ -19,7 +19,6 @@
  * 	- Allows clients to compare IdentifierRecords for equality.
  * 	- Allows clients to compare IdentifierRecords for less than value.
  *	- Allows clients to print the IdentifierRecord.
- *	- Allows cloning an IdentifierRecord.
  *
  * Assumptions:
  * 	- All derived classes of IdentifierRecord implement getNewInstance,
@@ -87,6 +86,7 @@ IdentifierRecord::~IdentifierRecord() {
  * @param output The output stream.
  */
 void IdentifierRecord::print(ostream &output) const {
+	output << "IdentifierRecord::print()";
 	output << name;
 }
 

@@ -46,7 +46,9 @@
  *
  * Assumptions:
  * 	- The IdentifierRecord objects are not NULL when adding them.
- * 	- TODO: More assumptions
+ * 	- When adding, removing, or searching for an identifier, an identifier
+ * 	  is equal if the name and type match (if procedure, params must match).
+ * 	  TODO: Not sure, this needs to get figured out.
  */
 //-----------------------------------------------------------------------------
 
@@ -105,7 +107,7 @@ public:
  	 *        If the identifier already exists within the same scope false is
  	 *        returned.
 	 *
-	 * Preconditions: The ident_name is non-NULL.
+	 * Preconditions: ident is non-NULL.
 	 *
 	 * Postconditions: True is returned if the identifier was added, false
 	 *                 otherwise.
@@ -115,6 +117,39 @@ public:
 	 * @return True if identifier was added, false otherwise.
  	 */
 	bool addSymbol (const IdentifierRecord* ident, int scope);
+
+
+	//---------------------lookup----------------------------------------------
+	/**
+ 	 * @brief Does a lookup for the provided IdentifierRecord. If it is not
+ 	 *        in the current scope, a lookup is done on all the scopes above
+ 	 *        the current. Returns false if the identifier is not in the
+ 	 *        current or above scopes.
+	 *
+	 * Preconditions: ident is non-NULL.
+	 *
+	 * Postconditions: Returns true if the identifier is found in either the
+	 *                 current or above scopes.
+	 *
+	 * @param ident A pointer to an IdentifierRecord.
+	 * @return True if the identifier was found, false otherwise.
+ 	 */
+	bool lookup (const IdentifierRecord* ident, int scope) const;
+
+
+	//---------------------retrieve--------------------------------------------
+	/**
+ 	 * @brief Retrieves the provided identifier from this symbol table. Returns
+ 	 *        NULL if the identifier was not found.
+	 *
+	 * Preconditions: ident is non-NULL.
+	 *
+	 * Postconditions: Returns the identifier if found, NULL otherwise.
+	 *
+	 * @param ident A pointer to an IdentifierRecord.
+	 * @return The identifier if found, NULL otherwise.
+ 	 */
+	IdentifierRecord * retrieve (const IdentifierRecord* ident, int scope) const;
 
 
 	//---------------------printTable------------------------------------------
@@ -137,17 +172,23 @@ private:
 	 * @brief The node stored in the tree.
 	 */
 	struct Node {
-		int scope;
-		BSTree* identTree;
-		Node* sibling;
-		Node* parent;
+		int     scope;
+		BSTree* identifiers;
+		Node*   sibling;
+		Node*   parent;
+		Node*   child;
 	};
 
 
 	/**
-	 * @brief The root of the identifier records.
+	 * @brief The root of the identifier records (scope is 0).
 	 */
 	Node* root;
+
+	/**
+	 * @brief The current node at the current scope of insertion.
+	 */
+	Node* current;
 
 
 	//---------------------init_symbolTable------------------------------------
@@ -159,6 +200,17 @@ private:
 	 * Postconditions:
 	 */
 	void init_symbolTable ();
+
+
+	//---------------------printTableHelper------------------------------------
+	/**
+ 	 * @brief A helper method that prints this symbol table.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: This symbol table was printed to the standard output.
+ 	 */
+	void printTableHelper () const;
 };
 
 #endif /* SYMBOLTABLE_H_ */

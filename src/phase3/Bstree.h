@@ -56,7 +56,7 @@ class BSTree {
 	 * Preconditions: The root pointer of the tree must point to the root of
 	 *                the tree or NULL.
 	 *
-	 * Postconditions: The elements of the bstree were sent to the std output
+	 * Postconditions: The elements of the bstree were sent to the output
 	 *                 stream.
 	 *
 	 * @param output The output stream.
@@ -71,91 +71,56 @@ class BSTree {
  */
 public:
 
-	//---------------------Constructor----------------------------
+	//---------------------Constructor-----------------------------------------
 	/**
 	 * @brief Creates a BSTree with a NULL root.
 	 *
 	 * Preconditions: None.
 	 *
-	 * Postconditions: The BSTree was instantiated with its root
-	 *		           set to NULL.
+	 * Postconditions: The BSTree was instantiated with its root set to NULL.
 	 */
 	BSTree ();
 
 
-	//---------------------Copy-Constructor-----------------------
+	//---------------------Copy-Constructor------------------------------------
 	/**
 	 * @brief Copies the other tree into this tree.
 	 *
-	 * Preconditions: The other trees' root points to NULL if it
-	 *		          is empty, otherwise the root of the tree.
+	 * Preconditions: The other trees' root points to NULL if it is empty,
+	 *                otherwise the root of the tree.
 	 *
  	 * Postconditions: The other tree was copied into this tree.
 	 */
 	BSTree (const BSTree &other);
 
 
-	//---------------------Destructor-----------------------------
+	//---------------------Destructor------------------------------------------
 	/**
-	 * @brief Deletes all dynamically allocated objects within
-	 *	  the tree.
+	 * @brief Deletes all dynamically allocated objects within the tree.
 	 *
 	 * Preconditions: makeEmpty is implemented.
-	 *IdentifierRecord
+	 *
 	 * Postconditions: This BSTree is empty with a NULL root.
 	 */
 	~BSTree ();
 
 
-	//---------------------insert---------------------------------
+	//---------------------insert----------------------------------------------
 	/**
-	 * @brief Inserts an item into the tree.
+	 * @brief Inserts an IdentifierRecord into this tree.
 	 *
-	 * Preconditions: The item is not NULL, and there must be
-	 * 		  enough memory for allocating the new Node.
+	 * Preconditions: The item is not NULL, and there must be enough memory for
+	 *                allocating the new Node.
 	 *
- 	 * Postconditions: The item was inserted into the tree.
+ 	 * Postconditions: The IdentifierRecord was inserted into the tree.
 	 *
-	 * @param item The item to insert into the tree.
+	 * @param ident The IdentifierRecord to insert into the tree.
 	 * @return True if successfully inserted, false otherwise.
 	 */
-	bool insert (Object *item);
+	bool insert (IdentifierRecord *ident);
 
 
-	//---------------------retrieve-------------------------------
-	/**
-	 * @brief Searches the tree for the given target, if found
-	 *	  a pointer to the object is returned, NULL otherwise.
-	 *
-	 * Preconditions: None.
-	 *
-	 * Postconditions: A pointer to the object was returned if it
-	 *		   was found, NULL otherwise.
-	 *
-	 * @param target The item to search for.
-	 * @return Pointer to the object if found, NULL otherwise.
-	 */
-	const Object * retrieve (const Object &target) const;
-
-
-	//---------------------remove---------------------------------
-	/**
-	 * @brief Removes one occurance of the provided item from
-	 *	  the tree. If it is the last occurance, the objet
-	 *	  is removed. Calls a helper recursive method.
-	 *
-	 * Preconditions: item is a reference to a non NULL object.
-	 *
- 	 * Postconditions: True was returned if the item was was
-	 *		   found and removed, false otherwise.
-	 *
-	 * @param item The item to remove from the tree.
-	 * @return True if removed, false otherwise.
-	 */
-	bool remove (const Object &item);
-
-
-	//---------------------makeEmpty------------------------------
+	//---------------------makeEmpty-------------------------------------------
 	/**
 	 * @brief Empties this tree.
 	 *
@@ -165,19 +130,6 @@ public:
 	 * Postconditions: The tree is empty.
 	 */
 	void makeEmpty ();
-
-
-	//---------------------getOccurrence---------------------------
-	/* @brief Returns the occurence of the item.
-	 *
-	 * Preconditions: item is not NULL.
-	 *
-	 * Postconditions: occurrnce was returned.
-	 *
-	 * @param item The item to get the count of.
-	 * @return occurence count of the item.
-	 */
-	int getOccurrence (const Object &item) const;
 
 
 	//---------------------operator(=)----------------------------
@@ -192,7 +144,7 @@ public:
 	 * @param the_other The other tree to copy into this.
 	 * @return this is returned.
 	 */
-	const BSTree& operator=  (const BSTree &the_other);
+	const BSTree& operator= (const BSTree &the_other);
 
 /**
  * @private
@@ -203,10 +155,9 @@ private:
 	 * @brief The node stored in the tree.
 	 */
 	struct Node {
-		Object *item;	// Object data being stored.
-		Node   *left;	// Left child subtree.
-	 	Node   *right;	// Right child subtree.
-		int occurences;	// Occurrences of the character.
+		IdentifierRecord *item;	// Object data being stored.
+		Node *left;	            // Left child subtree.
+	 	Node *right;	        // Right child subtree.
 	};
 
 
@@ -216,16 +167,15 @@ private:
 	Node *my_root;
 
 
-	//---------------------clone----------------------------------
+	//---------------------clone-----------------------------------------------
 	/**
-	 * @brief Clones the given originalTree into the subtree of
-	 *	  copy recursively.
+	 * @brief Clones the given originalTree into the subtree of copy
+	 *        recursively.
 	 *
-	 * Preconditions: originalTree is not NULL. Object has a
-	 *		  copy constructor.
+	 * Preconditions: originalTree is not NULL. IdentifierRecord has a copy
+	 *                constructor.
 	 *
-	 * Postconditions: copy contains its own copy of the original
-	 *		   tree.
+	 * Postconditions: copy contains its own copy of the original tree.
 	 *
 	 * @param copy The tree to copy into.
 	 * @param originalTree The tree to copy from.
@@ -233,12 +183,12 @@ private:
 	void clone (Node *&copy, const Node *originalTree);
 
 
-	//---------------------makeEmptyHelper------------------------
+	//---------------------makeEmptyHelper-------------------------------------
 	/**
 	 * @brief Recursively empties the provided subtree.
 	 *
 	 * Preconditions: root points to the first node in the
-	 *		  tree, or NULL if the tree is empty.
+	 *		          tree, or NULL if the tree is empty.
 	 *
 	 * Postconditions: The provided tree is empty with a NULL
 	 * 		   root.
@@ -248,7 +198,7 @@ private:
 	void makeEmptyHelper (Node *&root);
 
 
-	//---------------------insertHelper---------------------------
+	//---------------------insertHelper----------------------------------------
 	/**
 	 * @brief A helper method for recursively inserting an
 	 * 	  item into the tree. If the item already exists in
@@ -262,57 +212,17 @@ private:
 	 *		   otherwise.
 	 *
 	 * @param root The root of the subtree.
-	 * @param item The item being inserted.
-	 * @return True if the item was inserted, false otherwise.
+	 * @param ident The identifier being inserted.
+	 * @return True if the identifier was inserted, false otherwise.
 	 */
-	bool insertHelper (Node *&root, Object *item);
+	bool insertHelper (Node *&root, IdentifierRecord *ident);
 
 
-	//---------------------retrieveHelper-------------------------
+	//---------------------deleteRoot------------------------------------------
 	/**
-	 * @brief A helper method for recursively finding the provided
-	 *	  item in the tree. Returns NULL if the item is not
-	 *	  found.
-	 *
-	 * Preconditions: item is not NULL, and my_root points to the
-	 *		  root of the tree, or NULL if the tree is
-	 *		  empty.
-	 *
-	 * Postconditions: A pointer to the found item is returned,
-	 *		   NULL is returned otherwise.
-	 *
-	 * @param root The root of the subtree.
-	 * @param item The item being retrieved.
-	 * @return A pointer to the found item, NULL otherwise.
-	 */
-	const Object * retrieveHelper (const Node *root,
-					const Object &item) const;
-
-
-	//---------------------removeHelper---------------------------
-	/**
-	 * @brief Removes an occurance of the provided item from the
-	 *	  tree. If it is its last occurance the Object it is
-	 *	  removed.
-	 *
-	 * Preconditions: item is a reference to a non-NULL Object.
-	 *
-	 * Postconditions: True was retuned if the item was found and
-	 *		   removed, false otherwise.
-	 *
-	 * @param root The root of the subtree.
-	 * @param item The item to remove from the tree.
-	 * @return True if item was removed, false otherwise.
-	 */
-	bool removeHelper (Node *&root, const Object &item);
-
-
-	//---------------------deleteRoot-----------------------------
-	/**
-	 * @brief Deletes the node the provided pointer points to.
- 	 * 	  If the left and right pointers of the node are not
-	 *	  NULL we delete the item in the node and replace it
-	 *        with the most left node in its right subtree.
+	 * @brief Deletes the node the provided pointer points to. If the left and
+	 *        right pointers of the node are not NULL we delete the item in the
+	 *        node and replace it with the most left node in its right subtree.
 	 *
 	 * Preconditions: root is not NULL.
 	 *
@@ -323,29 +233,28 @@ private:
 	void deleteRoot (Node *&root);
 
 
-	//---------------------findAndDeleteMostLeft------------------
+	//---------------------findAndDeleteMostLeft-------------------------------
 	/**
-	 * @brief Returns the Object item from the node that is
-	 *	  located at the most left subtree of the give root.
+	 * @brief Returns the IdentifierRecord item from the node that is located
+	 *        at the most left subtree of the give root.
 	 *
 	 * Preconditions: root is not NULL.
 	 *
-	 * Postconditions: A pointer to the Object item of the most
-	 *		   left node is returned. That node that
-	 *		   previously stored item is then deleted. The
-	 *		   occurance cound is also handled.
+	 * Postconditions: A pointer to the IdentifierRecord of the most
+	 *		           left node is returned. That node that
+	 *		           previously stored item is then deleted. The
+	 *		           occurrence.
 	 *
 	 * @param root The root of the subtree.
 	 * @param m_root The root of the tree being replaced.
-	 * @return A pointer to the furthest left node.
+	 * @return A pointer to the farthest left node.
 	 */
-	Object * findAndDeleteMostLeft (Node *&root, Node *m_root);
+	IdentifierRecord * findAndDeleteMostLeft (Node *&root, Node *m_root);
 
 
-	//---------------------printHelper----------------------------
+	//---------------------printHelper-----------------------------------------
 	/**
-	 * A helper method that recursively prints the given tree
-	 * in order.
+	 * A helper method that recursively prints the given tree in order.
 	 *
 	 * Preconditions: root is not NULL.
 	 *
@@ -355,19 +264,5 @@ private:
 	 * @param root The root of the subtree.
 	 */
 	void printHelper (ostream &output, const Node *root) const;
-
-
-	//---------------------occurrenceHelper-----------------------
-	/**
-	 * @brief Returns the Node of the provided object.
-	 *
-	 * Preconditions: The object is not NULL.
-	 *
-	 * Postconditions: The node or NULL was returned.
-	 *
-	 * @param item The item being searched for.
-	 * @param root The root of the subtree.
-	 */
-	int occurrenceHelper (const Object &item, const Node *root) const;
 };
 #endif /* BSTREE_H */

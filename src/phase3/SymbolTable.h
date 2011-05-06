@@ -219,6 +219,7 @@ private:
 	 * @brief The node stored in the tree.
 	 */
 	struct Node {
+		IdentifierRecord* procedure;
 		int     scope;
 		BSTree* identifiers;
 		Node*   sibling;

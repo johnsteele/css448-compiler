@@ -107,9 +107,9 @@ bool SymbolTable::addSymbol(const IdentifierRecord* ident) {
 }
 
 
-//---------------------addProcedure--------------------------------------------
+//---------------------addProcedure----------------------------------------
 /**
- * @brief Adds the provided procedure/function to the current scope.
+	 * @brief Adds the provided procedure/function to the current scope.
  *
  * Preconditions: ident is non-NULL.
  *
@@ -118,10 +118,9 @@ bool SymbolTable::addSymbol(const IdentifierRecord* ident) {
  *
  * @param ident A pointer to an IdentifierRecord.
  * @return True if identifier was added, false otherwise.
- */
+	 */
 bool addProcedure (const IdentifierRecord* ident) {
 	bool result = false;
-
 
 
 	return result;
@@ -175,11 +174,14 @@ IdentifierRecord * SymbolTable::retrieve (const IdentifierRecord* ident) const {
  * Preconditions: None.
  *
  * Postconditions: A new scope has been entered.
+ *
+ * @param procedure The procedure associated with the scope about to enter.
  */
-void SymbolTable::enterScope () {
+void SymbolTable::enterScope (const IdentifierRecord* procedure) {
 
 	// The new scope node we're entering.
 	Node *node        = new Node ();
+	node->procedure   = procedure;
 	node->child       = NULL;
 	node->sibling     = NULL;
 	node->identifiers = NULL;

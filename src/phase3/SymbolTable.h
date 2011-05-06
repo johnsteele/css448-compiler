@@ -10,7 +10,7 @@
  * @date April 30, 2011                                                       *
  *                                                                            *
  * @brief SymbolTable class is responsible for managing a compilers           *
- * 	      identifier symbols. The table uses lists of lists.                  *
+ *        identifier symbols. The table uses lists of lists.                  *
  *                                                                            *
  *                                                                            *
  * program A             Consider the code in procedure F.                    *

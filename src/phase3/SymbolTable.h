@@ -1,7 +1,7 @@
 /******************************************************************************
  * @file SymbolTable.h                                                        *
  *                                                                            *
- * @brief CSS 448 - Compiler Phase 3 - Symbol Table	                          *
+ * @brief CSS 448 - Compiler Phase 3 - Symbol Table                           *
  *                                                                            *
  * @author John Steele      \<steelejr@u.washington.edu\>                     *
  * @author Alicia Flinchum  \<aliciaflinchum@yahoo.com\>                      *

@@ -1,7 +1,7 @@
 /******************************************************************************
  * @file SymbolTable.cpp                                                      *
  *                                                                            *
- * @brief CSS 448 - Compiler Phase 3 - Symbol Table	                          *
+ * @brief CSS 448 - Compiler Phase 3 - Symbol Table                           *
  *                                                                            *
  * @author John Steele      \<steelejr@u.washington.edu\>                     *
  * @author Alicia Flinchum  \<aliciaflinchum@yahoo.com\>                      *
@@ -10,7 +10,7 @@
  * @date April 30, 2011                                                       *
  *                                                                            *
  * @brief SymbolTable class is responsible for managing a compilers           *
- * 	      identifier symbols. The table uses lists of lists.                  *
+ *        identifier symbols. The table uses lists of lists.                  *
  *                                                                            *
  *                                                                            *
  * program A            Consider the code in procedure F.                     *

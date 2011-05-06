@@ -118,21 +118,6 @@ public:
 	bool addSymbol (const IdentifierRecord* ident);
 
 
-	//---------------------addProcedure----------------------------------------
-	/**
- 	 * @brief Adds the provided procedure/function to the current scope.
-	 *
-	 * Preconditions: ident is non-NULL.
-	 *
-	 * Postconditions: True is returned if the procedure was added, false
-	 *                 otherwise.
-	 *
-	 * @param ident A pointer to an IdentifierRecord.
-	 * @return True if identifier was added, false otherwise.
- 	 */
-	bool addProcedure (const IdentifierRecord* ident);
-
-
 	//---------------------lookup----------------------------------------------
 	/**
  	 * @brief Does a lookup for the provided IdentifierRecord. If it is not

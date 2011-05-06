@@ -1,7 +1,7 @@
 /******************************************************************************
- * @file FunctionSymbol.h                                                     *
+ * @file ProcedureRecord.h                                                    *
  *                                                                            *
- * @brief CSS 448 - Compiler Phase 3 - FunctionSymbol                         *
+ * @brief CSS 448 - Compiler Phase 3 - ProcedureRecord                        *
  *                                                                            *
  * @author John Steele      \<steelejr@u.washington.edu\>                     *
  * @author Alicia Flinchum  \<aliciaflinchum@yahoo.com\>                      *
@@ -9,29 +9,29 @@
  * @version 1.0.0                                                             *
  * @date May 1, 2011                                                          *
  *                                                                            *
- * @brief FunctionSymbol represents a function or procedure identifier.       *
+ * @brief ProcedureRecord represents a function or procedure identifier.      *
  *****************************************************************************/
 //-----------------------------------------------------------------------------
 /**
  * Includes following features:
- *	- Allows client to << an FunctionRecord.
- * 	- Allows clients to compare FunctionRecord for equality.
- * 	- Allows clients to compare FunctionRecords for less than value.
- *	- Allows clients to print the FunctionRecord.
+ *	- Allows client to << an ProcedureRecord.
+ * 	- Allows clients to compare ProcedureRecord for equality.
+ * 	- Allows clients to compare ProcedureRecords for less than value.
+ *	- Allows clients to print the ProcedureRecord.
  */
 //-----------------------------------------------------------------------------
-#include "FunctionRecord.h"
+#include "ProcedureRecord.h"
 
 
 //---------------------Constructor-----------------------------------------
 /**
- * @brief Creates a FunctionRecord with default values.
+ * @brief Creates a ProcedureRecord with default values.
  *
  * Preconditions: None.
  *
- * Postconditions: This FunctionRecord was instantiated.
+ * Postconditions: This ProcedureRecord was instantiated.
  */
-FunctionRecord::FunctionRecord() : IdentifierRecord() {
+ProcedureRecord::ProcedureRecord() : IdentifierRecord() {
 	args = new vector<string>();
 }
 
@@ -39,13 +39,13 @@ FunctionRecord::FunctionRecord() : IdentifierRecord() {
 //---------------------Destructor------------------------------------------
 /**
  * @brief Deletes all dynamically allocated objects within the
- *        FunctionRecord.
+ *        ProcedureRecord.
  *
  * Preconditions: None.
  *
  * Postconditions: Resources were released.
  */
-FunctionRecord::~FunctionRecord() {
+ProcedureRecord::~ProcedureRecord() {
 
 }
 
@@ -60,7 +60,7 @@ FunctionRecord::~FunctionRecord() {
  *
  * @return The pointer to the cloned object.
  */
-FunctionRecord * FunctionRecord::clone() const {
+ProcedureRecord * ProcedureRecord::clone() const {
 	return NULL;
 }
 
@@ -80,7 +80,7 @@ FunctionRecord * FunctionRecord::clone() const {
  * @return True if this IdentfierRecord is less than the_other,
  *	       false otherwise.
  */
-bool FunctionRecord::operator<(const IdentifierRecord &the_other) const {
+bool ProcedureRecord::operator<(const IdentifierRecord &the_other) const {
 	bool result = false;
 
 	return result;
@@ -103,7 +103,7 @@ bool FunctionRecord::operator<(const IdentifierRecord &the_other) const {
  * @return True if the_other is equal to this IdentifierRecord,
  *	       false otherwise.
  */
-bool FunctionRecord::operator==(const IdentifierRecord &the_other) const {
+bool ProcedureRecord::operator==(const IdentifierRecord &the_other) const {
 	bool result = false;
 
 	return result;
@@ -121,7 +121,7 @@ bool FunctionRecord::operator==(const IdentifierRecord &the_other) const {
  *
  * @param output The output stream.
  */
-void FunctionRecord::print(ostream &output) const {
+void ProcedureRecord::print(ostream &output) const {
 	output << "FuncSymbol::print()";
 }
 

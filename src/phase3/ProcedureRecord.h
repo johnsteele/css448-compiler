@@ -1,7 +1,7 @@
 /******************************************************************************
- * @file FunctionRecord.h                                                     *
+ * @file ProcedureRecord.h                                                    *
  *                                                                            *
- * @brief CSS 448 - Compiler Phase 3 - FunctionRecord                         *
+ * @brief CSS 448 - Compiler Phase 3 - ProcedureRecord                        *
  *                                                                            *
  * @author John Steele      \<steelejr@u.washington.edu\>                     *
  * @author Alicia Flinchum  \<aliciaflinchum@yahoo.com\>                      *
@@ -9,53 +9,53 @@
  * @version 1.0.0                                                             *
  * @date May 1, 2011                                                          *
  *                                                                            *
- * @brief FunctionRecord represents a function or procedure identifier.       *
+ * @brief ProcedureRecord represents a function or procedure identifier.      *
  *****************************************************************************/
 //-----------------------------------------------------------------------------
 /**
  * Includes following features:
- *	- Allows client to << an FunctionRecord.
- * 	- Allows clients to compare FunctionRecord for equality.
- * 	- Allows clients to compare FunctionRecords for less than value.
- *	- Allows clients to print the FunctionRecord.
+ *	- Allows client to << an ProcedureRecord.
+ * 	- Allows clients to compare ProcedureRecord for equality.
+ * 	- Allows clients to compare ProcedureRecords for less than value.
+ *	- Allows clients to print the ProcedureRecord.
  */
 //-----------------------------------------------------------------------------
-#ifndef FUNCTIONRECORD_H_
-#define FUNCTIONRECORD_H_
+#ifndef PROCEDURERECORD_H_
+#define PROCEDURERECORD_H_
 
 #include <vector>
 #include "IdentifierRecord.h"
 
-class FunctionRecord: public IdentifierRecord {
+class ProcedureRecord: public IdentifierRecord {
 
 public:
 
 	//---------------------Constructor-----------------------------------------
 	/**
-	 * @brief Creates a FunctionRecord with default values.
+	 * @brief Creates a ProcedureRecord with default values.
 	 *
 	 * Preconditions: None.
 	 *
-	 * Postconditions: This FunctionRecord was instantiated.
+	 * Postconditions: This ProcedureRecord was instantiated.
 	 */
-	FunctionRecord();
+	ProcedureRecord();
 
 
 	//---------------------Destructor------------------------------------------
 	/**
 	 * @brief Deletes all dynamically allocated objects within the
-	 *        FunctionRecord.
+	 *        ProcedureRecord.
 	 *
 	 * Preconditions: None.
 	 *
 	 * Postconditions: Resources were released.
 	 */
-	virtual ~FunctionRecord();
+	virtual ~ProcedureRecord();
 
 
 	//---------------------clone-----------------------------------------------
 	/**
-	 * @brief Clones this FunctionRecord.
+	 * @brief Clones this ProcedureRecord.
 	 *
 	 * Preconditions: None.
 	 *
@@ -63,7 +63,7 @@ public:
 	 *
 	 * @return The pointer to the cloned object.
 	 */
-	virtual FunctionRecord * clone() const;
+	virtual ProcedureRecord * clone() const;
 
 
 	//---------------------operator<-------------------------------------------
@@ -125,4 +125,4 @@ private:
 	vector<string> * args;
 };
 
-#endif /* FUNCTIONRECORD_H_ */
+#endif /* PROCEDURERECORD_H_ */

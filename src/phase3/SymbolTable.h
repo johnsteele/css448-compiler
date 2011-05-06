@@ -113,10 +113,24 @@ public:
 	 *                 otherwise.
 	 *
 	 * @param ident A pointer to an IdentifierRecord.
-	 * @param scope The scope of the identifier (0 for global).
 	 * @return True if identifier was added, false otherwise.
  	 */
-	bool addSymbol (const IdentifierRecord* ident, int scope);
+	bool addSymbol (const IdentifierRecord* ident);
+
+
+	//---------------------addProcedure----------------------------------------
+	/**
+ 	 * @brief Adds the provided procedure/function to the current scope.
+	 *
+	 * Preconditions: ident is non-NULL.
+	 *
+	 * Postconditions: True is returned if the procedure was added, false
+	 *                 otherwise.
+	 *
+	 * @param ident A pointer to an IdentifierRecord.
+	 * @return True if identifier was added, false otherwise.
+ 	 */
+	bool addProcedure (const IdentifierRecord* ident);
 
 
 	//---------------------lookup----------------------------------------------
@@ -134,7 +148,7 @@ public:
 	 * @param ident A pointer to an IdentifierRecord.
 	 * @return True if the identifier was found, false otherwise.
  	 */
-	bool lookup (const IdentifierRecord* ident, int scope) const;
+	bool lookup (const IdentifierRecord* ident) const;
 
 
 	//---------------------retrieve--------------------------------------------
@@ -149,7 +163,7 @@ public:
 	 * @param ident A pointer to an IdentifierRecord.
 	 * @return The identifier if found, NULL otherwise.
  	 */
-	IdentifierRecord * retrieve (const IdentifierRecord* ident, int scope) const;
+	IdentifierRecord * retrieve (const IdentifierRecord* ident) const;
 
 
 	//---------------------printTable------------------------------------------
@@ -161,6 +175,39 @@ public:
 	 * Postconditions: This symbol table was printed to the standard output.
  	 */
 	void printTable () const;
+
+
+	//---------------------enterScope------------------------------------------
+	/**
+ 	 * @brief Notifies the symbol table of an entry to a new scope.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: A new scope has been entered.
+ 	 */
+	void enterScope ();
+
+
+	//---------------------exitScope-------------------------------------------
+	/**
+ 	 * @brief Notifies the symbol table of an exit to the current scope.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: The current scope was exited.
+ 	 */
+	void exitScope ();
+
+
+	//---------------------addFunction-----------------------------------------
+	/**
+	 * @brief Adds the provided function to the current scope.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: The current scope was exited.
+	 */
+	void addFunction ();
 
 
 /**
@@ -183,12 +230,12 @@ private:
 	/**
 	 * @brief The root of the identifier records (scope is 0).
 	 */
-	Node* root;
+	Node* rootScope;
 
 	/**
 	 * @brief The current node at the current scope of insertion.
 	 */
-	Node* current;
+	Node* currentScope;
 
 
 	//---------------------init_symbolTable------------------------------------

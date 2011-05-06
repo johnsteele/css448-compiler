@@ -63,7 +63,8 @@
  * Postconditions: This SymbolTable was created with the default values.
  */
 SymbolTable::SymbolTable() {
-	init_symbolTable();
+	rootScope    = NULL;
+	currentScope = NULL;
 }
 
 
@@ -79,30 +80,9 @@ SymbolTable::~SymbolTable() {
 
 	// TODO: Delete the table.
 
-	delete root;
-	root    = NULL;
-	current = NULL;
-}
-
-
-//---------------------init_symbolTable----------------------------------------
-/**
- * @brief Initializes this symbol table by instantiating the root of the
- *        identifiers, and initializing it's members. The scope of the root
- *        is 0.
- *
- * Preconditions: None.
- *
- * Postconditions: The root of the identifiers has been initialized.
- */
-void SymbolTable::init_symbolTable() {
-	root              = new Node;
-	root->scope       = 0;
-	root->child       = NULL;
-	root->identifiers = NULL;
-	root->parent      = NULL;
-	root->sibling     = NULL;
-	current = root;
+	delete rootScope;
+	rootScope    = NULL;
+	currentScope = NULL;
 }
 
 
@@ -118,17 +98,37 @@ void SymbolTable::init_symbolTable() {
  *                 otherwise.
  *
  * @param ident A pointer to the name of the identifier.
- * @param scope  The scope of the identifier (0 for global).
  * @return True if identifier was added, false otherwise.
  */
-bool SymbolTable::addSymbol(const IdentifierRecord* ident, int scope) {
+bool SymbolTable::addSymbol(const IdentifierRecord* ident) {
 	bool result = false;
 
 	return result;
 }
 
 
-//---------------------lookup----------------------------------------------
+//---------------------addProcedure--------------------------------------------
+/**
+ * @brief Adds the provided procedure/function to the current scope.
+ *
+ * Preconditions: ident is non-NULL.
+ *
+ * Postconditions: True is returned if the procedure was added, false
+ *                 otherwise.
+ *
+ * @param ident A pointer to an IdentifierRecord.
+ * @return True if identifier was added, false otherwise.
+ */
+bool addProcedure (const IdentifierRecord* ident) {
+	bool result = false;
+
+
+
+	return result;
+}
+
+
+//---------------------lookup--------------------------------------------------
 /**
  * @brief Does a lookup for the provided IdentifierRecord. If it is not
  *        in the current scope, a lookup is done on all the scopes above
@@ -143,7 +143,7 @@ bool SymbolTable::addSymbol(const IdentifierRecord* ident, int scope) {
  * @param ident A pointer to an IdentifierRecord.
  * @return True if the identifier was found, false otherwise.
  */
-bool SymbolTable::lookup (const IdentifierRecord* ident, int scope) const {
+bool SymbolTable::lookup (const IdentifierRecord* ident) const {
 	bool result = false;
 
 	return result;
@@ -162,10 +162,63 @@ bool SymbolTable::lookup (const IdentifierRecord* ident, int scope) const {
  * @param ident A pointer to an IdentifierRecord.
  * @return The identifier if found, NULL otherwise.
  */
-IdentifierRecord * SymbolTable::retrieve (
-		const IdentifierRecord* ident, int scope) const {
+IdentifierRecord * SymbolTable::retrieve (const IdentifierRecord* ident) const {
 
 	return NULL;
+}
+
+
+//---------------------enterScope----------------------------------------------
+/**
+ * @brief Notifies the symbol table of an entry to a new scope.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: A new scope has been entered.
+ */
+void SymbolTable::enterScope () {
+
+	// The new scope node we're entering.
+	Node *node        = new Node ();
+	node->child       = NULL;
+	node->sibling     = NULL;
+	node->identifiers = NULL;
+
+	// If root is NULL, link it in.
+	if (rootScope == NULL) {
+		rootScope         = node;
+		rootScope->scope  = 0;
+		rootScope->parent = NULL;
+		// Link in current.
+		currentScope = rootScope;
+	}
+
+	else {
+		// Link current's child to new scope.
+		currentScope->child = node;
+		// Link new scope in with it's parent.
+		node->parent = currentScope;
+		// Increment the scope.
+		node->scope = currentScope->scope + 1;
+		// Move current to our new scope.
+		currentScope = node;
+	}
+}
+
+
+//---------------------exitScope-----------------------------------------------
+/**
+ * @brief Notifies the symbol table of an exit to the current scope.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: The current scope was exited.
+ */
+void SymbolTable::exitScope () {
+
+	// We're at the root if parent is NULL.
+	if (currentScope->parent != NULL)
+		currentScope = currentScope->parent;
 }
 
 
@@ -184,7 +237,7 @@ void SymbolTable::printTable() const {
 }
 
 
-//---------------------printTableHelper------------------------------------
+//---------------------printTableHelper----------------------------------------
 /**
  * @brief A helper method that prints this symbol table.
  *

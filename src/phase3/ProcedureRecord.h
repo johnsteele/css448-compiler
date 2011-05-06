@@ -37,8 +37,10 @@ public:
 	 * Preconditions: None.
 	 *
 	 * Postconditions: This ProcedureRecord was instantiated.
+	 *
+	 * @param name The name of the ProcedureRecord.
 	 */
-	ProcedureRecord();
+	ProcedureRecord(string name);
 
 
 	//---------------------Destructor------------------------------------------

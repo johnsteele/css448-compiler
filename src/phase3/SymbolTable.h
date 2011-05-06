@@ -170,7 +170,7 @@ public:
 	 *
 	 * Postconditions: A new scope has been entered.
  	 */
-	void enterScope ();
+	void enterScope (const IdentifierRecord* procedure);
 
 
 	//---------------------exitScope-------------------------------------------
@@ -204,7 +204,7 @@ private:
 	 * @brief The node stored in the tree.
 	 */
 	struct Node {
-		IdentifierRecord* procedure;
+		const IdentifierRecord* procedure;
 		int     scope;
 		BSTree* identifiers;
 		Node*   sibling;

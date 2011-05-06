@@ -213,9 +213,9 @@ void SymbolTable::exitScope () {
  * Postconditions: This symbol table was printed to the standard output.
  */
 void SymbolTable::printTable() const {
-	cout << "*********** SymbolTable::printTable() - Start  ***************";
+	cout << "*********** SymbolTable::printTable() - Start  ***************\n";
 	printTableHelper ();
-	cout << "*********** SymbolTable::printTable() - Finish ***************";
+	cout << "*********** SymbolTable::printTable() - Finish ***************\n";
 }
 
 

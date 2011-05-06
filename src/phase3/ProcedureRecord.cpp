@@ -30,8 +30,10 @@
  * Preconditions: None.
  *
  * Postconditions: This ProcedureRecord was instantiated.
+ *
+ * @param name The name of the ProcedureRecord.
  */
-ProcedureRecord::ProcedureRecord() : IdentifierRecord() {
+ProcedureRecord::ProcedureRecord(string name) : IdentifierRecord(name) {
 	args = new vector<string>();
 }
 

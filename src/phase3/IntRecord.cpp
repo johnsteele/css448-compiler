@@ -30,8 +30,10 @@
  * Preconditions: None.
  *
  * Postconditions: This IntRecord was instantiated.
+ *
+ * @param name The name of the ProcedureRecord.
  */
-IntRecord::IntRecord() : IdentifierRecord () {
+IntRecord::IntRecord(string name) : IdentifierRecord (name) {
 
 }
 

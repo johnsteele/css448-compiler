@@ -69,18 +69,6 @@ class IdentifierRecord {
  */
 public:
 
-	//---------------------Default Constructor---------------------------------
-	/**
- 	 * @brief Creates an IdentifierRecord object with default values.
-	 *
-	 * Preconditions: None.
-	 *
-	 * Postconditions: The data members of this IdentifierRecord have been
-	 *		           initialized with default values.
- 	 */
-	IdentifierRecord ();
-
-
 	//---------------------Constructor-----------------------------------------
 	/**
  	 * @brief Creates an IdentifierRecord object with the specified values.
@@ -170,11 +158,6 @@ public:
  	 */
 	virtual void print (ostream &output) const;
 
-
-/**
- * @protected
- */
-protected:
 
 	//---------------------getName---------------------------------------------
 	/**

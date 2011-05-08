@@ -49,22 +49,6 @@ using namespace std;
  */
 class BSTree {
 
-	//---------------------operator<<------------------------------------------
-	/**
-	 * @brief Overloaded operator <<.
-	 *
-	 * Preconditions: The root pointer of the tree must point to the root of
-	 *                the tree or NULL.
-	 *
-	 * Postconditions: The elements of the bstree were sent to the output
-	 *                 stream.
-	 *
-	 * @param output The output stream.
-	 * @param the_other The BSTree to output.
-	 * @return The output stream.
-	 */
-	 friend ostream& operator<< (ostream &output,
-					const BSTree &the_other);
 
 /**
  * @public
@@ -103,6 +87,21 @@ public:
 	 * Postconditions: This BSTree is empty with a NULL root.
 	 */
 	~BSTree ();
+
+
+
+	//---------------------retrieve------------------------------------------------
+	/**
+	 * @brief Searches the tree for the given target, if found true is returned.
+	 *
+	 * Preconditions: target is non-NULL.
+	 *
+	 * Postconditions: Returns true if found, false otherwise.
+	 *
+	 * @param target The identifier to search for.
+	 * @return True if found, false otherwise.
+	 */
+	bool retrieve (IdentifierRecord * target) const;
 
 
 	//---------------------insert----------------------------------------------
@@ -146,6 +145,19 @@ public:
 	 */
 	const BSTree& operator= (const BSTree &the_other);
 
+
+	//---------------------print-----------------------------------------------
+	/**
+	 * @brief Prints the contents of this tree.
+	 *
+	 * Preconditions: Data members have been initialized.
+	 *
+	 * Postconditions: This tree has been printed.
+	 *
+	 * @param scope The scope of the tree (used for indenting purposes).
+ 	 */
+	virtual void print (int scope) const;
+
 /**
  * @private
  */
@@ -165,6 +177,24 @@ private:
 	 * @brief The root of this tree.
 	 */
 	Node *my_root;
+
+
+
+	//---------------------retrieveHelper---------------------------------
+	/**
+	 * @brief A helper method for recursively finding the provided item in
+	 *	      the tree. Returns true if found, false otherwise.
+	 *
+	 * Preconditions: item is not NULL, and my_root points to the root of
+	 *		          the tree, or NULL if the tree is empty.
+	 *
+	 * Postconditions: Returns true if found, false otherwise.
+	 *
+	 * @param root The root of the subtree.
+	 * @param the_item The item being retrieved.
+	 * @return True if found, false otherwise.
+	 */
+	bool retrieveHelper (const Node * root, IdentifierRecord * the_item) const;
 
 
 	//---------------------clone-----------------------------------------------
@@ -262,7 +292,8 @@ private:
 	 *
 	 * @param output The output stream to to send the data.
 	 * @param root The root of the subtree.
+	 * @param scope The indentation level (3 spaces per scope).
 	 */
-	void printHelper (ostream &output, const Node *root) const;
+	void printHelper (const Node *root, int scope) const;
 };
 #endif /* BSTREE_H */

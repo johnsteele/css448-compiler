@@ -1,7 +1,7 @@
 /******************************************************************************
- * @file ProcedureRecord.h                                                    *
+ * @file Parameter.h                                                          *
  *                                                                            *
- * @brief CSS 448 - Compiler Phase 3 - ProcedureRecord                        *
+ * @brief CSS 448 - Compiler Phase 3 - Parameter                              *
  *                                                                            *
  * @author John Steele      \<steelejr@u.washington.edu\>                     *
  * @author Alicia Flinchum  \<aliciaflinchum@yahoo.com\>                      *
@@ -9,46 +9,45 @@
  * @version 1.0.0                                                             *
  * @date May 1, 2011                                                          *
  *                                                                            *
- * @brief ProcedureRecord represents a function or procedure identifier.      *
+ * @brief Parameter represents an variable identifier.                        *
  *****************************************************************************/
 //-----------------------------------------------------------------------------
 /**
  * Includes following features:
- * 	- Allows clients to compare ProcedureRecord for equality.
- * 	- Allows clients to compare ProcedureRecords for less than value.
- *	- Allows clients to print the ProcedureRecord.
+ *	- Allows client to print Parameter.
+ * 	- Allows clients to compare Parameter for equality.
+ * 	- Allows clients to compare Parameters for less than value.
+ *	- Allows clients to prVariable the Parameter.
  */
 //-----------------------------------------------------------------------------
-#include "ProcedureRecord.h"
 
+#include "Parameter.h"
 
 //---------------------Constructor---------------------------------------------
 /**
- * @brief Creates a ProcedureRecord with the specified name.
+ * @brief Creates a Parameter with the provided name.
  *
  * Preconditions: None.
  *
- * Postconditions: This ProcedureRecord was instantiated.
+ * Postconditions: This Parameter was instantiated.
  *
- * @param name The name of the ProcedureRecord.
+ * @param name The name of the Parameter.
  */
-ProcedureRecord::ProcedureRecord(string name) : IdentifierRecord(name) {
+Parameter::Parameter(string name) : IdentifierRecord (name){
 
-	args       = new vector <IdentifierRecord *> ();
-	returnType = NULL;
 }
 
 
 //---------------------Destructor----------------------------------------------
 /**
  * @brief Deletes all dynamically allocated objects within the
- *        ProcedureRecord.
+ *        Parameter.
  *
  * Preconditions: None.
  *
  * Postconditions: Resources were released.
  */
-ProcedureRecord::~ProcedureRecord() {
+Parameter::~Parameter() {
 
 }
 
@@ -59,11 +58,11 @@ ProcedureRecord::~ProcedureRecord() {
  *
  * Preconditions: None.
  *
- * Postconditions: A pointer to a cloned identfifier is returned.
+ * Postconditions: A pointer to a cloned identifier is returned.
  *
  * @return The pointer to the cloned object.
  */
-ProcedureRecord * ProcedureRecord::clone() const {
+Parameter * Parameter::clone() const {
 	return NULL;
 }
 
@@ -83,7 +82,7 @@ ProcedureRecord * ProcedureRecord::clone() const {
  * @return True if this IdentfierRecord is less than the_other,
  *	       false otherwise.
  */
-bool ProcedureRecord::operator<(const IdentifierRecord &the_other) const {
+bool Parameter::operator<(const IdentifierRecord &the_other) const {
 	bool result = false;
 
 	return result;
@@ -106,7 +105,7 @@ bool ProcedureRecord::operator<(const IdentifierRecord &the_other) const {
  * @return True if the_other is equal to this IdentifierRecord,
  *	       false otherwise.
  */
-bool ProcedureRecord::operator==(const IdentifierRecord &the_other) const {
+bool Parameter::operator==(const IdentifierRecord &the_other) const {
 	bool result = false;
 
 	return result;
@@ -115,8 +114,8 @@ bool ProcedureRecord::operator==(const IdentifierRecord &the_other) const {
 
 //---------------------print---------------------------------------------------
 /**
- * @brief Prints the return type if the procedure is a function, followed
- *        by the parameters.
+ * @brief Prints the data members of this IdentifierRecord to the
+ *        output stream.
  *
  * Preconditions: Data members have been initialized.
  *
@@ -124,52 +123,6 @@ bool ProcedureRecord::operator==(const IdentifierRecord &the_other) const {
  *
  * @param scope The scope of this identifier (used for indenting purposes).
  */
-void ProcedureRecord::print (int scope) const {
-
+void Parameter::print(int scope) const {
 	IdentifierRecord::print(scope);
-
-	// Print name.
-	cout << getName();
-
-	// Print return type (if this Procedure is a function).
-	if (returnType != NULL)
-		cout << " " << returnType;
-
-	// cout << endl;
-
-	// Print parameters (if there is any).
-	for (int i = 0; i < (long) args->size(); i++) {
-		args->at(i)->print(scope);
-		cout << endl;
-	}
-}
-
-
-//---------------------setReturnType-------------------------------------------
-/**
- * @brief Sets the return type of this Procedure to the provided return type.
- *
- * Preconditions: returnType is not NULL.
- *
- * Postconditions: The return type was set.
- *
- * @param the_returnType The return type for this Procedure.
- */
-void ProcedureRecord::setReturnType (IdentifierRecord * the_returnType) {
-	returnType = the_returnType;
-}
-
-
-//---------------------insertParam---------------------------------------------
-/**
- * @brief Inserts the provided Parameter into this Procedure.
- *
- * Preconditions: parameter is not NULL.
- *
- * Postconditions: The parameter is not NULL.
- *
- * @param parameter The parameter to add to this Procedure.
- */
-void ProcedureRecord::insertParam (Parameter * parameter) {
-	args->push_back(parameter);
 }

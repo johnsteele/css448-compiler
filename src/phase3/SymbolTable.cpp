@@ -78,11 +78,30 @@ SymbolTable::SymbolTable() {
  */
 SymbolTable::~SymbolTable() {
 
-	// TODO: Delete the table.
-
-	delete rootScope;
+	emptyTable(rootScope);
 	rootScope    = NULL;
 	currentScope = NULL;
+}
+
+
+//---------------------emptyTable----------------------------------------------
+/**
+ * @brief Deletes all dynamic memory in the table.
+ *
+ * Preconditions: root points to the top-most Node of the list of lists.
+ *
+ * Postconditions: The symbol table is empty, root is NULL.
+ *
+ * @param the_root The current root.
+ */
+void SymbolTable::emptyTable (Node * the_root) {
+	if (the_root == NULL) return;
+	// TODO: This is close.
+	//delete the_root->identifiers;
+	//delete the_root->procedure;
+	//delete the_root; <-- Problem! can't delete then traverse to children.
+	//printTableHelper(the_root->child);
+	//printTableHelper(the_root->sibling);
 }
 
 
@@ -100,10 +119,32 @@ SymbolTable::~SymbolTable() {
  * @param ident A pointer to the name of the identifier.
  * @return True if identifier was added, false otherwise.
  */
-bool SymbolTable::addSymbol(const IdentifierRecord* ident) {
-	bool result = false;
+bool SymbolTable::addSymbol(IdentifierRecord* ident) {
+	bool found = false;
 
-	return result;
+	// Check for duplicate identifier in current scope.
+	if (currentScope->identifiers != NULL) {
+		found = currentScope->identifiers->retrieve(ident);
+	}
+
+	// Already there, return false.
+	if (found == true) {
+		cout << "Already in table!" << endl;
+		return false;
+	}
+
+	// Otherwise, add it, return true.
+	else {
+
+		// Is this the first symbol being added.
+		if (currentScope->identifiers == NULL) {
+			currentScope->identifiers = new BSTree ();
+		}
+
+		bool inserted = currentScope->identifiers->insert(ident);
+		if (inserted == true) cout << "Inserted!" << endl;
+		return inserted;
+	}
 }
 
 
@@ -175,15 +216,40 @@ void SymbolTable::enterScope (const IdentifierRecord* procedure) {
 		currentScope = rootScope;
 	}
 
+	// Otherwise, it's a sibling to existing scope or new scope.
 	else {
-		// Link current's child to new scope.
-		currentScope->child = node;
-		// Link new scope in with it's parent.
-		node->parent = currentScope;
-		// Increment the scope.
-		node->scope = currentScope->scope + 1;
-		// Move current to our new scope.
-		currentScope = node;
+
+		// If it's a sibling to an already existing scope.
+		if (currentScope->child != NULL) {
+			Node *rightSib = currentScope->child;
+
+			// Get the farthest right sibling.
+			while (rightSib->sibling != NULL) {
+				rightSib = rightSib->sibling;
+			}
+
+			// We're at the farthest right node, so link it in.
+			rightSib->sibling = node;
+
+			// Link the parent to the current scope.
+			node->parent = currentScope;
+			node->scope = currentScope->scope + 1;
+
+			// Set current to the new scope.
+			currentScope = node;
+		}
+
+		// Otherwise, it's the first child of a new scope.
+		else {
+			// Link current's child to new scope.
+			currentScope->child = node;
+			// Link new scope in with it's parent.
+			node->parent = currentScope;
+			// Increment the scope.
+			node->scope = currentScope->scope + 1;
+			// Move current to our new scope.
+			currentScope = node;
+		}
 	}
 }
 
@@ -192,14 +258,13 @@ void SymbolTable::enterScope (const IdentifierRecord* procedure) {
 /**
  * @brief Notifies the symbol table of an exit to the current scope.
  *
- * Preconditions: None.
+ * Preconditions: This method cannot be called if enterScope has not already
+ *                been called.
  *
  * Postconditions: The current scope was exited.
  */
 void SymbolTable::exitScope () {
-
-	// We're at the root if parent is NULL.
-	if (currentScope->parent != NULL)
+	if (currentScope != NULL)
 		currentScope = currentScope->parent;
 }
 
@@ -213,9 +278,7 @@ void SymbolTable::exitScope () {
  * Postconditions: This symbol table was printed to the standard output.
  */
 void SymbolTable::printTable() const {
-	cout << "*********** SymbolTable::printTable() - Start  ***************\n";
-	printTableHelper ();
-	cout << "*********** SymbolTable::printTable() - Finish ***************\n";
+	printTableHelper (rootScope);
 }
 
 
@@ -226,8 +289,18 @@ void SymbolTable::printTable() const {
  * Preconditions: None.
  *
  * Postconditions: This symbol table was printed to the standard output.
+ *
+ * @param root The root at which to print siblings and children.
  */
-void SymbolTable::printTableHelper () const {
-
+void SymbolTable::printTableHelper (const Node * root) const {
+	if (root == NULL) return;
+	root->procedure->print(root->scope);
+	cout << endl;
+	if (root->identifiers != NULL)
+		root->identifiers->print(root->scope + 1);
+	else
+		cout << endl;
+	printTableHelper(root->child);
+	printTableHelper(root->sibling);
 }
 

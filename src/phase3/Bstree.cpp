@@ -79,6 +79,51 @@ BSTree::~BSTree()
 }
 
 
+//---------------------retrieve------------------------------------------------
+/**
+ * @brief Searches the tree for the given target, if found true is returned.
+ *
+ * Preconditions: target is non-NULL.
+ *
+ * Postconditions: Returns true if found, false otherwise.
+ *
+ * @param target The identifier to search for.
+ * @return True if found, false otherwise.
+ */
+bool BSTree::retrieve (IdentifierRecord * target) const
+{
+	return retrieveHelper(my_root, target);
+}
+
+
+//---------------------retrieveHelper---------------------------------
+/**
+ * @brief A helper method for recursively finding the provided item in
+ *	      the tree. Returns true if found, false otherwise.
+ *
+ * Preconditions: item is not NULL, and my_root points to the root of
+ *		          the tree, or NULL if the tree is empty.
+ *
+ * Postconditions: Returns true if found, false otherwise.
+ *
+ * @param root The root of the subtree.
+ * @param the_item The item being retrieved.
+ * @return True if found, false otherwise.
+ */
+bool BSTree::retrieveHelper (const Node *root, IdentifierRecord * the_item) const
+{
+	if (root == NULL) return false;
+
+	else if (*the_item == *root->item)
+		return true;
+
+	else if (*the_item < *root->item)
+		return retrieveHelper (root->left, the_item);
+
+	else
+		return retrieveHelper (root->right, the_item);
+}
+
 //---------------------insert--------------------------------------------------
 /**
  * @brief Inserts an IdentifierRecord into the tree.
@@ -318,24 +363,19 @@ void BSTree::clone (Node *&copy, const Node *originalTree)
 }
 
 
-//---------------------operator<<-------------------------------------
+//---------------------print-----------------------------------------------
 /**
- * @brief Overloaded operator <<.
+ * @brief Prints the contents of this tree.
  *
- * Preconditions: The root pointer of the tree must point to the root
- *		  of the tree or NULL.
+ * Preconditions: Data members have been initialized.
  *
- * Postconditions: The elements of the bstree were sent to the std
- *		   output stream.
+ * Postconditions: This tree has been printed.
  *
- * @param output The output stream.
- * @param the_other The BSTree to output.
- * @return The output stream.
- */
-ostream& operator<< (ostream &output, const BSTree &the_other)
-{
-	the_other.printHelper(output, the_other.my_root);
-	return output;
+ * @param scope The scope of the tree (used for indenting purposes).
+	 */
+void BSTree::print (int scope) const {
+	printHelper (my_root, scope);
+	cout << endl;
 }
 
 
@@ -349,12 +389,14 @@ ostream& operator<< (ostream &output, const BSTree &the_other)
  *
  * @param output The output stream to to send the data.
  * @param root The root of the subtree.
+ * @param scope The indentation level (3 spaces per scope).
  */
-void BSTree::printHelper (ostream &output, const Node *root) const
+void BSTree::printHelper (const Node *root, int scope) const
 {
 	if (root != NULL) {
-		printHelper (output, root->left);
-		output << *root->item << endl;
-		printHelper (output, root->right);
+		printHelper (root->left, scope);
+		root->item->print(scope);
+		cout << endl;
+		printHelper (root->right, scope);
 	}
 }

@@ -15,7 +15,6 @@
 //-----------------------------------------------------------------------------
 /**
  * Includes following features:
- *	- Allows client to << a IdentifierRecord.
  * 	- Allows clients to compare IdentifierRecords for equality.
  * 	- Allows clients to compare IdentifierRecords for less than value.
  *	- Allows clients to print the IdentifierRecord.
@@ -33,6 +32,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <iomanip>
 
 /**
  * @namespace std
@@ -43,26 +43,6 @@ using namespace std;
  * @class IdentifierRecord
  */
 class IdentifierRecord {
-
-	//---------------------operator<<------------------------------------------
-	/**
-	 * @brief Overloaded output operator.
-	 *
-	 * Preconditions: The IdentfierRecord is not NULL.
-	 *
-	 * Postconditions: The data members of IdentfierRecord have been sent to
-	 *                 the output stream.
-	 *
-	 * @param output The output stream.
-	 * @param item The IdentfierRecord to output.
-	 *
-	 * @return The output stream.
-	 */
-	friend ostream& operator<< (ostream &output, const IdentifierRecord &ident)
-	{
-		ident.print(output);
-		return output;
-	}
 
 /**
  * @public
@@ -79,7 +59,6 @@ public:
 	 *                 specified values.
 	 *
 	 * @param the_name The name of this identifier.
-	 * TODO: finish params, if anymore are needed.
  	 */
 	IdentifierRecord (string the_name);
 
@@ -147,21 +126,21 @@ public:
 
 	//---------------------print-----------------------------------------------
 	/**
-	 * @brief Prints the data members of this IdentifierRecord to the
+	 * @brief Prints the data members of this IdentifierRecord to the standard
 	 *        output stream.
 	 *
-	 * Preconditions: Data members have been initialized.
+	 * Preconditions: None.
 	 *
-	 * Postconditions: This IdentifierRecord's members have been printed.
+	 * Postconditions: For every level of scope, three spaces were printed.
 	 *
-	 * @param output The output stream.
+	 * @param scope The scope of this identifier (used for indenting purposes).
  	 */
-	virtual void print (ostream &output) const;
+	virtual void print (int scope) const;
 
 
 	//---------------------getName---------------------------------------------
 	/**
-	 * @brief An accessor method for derived classes to use for comparisons.
+	 * @brief An accessor method for derived classes.
 	 *
 	 * Preconditions: name is initialized.
 	 *
@@ -170,6 +149,32 @@ public:
 	 * @return The name of this IdentifierRecord.
 	 */
 	const string getName () const;
+
+
+	//---------------------setType---------------------------------------------
+	/**
+	 * @brief Sets the name of the type for this identifier.
+	 *
+	 * Preconditions: type is initialized.
+	 *
+	 * Postconditions: type was returned.
+	 *
+	 * @param the_type The name of the type of identifier.
+	 */
+	void setType (string the_type);
+
+
+	//---------------------getType---------------------------------------------
+	/**
+	 * @brief An accessor method for derived classes.
+	 *
+	 * Preconditions: type is initialized.
+	 *
+	 * Postconditions: type was returned.
+	 *
+	 * @return The type of this IdentifierRecord.
+	 */
+	const string getType () const;
 
 
 /**
@@ -181,6 +186,11 @@ private:
 	 * @brief The name of this identifier.
 	 */
 	string name;
+
+	/**
+	 * @brief The type of this identifier.
+	 */
+	string type;
 };
 
 #endif /* IDENTIFIERRECORD_H_ */

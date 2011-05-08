@@ -58,6 +58,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 
 /**
  * @namespace std
@@ -115,7 +116,7 @@ public:
 	 * @param ident A pointer to an IdentifierRecord.
 	 * @return True if identifier was added, false otherwise.
  	 */
-	bool addSymbol (const IdentifierRecord* ident);
+	bool addSymbol (IdentifierRecord* ident);
 
 
 	//---------------------lookup----------------------------------------------
@@ -184,17 +185,6 @@ public:
 	void exitScope ();
 
 
-	//---------------------addFunction-----------------------------------------
-	/**
-	 * @brief Adds the provided function to the current scope.
-	 *
-	 * Preconditions: None.
-	 *
-	 * Postconditions: The current scope was exited.
-	 */
-	void addFunction ();
-
-
 /**
  * @private
  */
@@ -235,6 +225,19 @@ private:
 	void init_symbolTable ();
 
 
+	//---------------------emptyTable------------------------------------------
+	/**
+	 * @brief Deletes all dynamic memory in the table.
+	 *
+	 * Preconditions: root points to the top-most Node of the list of lists.
+	 *
+	 * Postconditions: The symbol table is empty, root is NULL.
+	 *
+	 * @param the_root The current root.
+	 */
+	void emptyTable (Node * the_root);
+
+
 	//---------------------printTableHelper------------------------------------
 	/**
  	 * @brief A helper method that prints this symbol table.
@@ -242,8 +245,10 @@ private:
 	 * Preconditions: None.
 	 *
 	 * Postconditions: This symbol table was printed to the standard output.
+	 *
+     * @param root The root at which to print siblings and children
  	 */
-	void printTableHelper () const;
+	void printTableHelper (const Node * root) const;
 };
 
 #endif /* SYMBOLTABLE_H_ */

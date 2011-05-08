@@ -1,7 +1,7 @@
 /******************************************************************************
- * @file ProcedureRecord.h                                                    *
+ * @file ConstantRecord.h                                                     *
  *                                                                            *
- * @brief CSS 448 - Compiler Phase 3 - ProcedureRecord                        *
+ * @brief CSS 448 - Compiler Phase 3 - IdentRecord                            *
  *                                                                            *
  * @author John Steele      \<steelejr@u.washington.edu\>                     *
  * @author Alicia Flinchum  \<aliciaflinchum@yahoo.com\>                      *
@@ -9,56 +9,53 @@
  * @version 1.0.0                                                             *
  * @date May 1, 2011                                                          *
  *                                                                            *
- * @brief ProcedureRecord represents a function or procedure identifier.      *
+ * @brief ConstantRecord represents an variable identifier.                   *
  *****************************************************************************/
 //-----------------------------------------------------------------------------
 /**
  * Includes following features:
- *	- Allows client to print ProcedureRecord.
- * 	- Allows clients to compare ProcedureRecord for equality.
- * 	- Allows clients to compare ProcedureRecords for less than value.
- * 	- Allows clients to insert a Parameter for the procedure.
+ * 	- Allows clients to compare ConstantRecord for equality.
+ * 	- Allows clients to compare ConstantRecords for less than value.
+ *	- Allows clients to print the ConstantRecord.
  */
 //-----------------------------------------------------------------------------
-#ifndef PROCEDURERECORD_H_
-#define PROCEDURERECORD_H_
+#ifndef CONSTANTRECORD_H_
+#define CONSTANTRECORD_H_
 
-#include <vector>
 #include "IdentifierRecord.h"
-#include "Parameter.h"
 
-class ProcedureRecord: public IdentifierRecord {
+class ConstantRecord : public IdentifierRecord  {
 
 public:
 
 	//---------------------Constructor-----------------------------------------
 	/**
-	 * @brief Creates a ProcedureRecord with the specified name.
+	 * @brief Creates a ConstantRecord with the specified name.
 	 *
 	 * Preconditions: None.
 	 *
-	 * Postconditions: This ProcedureRecord was instantiated.
+	 * Postconditions: This ConstantRecord was instantiated.
 	 *
-	 * @param name The name of the ProcedureRecord.
+	 * @param name The name of the ConstantRecord.
 	 */
-	ProcedureRecord(string name);
+	ConstantRecord(string name);
 
 
 	//---------------------Destructor------------------------------------------
 	/**
 	 * @brief Deletes all dynamically allocated objects within the
-	 *        ProcedureRecord.
+	 *        ConstantRecord.
 	 *
 	 * Preconditions: None.
 	 *
 	 * Postconditions: Resources were released.
 	 */
-	virtual ~ProcedureRecord();
+	virtual ~ConstantRecord();
 
 
 	//---------------------clone-----------------------------------------------
 	/**
-	 * @brief Clones this ProcedureRecord.
+	 * @brief Clones this IdentifierRecord.
 	 *
 	 * Preconditions: None.
 	 *
@@ -66,7 +63,7 @@ public:
 	 *
 	 * @return The pointer to the cloned object.
 	 */
-	virtual ProcedureRecord * clone() const;
+	virtual ConstantRecord * clone () const;
 
 
 	//---------------------operator<-------------------------------------------
@@ -84,7 +81,7 @@ public:
 	 * @return True if this IdentfierRecord is less than the_other,
 	 *	       false otherwise.
 	 */
-	virtual bool operator<(const IdentifierRecord &the_other) const;
+	virtual bool operator< (const IdentifierRecord &the_other) const;
 
 
 	//---------------------operator==------------------------------------------
@@ -103,7 +100,7 @@ public:
 	 * @return True if the_other is equal to this IdentifierRecord,
 	 *	       false otherwise.
 	 */
-	virtual bool operator==(const IdentifierRecord &the_other) const;
+	virtual bool operator== (const IdentifierRecord &the_other) const;
 
 
 	//---------------------print-----------------------------------------------
@@ -120,31 +117,17 @@ public:
 	virtual void print (int scope) const;
 
 
-	//---------------------insertParam-----------------------------------------
+	//---------------------setConstFactor--------------------------------------
 	/**
-	 * @brief Inserts the provided Parameter into this Procedure.
+	 * @brief Sets the constant factor value for this constant.
 	 *
-	 * Preconditions: parameter is not NULL.
+	 * Preconditions: None.
 	 *
-	 * Postconditions: The parameter is not NULL.
+	 * Postconditions: The constant factor was set to the provided value.
 	 *
-	 * @param parameter The parameter to add to this Procedure.
+	 * @param factor The constant factor value.
  	 */
-	void insertParam (Parameter * parameter);
-
-
-	//---------------------setReturnType---------------------------------------
-	/**
-	 * @brief Sets the return type of this Procedure to the provided
-	 *        return type.
-	 *
-	 * Preconditions: returnType is not NULL.
-	 *
-	 * Postconditions: The return type was set.
-	 *
-	 * @param the_returnType The return type for this Procedure.
- 	 */
-	void setReturnType (IdentifierRecord * the_returnType);
+	void setConstFactor (int factor);
 
 
 /**
@@ -152,8 +135,10 @@ public:
  */
 private:
 
-	vector<IdentifierRecord *> * args;
-	IdentifierRecord * returnType;
+	/**
+	 * @brief The constant factor value.
+	 */
+	int const_factor;
 };
 
-#endif /* PROCEDURERECORD_H_ */
+#endif /* CONSTANTRECORD_H_ */

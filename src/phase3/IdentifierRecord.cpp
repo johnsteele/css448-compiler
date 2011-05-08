@@ -15,7 +15,6 @@
 //-----------------------------------------------------------------------------
 /**
  * Includes following features:
- *	- Allows client to << a IdentifierRecord.
  * 	- Allows clients to compare IdentifierRecords for equality.
  * 	- Allows clients to compare IdentifierRecords for less than value.
  *	- Allows clients to print the IdentifierRecord.
@@ -39,11 +38,11 @@
  * Postconditions: The data members of this Item have been set to the
  *                 specified values.
  *
- * @param the_name The name of this identifier.
- * TODO: finish params, if anymore are needed.
+ * @param the_name The name of the identifier record.
  */
 IdentifierRecord::IdentifierRecord (string the_name) {
 	name = the_name;
+	type = "";
 }
 
 
@@ -60,24 +59,6 @@ IdentifierRecord::~IdentifierRecord() {
 }
 
 
-//---------------------print---------------------------------------------------
-/**
- * @brief Prints the data members of this IdentifierRecord to the
- *        output stream.
- *
- * Preconditions: Data members have been initialized.
- *
- * Postconditions: This IdentifierRecord's members have been printed.
- *
- * @param output The output stream.
- */
-void IdentifierRecord::print(ostream &output) const {
-	output << "IdentifierRecord::print()";
-	output << name;
-}
-
-
-
 //---------------------getName-------------------------------------------------
 /**
  * @brief An accessor method for derived classes to use for comparisons.
@@ -88,8 +69,56 @@ void IdentifierRecord::print(ostream &output) const {
  *
  * @return The name of this IdentifierRecord.
  */
-const string IdentifierRecord::getName () const
-{
+const string IdentifierRecord::getName () const {
 	return name;
+}
+
+
+//---------------------setType-------------------------------------------------
+/**
+ * @brief Sets the name of the type for this identifier.
+ *
+ * Preconditions: type is initialized.
+ *
+ * Postconditions: type was returned.
+ *
+ * @param the_type The name of the type of identifier.
+ */
+void IdentifierRecord::setType (string the_type) {
+	type = the_type;
+}
+
+
+//---------------------getType-------------------------------------------------
+/**
+ * @brief An accessor method for derived classes.
+ *
+ * Preconditions: type is initialized.
+ *
+ * Postconditions: type was returned.
+ *
+ * @return The type of this IdentifierRecord.
+ */
+const string IdentifierRecord::getType () const {
+	return type;
+}
+
+
+//---------------------print---------------------------------------------------
+/**
+ * @brief Prints the data members of this IdentifierRecord to the standard
+ *        output stream.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: For every level of scope, three spaces were printed.
+ *
+ * @param scope The scope of this identifier (used for indenting purposes).
+ */
+void IdentifierRecord::print (int scope) const {
+
+	for (int i = 0; i < scope; i++) {
+		cout << "   ";
+	}
 }
 

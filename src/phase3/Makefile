@@ -6,7 +6,7 @@
 OBJ = main.o lex.yy.o y.tab.o      # all object files, the .o  files
                                    # change lex.o to lex.yy.o if (f)lex used
 
-ACTIONS=SymbolTable.o Bstree.o IdentifierRecord.o ProcedureRecord.o IntRecord.o
+ACTIONS=SymbolTable.o Bstree.o IdentifierRecord.o ProcedureRecord.o ConstantRecord.o Parameter.o VariableRecord.o 
 H = y.tab.h tokenconst.h
 
 # The $ is a macro reference.  The following ident is replaced with the
@@ -15,8 +15,8 @@ H = y.tab.h tokenconst.h
 a.out: $(ACTIONS) $(OBJ) $H                   # a.out depends on everything
 	g++ $(OBJ) $(ACTIONS) -o a.out
 
-$(ACTIONS): SymbolTable.cpp Bstree.cpp IdentifierRecord.cpp ProcedureRecord.cpp IntRecord.cpp
-	g++ -c SymbolTable.cpp Bstree.cpp IdentifierRecord.cpp ProcedureRecord.cpp IntRecord.cpp
+$(ACTIONS): SymbolTable.cpp Bstree.cpp IdentifierRecord.cpp ProcedureRecord.cpp ConstantRecord.cpp Parameter.cpp VariableRecord.cpp
+	g++ -c SymbolTable.cpp Bstree.cpp IdentifierRecord.cpp ProcedureRecord.cpp ConstantRecord.cpp Parameter.cpp VariableRecord.cpp
 
 main.o: main.cpp                   # main.o depends on main.cpp
 	g++ -c  main.cpp

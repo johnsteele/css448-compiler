@@ -1,7 +1,7 @@
 /******************************************************************************
  * @file ConstantRecord.h                                                     *
  *                                                                            *
- * @brief CSS 448 - Compiler Phase 3 - IdentRecord                            *
+ * @brief CSS 448 - Compiler Phase 3 - ConstantRecord                         *
  *                                                                            *
  * @author John Steele      \<steelejr@u.washington.edu\>                     *
  * @author Alicia Flinchum  \<aliciaflinchum@yahoo.com\>                      *

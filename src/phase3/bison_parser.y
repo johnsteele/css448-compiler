@@ -26,10 +26,13 @@
 
 using namespace std; 
 
-SymbolTable      * symbolTable_ptr;
+SymbolTable      * symbolTable_ptr = new SymbolTable ();
 IdentifierRecord * parameter_ptr;
 IdentifierRecord * procedure_ptr;
 IdentifierRecord * const_ptr;
+
+
+string procedure_name;
 %}
 
 
@@ -59,13 +62,14 @@ IdentifierRecord * const_ptr;
 CompilationUnit    :  ProgramModule        
                    ;
 ProgramModule      :  yprogram Identifier ProgramParameters ysemicolon Block ydot 
+			{ procedure_ptr = new ProcedureRecord (procedure_name); }
                    ;
 ProgramParameters  :  yleftparen  IdentList  yrightparen
                    ;
 IdentList          :  Identifier 
                    |  IdentList ycomma Identifier 
                    ;
-Identifier         :  yident { /* cout << yylval.str; delete yylval.str; */}
+Identifier         :  yident { procedure_name = yylval.str; /* cout << yylval.str; delete yylval.str; */}
 		   		   ; 
 /**************************  Declarations section ***************************/
 
@@ -93,8 +97,11 @@ VariableDeclList   :  VariableDecl ysemicolon
 ConstantDef        :  Identifier  yequal  ConstExpression 
 					  { 
 					  	const_ptr = new ConstantRecord ("constVar1"); 
-						if (symbolTable_ptr != NULL) cout << "NULL!" << endl;
-					  	else symbolTable_ptr->addSymbol (const_ptr); 
+						if (symbolTable_ptr == NULL) cout << "NULL!" << endl;
+					  	else  {
+							symbolTable_ptr->enterScope (procedure_ptr);
+							symbolTable_ptr->addSymbol (const_ptr); 
+						}
 					  }
                    ;
 TypeDef            :  Identifier  yequal  Type

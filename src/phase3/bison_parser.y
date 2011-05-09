@@ -32,7 +32,7 @@ IdentifierRecord * procedure_ptr;
 IdentifierRecord * const_ptr;
 
 
-string procedure_name;
+string identifier_name;
 %}
 
 
@@ -62,18 +62,18 @@ string procedure_name;
 CompilationUnit    :  ProgramModule        
                    ;
 ProgramModule      :  yprogram Identifier ProgramParameters ysemicolon Block ydot 
-			{ procedure_ptr = new ProcedureRecord (procedure_name); }
+			{ procedure_ptr = new ProcedureRecord (identifier_name); }
                    ;
 ProgramParameters  :  yleftparen  IdentList  yrightparen
                    ;
 IdentList          :  Identifier 
                    |  IdentList ycomma Identifier 
                    ;
-Identifier         :  yident { procedure_name = yylval.str; /* cout << yylval.str; delete yylval.str; */}
+Identifier         :  yident { identifier_name = yylval.str; /* cout << yylval.str; delete yylval.str; */}
 		   		   ; 
 /**************************  Declarations section ***************************/
 
-Block              :  Declarations  ybegin  StatementSequence  yend 
+Block              :  Declarations  ybegin  StatementSequence  yend
                    ;                                        
 Declarations       :  ConstantDefBlock TypeDefBlock VariableDeclBlock SubprogDeclList  
                    ;
@@ -96,7 +96,7 @@ VariableDeclList   :  VariableDecl ysemicolon
                    ;  
 ConstantDef        :  Identifier  yequal  ConstExpression 
 					  { 
-					  	const_ptr = new ConstantRecord ("constVar1"); 
+					  	const_ptr = new ConstantRecord (identifier_name); 
 						if (symbolTable_ptr == NULL) cout << "NULL!" << endl;
 					  	else  {
 							symbolTable_ptr->enterScope (procedure_ptr);

@@ -1,5 +1,5 @@
 /******************************************************************************
- * @file VariableRecord.h                                                      *
+ * @file VariableRecord.h                                                     *
  *                                                                            *
  * @brief CSS 448 - Compiler Phase 3 - IdentRecord                            *
  *                                                                            *
@@ -24,8 +24,14 @@
 
 #include "IdentifierRecord.h"
 
+/**
+ * @class VariableRecord
+ */
 class VariableRecord : public IdentifierRecord  {
 
+/**
+ * @public
+ */
 public:
 
 	//---------------------Constructor-----------------------------------------

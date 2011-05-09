@@ -27,8 +27,14 @@
 #include "IdentifierRecord.h"
 #include "Parameter.h"
 
+/**
+ * @class ProcedureRecord
+ */
 class ProcedureRecord: public IdentifierRecord {
 
+/**
+ * @public
+ */
 public:
 
 	//---------------------Constructor-----------------------------------------

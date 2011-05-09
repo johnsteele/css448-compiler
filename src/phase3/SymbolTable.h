@@ -74,7 +74,6 @@ using namespace std;
  */
 class SymbolTable {
 
-
 /**
  * @public
  */

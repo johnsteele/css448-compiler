@@ -9,7 +9,7 @@
  * @version 1.0.0                                                             *
  * @date May 1, 2011                                                          *
  *                                                                            *
- * @brief ConstantRecord represents an variable identifier.                   *
+ * @brief ConstantRecord represents a ConstantRecord identifier.              *
  *****************************************************************************/
 //-----------------------------------------------------------------------------
 /**
@@ -24,8 +24,14 @@
 
 #include "IdentifierRecord.h"
 
+/**
+ * @class ConstantRecord
+ */
 class ConstantRecord : public IdentifierRecord  {
 
+/**
+ * @public
+ */
 public:
 
 	//---------------------Constructor-----------------------------------------

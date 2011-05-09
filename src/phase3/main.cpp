@@ -15,19 +15,28 @@
 #include <iostream>
 #include <stdlib.h>
 using namespace std;
-
+ 
 #include "SymbolTable.h"
 #include "IdentifierRecord.h"
 #include "VariableRecord.h"
 #include "ProcedureRecord.h"
 #include "ConstantRecord.h"
 #include "Parameter.h"
+#include "ArrayType.h"
+#include "PointerType.h"
 
-
+extern int yyparse();
+#define DEBUG 1
 int main(void) {
+ 
 
-	cout << "=================== Started parsing ==================" << endl;
 
+	cout << "=================== Started parsing ===================" << endl;
+	yyparse();
+	cout << "=================== Finished parsing ==================" << endl;
+
+#if DEBUG
+	cout << "=============== Start Print Symbol Table ==============" << endl;
 
 	SymbolTable * symbolTable = new SymbolTable ();
 
@@ -50,6 +59,107 @@ int main(void) {
 	IdentifierRecord *var5     = new VariableRecord ("varVal5");
 	IdentifierRecord *var6     = new VariableRecord ("varVal6");
 	IdentifierRecord *var7     = new VariableRecord ("varVal7");
+
+
+	IdentifierRecord *ptr1     = new PointerType ("ptrVal");
+	IdentifierRecord *ptr2     = new PointerType ("ptrVal2");
+	IdentifierRecord *ptr3     = new PointerType ("ptrVal3");
+	IdentifierRecord *ptr4     = new PointerType ("ptrVal4");
+	IdentifierRecord *ptr5     = new PointerType ("ptrVal5");
+	IdentifierRecord *ptr6     = new PointerType ("ptrVal6");
+	IdentifierRecord *ptr7     = new PointerType ("ptrVal7");
+
+	IdentifierRecord *array1     = new ArrayType ("array1Val");
+	try {
+				ArrayType &r = dynamic_cast<ArrayType &> (*array1);
+				r.setLowDimension(1);
+				r.setHighDimension(5);
+				r.setLowDimension(2);
+				r.setHighDimension(6);
+				r.setLowDimension(3);
+				r.setHighDimension(7);
+			} catch (exception &e) {
+				cout << "Exception: " << e.what() << endl;
+			}
+	IdentifierRecord *array2     = new ArrayType ("array2Val2");
+	try {
+				ArrayType &r = dynamic_cast<ArrayType &> (*array2);
+				r.setLowDimension(1);
+				r.setHighDimension(5);
+				r.setLowDimension(2);
+				r.setHighDimension(6);
+				r.setLowDimension(3);
+				r.setHighDimension(7);
+			} catch (exception &e) {
+				cout << "Exception: " << e.what() << endl;
+			}
+	IdentifierRecord *array3     = new ArrayType ("array3Val3");
+	try {
+				ArrayType &r = dynamic_cast<ArrayType &> (*array3);
+				r.setLowDimension(1);
+				r.setHighDimension(5);
+				r.setLowDimension(2);
+				r.setHighDimension(6);
+				r.setLowDimension(3);
+				r.setHighDimension(7);
+			} catch (exception &e) {
+				cout << "Exception: " << e.what() << endl;
+			}
+	IdentifierRecord *array4     = new ArrayType ("array4Val4");
+	try {
+				ArrayType &r = dynamic_cast<ArrayType &> (*array4);
+				r.setLowDimension(1);
+				r.setHighDimension(5);
+				r.setLowDimension(2);
+				r.setHighDimension(6);
+				r.setLowDimension(3);
+				r.setHighDimension(7);
+			} catch (exception &e) {
+				cout << "Exception: " << e.what() << endl;
+			}
+	IdentifierRecord *array5     = new ArrayType ("array5Val5");
+	try {
+				ArrayType &r = dynamic_cast<ArrayType &> (*array5);
+				r.setLowDimension(1);
+				r.setHighDimension(5);
+				r.setLowDimension(2);
+				r.setHighDimension(6);
+				r.setLowDimension(3);
+				r.setHighDimension(7);
+			} catch (exception &e) {
+				cout << "Exception: " << e.what() << endl;
+			}
+	IdentifierRecord *array6     = new ArrayType ("array6Val6");
+	try {
+				ArrayType &r = dynamic_cast<ArrayType &> (*array6);
+				r.setLowDimension(1);
+				r.setHighDimension(5);
+				r.setLowDimension(2);
+				r.setHighDimension(6);
+				r.setLowDimension(3);
+				r.setHighDimension(7);
+			} catch (exception &e) {
+				cout << "Exception: " << e.what() << endl;
+			}
+	IdentifierRecord *array7     = new ArrayType ("array7Val7");
+	try {
+				ArrayType &r = dynamic_cast<ArrayType &> (*array7);
+				r.setLowDimension(1);
+				r.setHighDimension(5);
+				r.setLowDimension(2);
+				r.setHighDimension(6);
+				r.setLowDimension(3);
+				r.setHighDimension(7);
+			} catch (exception &e) {
+				cout << "Exception: " << e.what() << endl;
+			}
+
+
+
+
+
+
+
 
 
 	IdentifierRecord *const1     = new ConstantRecord ("constVal1");
@@ -116,11 +226,15 @@ int main(void) {
 	symbolTable->enterScope(proc);   // enter the program.
 	bool result = symbolTable->addSymbol(const1);  // add const1
 	result      =  symbolTable->addSymbol(const2); // add const2
+	result      =  symbolTable->addSymbol(array1); // add array1
+	result      =  symbolTable->addSymbol(array2); // add array2
 
 
 	symbolTable->enterScope(proc1);  // enter function1
 	result      =  symbolTable->addSymbol(const3); // add const3
 	result      =  symbolTable->addSymbol(const4); // add const4
+	result      =  symbolTable->addSymbol(array3); // add array3
+	result      =  symbolTable->addSymbol(array4); // add array4
 	symbolTable->enterScope(proc2);  // enter function2
 
 	symbolTable->exitScope();        // exit function2
@@ -128,6 +242,7 @@ int main(void) {
 
 	symbolTable->enterScope(proc3);  // enter function3
 	result      =  symbolTable->addSymbol(const5); // add const5
+	result      =  symbolTable->addSymbol(array5); // add array5
 	symbolTable->exitScope();        // exit  function3
 
 	symbolTable->enterScope(proc4);  // enter function4
@@ -138,6 +253,10 @@ int main(void) {
 	symbolTable->enterScope(proc7);  // enter function7
 	result      =  symbolTable->addSymbol(const6); // add const6
 	result      =  symbolTable->addSymbol(const7); // add const7
+	result      =  symbolTable->addSymbol(array6); // add array6
+	result      =  symbolTable->addSymbol(array7); // add array7
+
+
 
 	symbolTable->exitScope();        // exit  function5
 	symbolTable->exitScope();        // exit  function6
@@ -150,17 +269,13 @@ int main(void) {
 	symbolTable->exitScope();        // exit  function9
 
 
-
-	/**
-	 * Exit program1
-	 */
 	symbolTable->exitScope();
 
 	symbolTable->printTable();
 	delete symbolTable;
 
+	cout << "=============== End Print Symbol Table ==============" << endl;
 
-	string temp = "test";
-	cout << "=================== Finished parsing ==================" << endl;
+#endif
 	return EXIT_SUCCESS;
 }

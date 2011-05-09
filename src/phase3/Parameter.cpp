@@ -9,7 +9,7 @@
  * @version 1.0.0                                                             *
  * @date May 1, 2011                                                          *
  *                                                                            *
- * @brief Parameter represents an variable identifier.                        *
+ * @brief Parameter represents a Parameter identifier.                        *
  *****************************************************************************/
 //-----------------------------------------------------------------------------
 /**

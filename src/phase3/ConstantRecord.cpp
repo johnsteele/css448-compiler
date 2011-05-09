@@ -9,7 +9,7 @@
  * @version 1.0.0                                                             *
  * @date May 1, 2011                                                          *
  *                                                                            *
- * @brief ConstantRecord represents an variable identifier.                   *
+ * @brief ConstantRecord represents a ConstantRecord identifier.              *
  *****************************************************************************/
 //-----------------------------------------------------------------------------
 /**

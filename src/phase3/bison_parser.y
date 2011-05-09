@@ -15,7 +15,21 @@
     /************************ C-Declarations Section **************************/
 %{ 
 #include <iostream>
+#include "SymbolTable.h"
+#include "IdentifierRecord.h"
+#include "VariableRecord.h"
+#include "ConstantRecord.h"
+#include "Parameter.h"
+#include "ProcedureRecord.h"
+#include "ArrayType.h"
+#include "PointerType.h"
+
 using namespace std; 
+
+SymbolTable      * symbolTable_ptr;
+IdentifierRecord * parameter_ptr;
+IdentifierRecord * procedure_ptr;
+IdentifierRecord * const_ptr;
 %}
 
 
@@ -33,7 +47,7 @@ using namespace std;
 
 %union 
 {
-    /* The identifier wich is set from within the lexer. */
+    /* The identifier which is set from within the lexer. */
     char *str;
 }
 
@@ -44,16 +58,15 @@ using namespace std;
 
 CompilationUnit    :  ProgramModule        
                    ;
-ProgramModule      :  yprogram Identifier ProgramParameters ysemicolon Block ydot
+ProgramModule      :  yprogram Identifier ProgramParameters ysemicolon Block ydot 
                    ;
 ProgramParameters  :  yleftparen  IdentList  yrightparen
                    ;
 IdentList          :  Identifier 
                    |  IdentList ycomma Identifier 
                    ;
-Identifier         :  yident { cout << yylval.str; delete yylval.str; /* printf("%s", yylval.str); free (yylval.str); */ }
-		   ; 
-/* We need to put the print Identifier here. */
+Identifier         :  yident { /* cout << yylval.str; delete yylval.str; */}
+		   		   ; 
 /**************************  Declarations section ***************************/
 
 Block              :  Declarations  ybegin  StatementSequence  yend 
@@ -77,7 +90,12 @@ VariableDeclBlock  :  /*** empty ***/
 VariableDeclList   :  VariableDecl ysemicolon                  
                    |  VariableDeclList VariableDecl ysemicolon
                    ;  
-ConstantDef        :  Identifier  yequal  ConstExpression
+ConstantDef        :  Identifier  yequal  ConstExpression 
+					  { 
+					  	const_ptr = new ConstantRecord ("constVar1"); 
+						if (symbolTable_ptr != NULL) cout << "NULL!" << endl;
+					  	else symbolTable_ptr->addSymbol (const_ptr); 
+					  }
                    ;
 TypeDef            :  Identifier  yequal  Type
                    ;
@@ -87,7 +105,7 @@ VariableDecl       :  IdentList  ycolon  Type
 /***************************  Const/Type Stuff  ******************************/
 
 ConstExpression    :  UnaryOperator ConstFactor 
-		   |  ConstFactor               
+		           |  ConstFactor               
                    |  ystring
                    ;
 ConstFactor        :  Identifier 
@@ -105,7 +123,7 @@ Type               :  Identifier
 ArrayType          :  yarray yleftbracket SubrangeList yrightbracket  yof Type
                    ;
 SubrangeList       :  Subrange
-		   |  SubrangeList ycomma Subrange 
+		           |  SubrangeList ycomma Subrange 
                    ;
 Subrange           :  ConstFactor ydotdot ConstFactor
                    |  ystring ydotdot  ystring

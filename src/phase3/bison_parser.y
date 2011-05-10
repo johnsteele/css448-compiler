@@ -61,7 +61,7 @@ string identifier_name;
 
 CompilationUnit    :  ProgramModule        
                    ;
-ProgramModule      :  yprogram ProcedureIdent ProgramParameters ysemicolon Block ydot 
+ProgramModule      :  yprogram Identifier { procedure_ptr = new ProcedureRecord (identifier_name);  symbolTable_ptr->enterScope (procedure_ptr); } ProgramParameters ysemicolon Block ydot 
 			{ 	
 				cout << "Printing Symbol Table." << endl;  
  				symbolTable_ptr->printTable(); 
@@ -74,8 +74,6 @@ IdentList          :  Identifier
                    ;
 Identifier         :  yident { identifier_name = yylval.str; } 
 		   ;
-ProcedureIdent     : Identifier { procedure_ptr = new ProcedureRecord (identifier_name); }
-	           ; 
 /**************************  Declarations section ***************************/
 
 Block              :  Declarations  ybegin  StatementSequence  yend
@@ -104,7 +102,6 @@ ConstantDef        :  Identifier  yequal  ConstExpression
 			  	const_ptr = new ConstantRecord (identifier_name); 
 				if (symbolTable_ptr == NULL) cout << "NULL!" << endl;
 			  	else  {
-					symbolTable_ptr->enterScope (procedure_ptr);
 					symbolTable_ptr->addSymbol (const_ptr); 
 				}
 			}

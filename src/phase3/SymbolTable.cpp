@@ -281,7 +281,6 @@ void SymbolTable::exitScope () {
  * Postconditions: This symbol table was printed to the standard output.
  */
 void SymbolTable::printTable() const {
-	cout << "Printing table..." << endl;
 	printTableHelper (rootScope);
 }
 

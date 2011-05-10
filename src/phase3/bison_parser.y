@@ -62,7 +62,10 @@ string identifier_name;
 CompilationUnit    :  ProgramModule        
                    ;
 ProgramModule      :  yprogram ProcedureIdent ProgramParameters ysemicolon Block ydot 
-			{ cout << "Printing Symbol Table." << endl;  symbolTable_ptr->ptrintTable(); }
+			{ 	
+				cout << "Printing Symbol Table." << endl;  
+ 				symbolTable_ptr->printTable(); 
+			}
                    ;
 ProgramParameters  :  yleftparen  IdentList  yrightparen
                    ;

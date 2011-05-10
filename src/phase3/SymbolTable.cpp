@@ -202,6 +202,7 @@ void SymbolTable::enterScope (const IdentifierRecord* procedure) {
 	
 	cout << "Entering Scope: " << endl;
 	if (procedure == NULL) cout << "Procedure is NULL...." << endl;
+	
 	// The new scope node we're entering.
 	Node *node        = new Node ();
 	node->procedure   = procedure;
@@ -216,7 +217,6 @@ void SymbolTable::enterScope (const IdentifierRecord* procedure) {
 		rootScope->parent = NULL;
 		// Link in current.
 		currentScope = rootScope;
-	 	// procedure->print (currentScope->scope);
 	}
 
 	// Otherwise, it's a sibling to existing scope or new scope.

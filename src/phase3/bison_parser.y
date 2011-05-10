@@ -31,8 +31,7 @@ IdentifierRecord * parameter_ptr;
 IdentifierRecord * procedure_ptr;
 IdentifierRecord * const_ptr;
 int const_factor;
-
-
+bool isBool;
 string identifier_name;
 %}
 
@@ -122,7 +121,8 @@ ConstantDef        :  Identifier  yequal  ConstExpression
 				symbolTable_ptr->addSymbol (const_ptr); 
 				try {
 					ConstantRecord &r = dynamic_cast<ConstantRecord &> (*const_ptr);
-					r.setConstFactor(const_factor);
+					if (isBool == true) r.setIsBool();
+					r.setConstFactor(const_factor); 
 				} catch (exception &e) {
 					cout << "Exception: " << e.what() << endl;
 				}	
@@ -140,11 +140,11 @@ ConstExpression    :  UnaryOperator ConstFactor
 		   |  ConstFactor               
                    |  ystring
                    ;
-ConstFactor        :  Identifier 
+ConstFactor        :  Identifier 	{ /* First check SIT. If okay, try to insert. */ }
                    |  ynumber 		{ const_factor = yylval.int_value; }
-                   |  ytrue
-                   |  yfalse
-                   |  ynil
+                   |  ytrue             { isBool = true; const_factor = 1; }
+                   |  yfalse	        { isBool = true; const_factor = 0; }
+                   |  ynil              { /* Not sure what to do here. */  } 
                    ;
 Type               :  Identifier 
                    |  ArrayType

@@ -30,6 +30,7 @@ SymbolTable      * symbolTable_ptr = new SymbolTable ();
 IdentifierRecord * parameter_ptr;
 IdentifierRecord * procedure_ptr;
 IdentifierRecord * const_ptr;
+int const_factor;
 
 
 string identifier_name;
@@ -116,6 +117,12 @@ ConstantDef        :  Identifier  yequal  ConstExpression
 		  	{ 
 			  	const_ptr = new ConstantRecord (identifier_name); 
 				symbolTable_ptr->addSymbol (const_ptr); 
+				try {
+					ConstantRecord &r = dynamic_cast<ConstantRecord &> (*const_ptr);
+					r.setConstFactor(const_factor);
+				} catch (exception &e) {
+					cout << "Exception: " << e.what() << endl;
+				}	
 				const_ptr = NULL;
 			}
                    ;
@@ -131,7 +138,7 @@ ConstExpression    :  UnaryOperator ConstFactor
                    |  ystring
                    ;
 ConstFactor        :  Identifier 
-                   |  ynumber
+                   |  ynumber {const_factor = ynumber;}
                    |  ytrue
                    |  yfalse
                    |  ynil

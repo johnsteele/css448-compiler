@@ -136,6 +136,18 @@ public:
 	void setConstFactor (int factor);
 
 
+	//---------------------setIsBool-------------------------------------------
+	/**
+	 * @brief Sets this constant record as a bool value. With this set, the
+	 *        const_factor represents true (1) or false (0) respectively.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: The constant factor now represents a bool value.
+	 */
+	void setIsBool ();
+
+
 /**
  * @private
  */
@@ -145,6 +157,11 @@ private:
 	 * @brief The constant factor value.
 	 */
 	int const_factor;
+
+	/**
+	 * @brief If this constant factor is a boolean value.
+	 */
+	int isBool;
 };
 
 #endif /* CONSTANTRECORD_H_ */

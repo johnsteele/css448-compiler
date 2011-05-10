@@ -34,6 +34,7 @@
  */
 ConstantRecord::ConstantRecord(string name) : IdentifierRecord (name) {
 	const_factor = 0;
+	isBool = false;
 }
 
 //---------------------Destructor----------------------------------------------
@@ -122,7 +123,9 @@ bool ConstantRecord::operator==(const IdentifierRecord &the_other) const {
  */
 void ConstantRecord::print(int scope) const {
 	IdentifierRecord::print(scope);
-	cout << getName() << " " << const_factor;
+	cout << getName() << " ";
+	if (isBool == true) cout << (const_factor == 1 ? "true" : "false");
+	else cout << const_factor;
 }
 
 
@@ -140,3 +143,16 @@ void ConstantRecord::setConstFactor (int factor) {
 	const_factor = factor;
 }
 
+
+//---------------------setIsBool-----------------------------------------------
+/**
+ * @brief Sets this constant record as a bool value. With this set, the
+ *        const_factor represents true (1) or false (0) respectively.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: The constant factor now represents a bool value.
+ */
+void ConstantRecord::setIsBool () {
+	isBool = true;
+}

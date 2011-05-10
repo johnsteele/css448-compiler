@@ -53,6 +53,9 @@ string identifier_name;
 {
     /* The identifier which is set from within the lexer. */
     char *str;
+
+    /* The integer value for ynumber. */
+    int int_value;
 }
 
     /************************* Grammar Rules Section *************************/ 
@@ -138,7 +141,7 @@ ConstExpression    :  UnaryOperator ConstFactor
                    |  ystring
                    ;
 ConstFactor        :  Identifier 
-                   |  ynumber {const_factor = ynumber;}
+                   |  ynumber 		{ const_factor = yylval.int_value; }
                    |  ytrue
                    |  yfalse
                    |  ynil

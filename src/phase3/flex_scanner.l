@@ -110,7 +110,7 @@ COMMENT      {S_COMMENT}({WHITESPACE}|{CHARACTER}|{D_QUOTE}|{S_QUOTE}|\*)*\*\)
 [nN][iI][lL]                              { return ynil; }
 [nN][oO][tT]                              { return ynot; }
 "<>"                                      { return ynotequal; }
-{NUMBER}                                  { return ynumber; }
+{NUMBER}                                  { yylval.int_value = atoi(yytext); return ynumber; }
 [rR][eE][cC][oO][rR][dD]                  { return yrecord; }
 [oO][fF]                                  { return yof; }
 [oO][rR]                                  { return yor; }

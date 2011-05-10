@@ -61,16 +61,18 @@ string identifier_name;
 
 CompilationUnit    :  ProgramModule        
                    ;
-ProgramModule      :  yprogram Identifier ProgramParameters ysemicolon Block ydot 
-			{ procedure_ptr = new ProcedureRecord (identifier_name); }
+ProgramModule      :  yprogram ProcedureIdent ProgramParameters ysemicolon Block ydot 
+			{ cout << "Printing Symbol Table." << endl;  symbolTable_ptr->ptrintTable(); }
                    ;
 ProgramParameters  :  yleftparen  IdentList  yrightparen
                    ;
 IdentList          :  Identifier 
                    |  IdentList ycomma Identifier 
                    ;
-Identifier         :  yident { identifier_name = yylval.str; /* cout << yylval.str; delete yylval.str; */}
-		   		   ; 
+Identifier         :  yident { identifier_name = yylval.str; } 
+		   ;
+ProcedureIdent     : Identifier { procedure_ptr = new ProcedureRecord (identifier_name); }
+	           ; 
 /**************************  Declarations section ***************************/
 
 Block              :  Declarations  ybegin  StatementSequence  yend
@@ -95,14 +97,14 @@ VariableDeclList   :  VariableDecl ysemicolon
                    |  VariableDeclList VariableDecl ysemicolon
                    ;  
 ConstantDef        :  Identifier  yequal  ConstExpression 
-					  { 
-					  	const_ptr = new ConstantRecord (identifier_name); 
-						if (symbolTable_ptr == NULL) cout << "NULL!" << endl;
-					  	else  {
-							symbolTable_ptr->enterScope (procedure_ptr);
-							symbolTable_ptr->addSymbol (const_ptr); 
-						}
-					  }
+		  	{ 
+			  	const_ptr = new ConstantRecord (identifier_name); 
+				if (symbolTable_ptr == NULL) cout << "NULL!" << endl;
+			  	else  {
+					symbolTable_ptr->enterScope (procedure_ptr);
+					symbolTable_ptr->addSymbol (const_ptr); 
+				}
+			}
                    ;
 TypeDef            :  Identifier  yequal  Type
                    ;
@@ -112,7 +114,7 @@ VariableDecl       :  IdentList  ycolon  Type
 /***************************  Const/Type Stuff  ******************************/
 
 ConstExpression    :  UnaryOperator ConstFactor 
-		           |  ConstFactor               
+		   |  ConstFactor               
                    |  ystring
                    ;
 ConstFactor        :  Identifier 
@@ -130,7 +132,7 @@ Type               :  Identifier
 ArrayType          :  yarray yleftbracket SubrangeList yrightbracket  yof Type
                    ;
 SubrangeList       :  Subrange
-		           |  SubrangeList ycomma Subrange 
+	           |  SubrangeList ycomma Subrange 
                    ;
 Subrange           :  ConstFactor ydotdot ConstFactor
                    |  ystring ydotdot  ystring

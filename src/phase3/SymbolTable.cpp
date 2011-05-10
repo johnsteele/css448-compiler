@@ -142,7 +142,7 @@ bool SymbolTable::addSymbol(IdentifierRecord* ident) {
 		}
 
 		bool inserted = currentScope->identifiers->insert(ident);
-		if (inserted == true) cout << "Inserted!" << endl; ident->print(1);
+		if (inserted == true) cout << "Inserted!" << endl; ident->print(1); cout << endl;
 		return inserted;
 	}
 }
@@ -199,7 +199,9 @@ IdentifierRecord * SymbolTable::retrieve (const IdentifierRecord* ident) const {
  * @param procedure The procedure associated with the scope about to enter.
  */
 void SymbolTable::enterScope (const IdentifierRecord* procedure) {
-
+	
+	cout << "Entering Scope: " << endl;
+	if (procedure == NULL) cout << "Procedure is NULL...." << endl;
 	// The new scope node we're entering.
 	Node *node        = new Node ();
 	node->procedure   = procedure;
@@ -214,6 +216,7 @@ void SymbolTable::enterScope (const IdentifierRecord* procedure) {
 		rootScope->parent = NULL;
 		// Link in current.
 		currentScope = rootScope;
+	 	// procedure->print (currentScope->scope);
 	}
 
 	// Otherwise, it's a sibling to existing scope or new scope.
@@ -278,6 +281,7 @@ void SymbolTable::exitScope () {
  * Postconditions: This symbol table was printed to the standard output.
  */
 void SymbolTable::printTable() const {
+	cout << "Printing table..." << endl;
 	printTableHelper (rootScope);
 }
 

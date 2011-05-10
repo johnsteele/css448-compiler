@@ -61,10 +61,25 @@ string identifier_name;
 
 CompilationUnit    :  ProgramModule        
                    ;
-ProgramModule      :  yprogram Identifier { procedure_ptr = new ProcedureRecord (identifier_name);  symbolTable_ptr->enterScope (procedure_ptr); } ProgramParameters ysemicolon Block ydot 
-			{ 	
+ProgramModule      :  yprogram 
+ 	              Identifier 
+			{ 
+				/* Set program as 1st procedure. */
+				procedure_ptr = new ProcedureRecord (identifier_name);  
+ 				symbolTable_ptr->enterScope (procedure_ptr); 
+			} 
+		      ProgramParameters ysemicolon Block ydot 
+			{ 
+				/* Parsing complete, print symbol table. */	
 				cout << "Printing Symbol Table." << endl;  
  				symbolTable_ptr->printTable(); 
+				
+				/* Clean up */
+				delete symbolTable_ptr;
+				procedure_ptr = NULL;
+				parameter_ptr = NULL;
+				procedure_ptr = NULL;
+				const_ptr     = NULL;
 			}
                    ;
 ProgramParameters  :  yleftparen  IdentList  yrightparen
@@ -100,10 +115,8 @@ VariableDeclList   :  VariableDecl ysemicolon
 ConstantDef        :  Identifier  yequal  ConstExpression 
 		  	{ 
 			  	const_ptr = new ConstantRecord (identifier_name); 
-				if (symbolTable_ptr == NULL) cout << "NULL!" << endl;
-			  	else  {
-					symbolTable_ptr->addSymbol (const_ptr); 
-				}
+				symbolTable_ptr->addSymbol (const_ptr); 
+				const_ptr = NULL;
 			}
                    ;
 TypeDef            :  Identifier  yequal  Type

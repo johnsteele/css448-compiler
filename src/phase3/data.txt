@@ -6,9 +6,9 @@ program list(input,output);
 (*  If there was an executable, a.out, run:  a.out < list.data  *)
 
 const
-  grades = 5;                             (* number of grades to be averaged
+  grades = 6;                             (* number of grades to be averaged
 *)
-  avgPosition = 6;                        (* position of grade average *)
+  avgPosition = 5;                        (* position of grade average *)
   size = 4;                               (* number of students *)
 
 type

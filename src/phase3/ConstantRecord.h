@@ -59,19 +59,6 @@ public:
 	virtual ~ConstantRecord();
 
 
-	//---------------------clone-----------------------------------------------
-	/**
-	 * @brief Clones this IdentifierRecord.
-	 *
-	 * Preconditions: None.
-	 *
-	 * Postconditions: A pointer to a cloned identifier is returned.
-	 *
-	 * @return The pointer to the cloned object.
-	 */
-	virtual ConstantRecord * clone () const;
-
-
 	//---------------------operator<-------------------------------------------
 	/**
 	 * @brief Compares this IdentfierRecord with the_other for less than value.

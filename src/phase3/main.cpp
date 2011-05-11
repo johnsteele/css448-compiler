@@ -32,7 +32,7 @@ int main(void) {
 
 
 	cout << "=================== Started parsing ===================" << endl;
-	yyparse();
+	// yyparse();
 	cout << "=================== Finished parsing ==================" << endl;
 
 #if DEBUG

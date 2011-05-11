@@ -53,21 +53,6 @@ ProcedureRecord::~ProcedureRecord() {
 }
 
 
-//---------------------clone---------------------------------------------------
-/**
- * @brief Clones this IdentifierRecord.
- *
- * Preconditions: None.
- *
- * Postconditions: A pointer to a cloned identfifier is returned.
- *
- * @return The pointer to the cloned object.
- */
-ProcedureRecord * ProcedureRecord::clone() const {
-	return NULL;
-}
-
-
 //---------------------operator<-----------------------------------------------
 /**
  * @brief Compares this IdentfierRecord with the_other for less than value.

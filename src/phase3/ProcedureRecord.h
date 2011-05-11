@@ -62,19 +62,6 @@ public:
 	virtual ~ProcedureRecord();
 
 
-	//---------------------clone-----------------------------------------------
-	/**
-	 * @brief Clones this ProcedureRecord.
-	 *
-	 * Preconditions: None.
-	 *
-	 * Postconditions: A pointer to a cloned identifier is returned.
-	 *
-	 * @return The pointer to the cloned object.
-	 */
-	virtual ProcedureRecord * clone() const;
-
-
 	//---------------------operator<-------------------------------------------
 	/**
 	 * @brief Compares this IdentfierRecord with the_other for less than value.

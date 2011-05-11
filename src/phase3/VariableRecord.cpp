@@ -51,21 +51,6 @@ VariableRecord::~VariableRecord() {
 
 }
 
-//---------------------clone---------------------------------------------------
-/**
- * @brief Clones this IdentifierRecord.
- *
- * Preconditions: None.
- *
- * Postconditions: A pointer to a cloned identifier is returned.
- *
- * @return The pointer to the cloned object.
- */
-VariableRecord * VariableRecord::clone() const {
-
-	return NULL;
-}
-
 
 //---------------------operator<-----------------------------------------------
 /**

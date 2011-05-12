@@ -84,50 +84,49 @@ ParamList          : ParamList ycomma Identifier
                             program-> insertParam(param);
                      }
                    ;
-
 IdentList          :  Identifier
                    |  IdentList ycomma Identifier
                    ;
 Identifier         :  yident { /*cout << yylval.str;*/ }
-         ;
+                   ;
 /* We need to put the print Identifier here. */
 /**************************  Declarations section ***************************/
 
-Block              :  Declarations  ybegin  StatementSequence  yend
+Block             :  Declarations  ybegin  StatementSequence  yend
                   ;
-Declarations       :  ConstantDefBlock TypeDefBlock VariableDeclBlock SubprogDeclList
+Declarations      :  ConstantDefBlock TypeDefBlock VariableDeclBlock SubprogDeclList
                   ;
-ConstantDefBlock   :  /*** empty ***/
+ConstantDefBlock  :  /*** empty ***/
                   |  yconst ConstantDefList
                   ;
-ConstantDefList    :  ConstantDef ysemicolon
+ConstantDefList   :  ConstantDef ysemicolon
                   |  ConstantDefList ConstantDef ysemicolon
                   ;
-TypeDefBlock       :  /*** empty ***/
+TypeDefBlock      :  /*** empty ***/
                   |  ytype  TypeDefList
                   ;
-TypeDefList        :  TypeDef  ysemicolon
+TypeDefList       :  TypeDef  ysemicolon
                   |  TypeDefList TypeDef ysemicolon
                   ;
-VariableDeclBlock  :  /*** empty ***/
+VariableDeclBlock :  /*** empty ***/
                   |  yvar VariableDeclList
                   ;
-VariableDeclList   :  VariableDecl ysemicolon
+VariableDeclList  :  VariableDecl ysemicolon
                   |  VariableDeclList VariableDecl ysemicolon
                   ;
-ConstantDef        :  Identifier {constant = new ConstantRecord(yylval.str);}
+ConstantDef       :  Identifier {constant = new ConstantRecord(yylval.str);}
                      yequal  ConstExpression
                   ;
-TypeDef            :  Identifier { /*theType = new TypeRecord(yylval.str);*/}
+TypeDef           :  Identifier { /*theType = new TypeRecord(yylval.str);*/}
                      yequal  Type {/*theType ->setType(yylval.str);*/}
                   ;
-VariableDecl       :  IdentList { /*v = new VariableRecord(yylval.str);*/}
+VariableDecl      :  IdentList { /*v = new VariableRecord(yylval.str);*/}
                      ycolon  Type {/*v ->setType(yylval.str);*/}
                   ;
 
 /***************************  Const/Type Stuff  ******************************/
 
-ConstExpression    :  UnaryOperator ConstFactor
+ConstExpression   :  UnaryOperator ConstFactor
                   {    /*have to figure out a way to deal with unary operator*/
                   }
                   |  ConstFactor
@@ -136,44 +135,44 @@ ConstExpression    :  UnaryOperator ConstFactor
 
                   |  ystring /*not handling any const but numbers right now*/
                   ;
-ConstFactor        :  Identifier
+ConstFactor       :  Identifier
                   |  ynumber {constant -> setConstFactor(yylval.i);}
                   |  ytrue   {constant -> setConstFactor(yylval.b);}
-                  |  yfalse   {constant -> setConstFactor(yylval.b);}
+                  |  yfalse  {constant -> setConstFactor(yylval.b);}
                   |  ynil    {constant -> setConstFactor(yylval.i);}
                   ;
-Type               :  Identifier /*will have to work out how to leave the pointer*/
+Type              :  Identifier /*will have to work out how to leave the pointer*/
                   |  ArrayType
                   |  PointerType
                   |  RecordType
                   |  SetType
                   ;
-ArrayType          :  yarray yleftbracket SubrangeList yrightbracket  yof Type
+ArrayType         :  yarray yleftbracket SubrangeList yrightbracket  yof Type
                   ;
-SubrangeList       :  Subrange
+SubrangeList      :  Subrange
                   |  SubrangeList ycomma Subrange
                   ;
-Subrange           :  ConstFactor ydotdot ConstFactor
+Subrange          :  ConstFactor ydotdot ConstFactor
                   |  ystring ydotdot  ystring
                   ;
-RecordType         :  yrecord  FieldListSequence  yend
+RecordType        :  yrecord  FieldListSequence  yend
                   ;
-SetType            :  yset  yof  Subrange
+SetType           :  yset  yof  Subrange
                   ;
-PointerType        :  ycaret  Identifier
+PointerType       :  ycaret  Identifier
                   ;
-FieldListSequence  :  FieldList
+FieldListSequence :  FieldList
                   |  FieldListSequence  ysemicolon  FieldList
                   ;
-FieldList          :  IdentList  ycolon  Type
+FieldList         :  IdentList  ycolon  Type
                   ;
 
 /***************************  Statements  ************************************/
 
-StatementSequence  :  Statement
+StatementSequence :  Statement
                   |  StatementSequence  ysemicolon  Statement
                   ;
-Statement          :  Assignment
+Statement         :  Assignment
                   |  ProcedureCall
                   |  IfStatement
                   |  CaseStatement
@@ -185,29 +184,29 @@ Statement          :  Assignment
                   |  ybegin StatementSequence yend
                   |  /*** empty ***/
                   ;
-Assignment         :  Designator yassign Expression
+Assignment        :  Designator yassign Expression
                   ;
-ProcedureCall      :  Identifier
+ProcedureCall     :  Identifier
                   |  Identifier ActualParameters
                   ;
-IfStatement        :  yif  Expression  ythen  Statement  ElsePart
+IfStatement       :  yif  Expression  ythen  Statement  ElsePart
                   ;
-ElsePart           :  /*** empty ***/
+ElsePart          :  /*** empty ***/
                   |  yelse  Statement
                   ;
-CaseStatement      :  ycase  Expression  yof  CaseList  yend
+CaseStatement     :  ycase  Expression  yof  CaseList  yend
                   ;
-CaseList           :  Case
+CaseList          :  Case
                   |  CaseList  ysemicolon  Case
                   ;
-Case               :  CaseLabelList  ycolon  Statement
+Case              :  CaseLabelList  ycolon  Statement
                   ;
-CaseLabelList      :  ConstExpression
+CaseLabelList     :  ConstExpression
                   |  CaseLabelList  ycomma  ConstExpression
                   ;
-WhileStatement     :  ywhile  Expression  ydo  Statement
+WhileStatement    :  ywhile  Expression  ydo  Statement
                   ;
-RepeatStatement    :  yrepeat StatementSequence yuntil Expression
+RepeatStatement   :  yrepeat StatementSequence yuntil Expression
                   ;
 ForStatement      :  yfor Identifier yassign Expression WhichWay Expression
                            ydo Statement

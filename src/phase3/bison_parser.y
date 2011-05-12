@@ -57,35 +57,37 @@ int scope;
 
 /**************************  Pascal program **********************************/
 
-CompilationUnit    :  ProgramModule
+CompilationUnit    : ProgramModule
                    ;
-ProgramModule      :  yprogram {table = new SymbolTable();}
+ProgramModule      : yprogram {table = new SymbolTable();}
                      Identifier
-                        {
+                     {
                             scope = 0;
                             program = new ProcedureRecord(yylval.str);
                             table-> enterScope(program);
                             parent = program;
                             aProcedure = program;
-                        }
+                     }
                      ProgramParameters ysemicolon Block  ydot
                      { table->printTable(); }
                    ;
-ProgramParameters  :  yleftparen  ParamList yrightparen //added paramlist to differentiate
+ProgramParameters  : yleftparen  ParamList yrightparen //added paramlist to differentiate
                    ;
 ParamList          : ParamList ycomma Identifier
-                     { param = new Parameter(yylval.str);
-                     program-> insertParam(param);
+                     { 
+                            param = new Parameter(yylval.str);
+                            program-> insertParam(param);
                      }
-                  | Identifier
-                     { param = new Parameter(yylval.str);
-                     program-> insertParam(param);
+                   | Identifier
+                     { 
+                            param = new Parameter(yylval.str);
+                            program-> insertParam(param);
                      }
-                  ;
+                   ;
 
 IdentList          :  Identifier
-                  |  IdentList ycomma Identifier
-                  ;
+                   |  IdentList ycomma Identifier
+                   ;
 Identifier         :  yident { /*cout << yylval.str;*/ }
          ;
 /* We need to put the print Identifier here. */
@@ -205,137 +207,145 @@ CaseLabelList      :  ConstExpression
                   ;
 WhileStatement     :  ywhile  Expression  ydo  Statement
                   ;
-RepeatStatement    :  yrepeat  StatementSequence  yuntil  Expression
+RepeatStatement    :  yrepeat StatementSequence yuntil Expression
                   ;
-ForStatement       :  yfor Identifier yassign  Expression  WhichWay  Expression
-                           ydo  Statement
+ForStatement      :  yfor Identifier yassign Expression WhichWay Expression
+                           ydo Statement
                   ;
-WhichWay           :  yto  |  ydownto
+WhichWay          : yto | ydownto
                   ;
-IOStatement        :  yread  yleftparen  DesignatorList  yrightparen
-                  |  yreadln
-                  |  yreadln  yleftparen DesignatorList  yrightparen
-                  |  ywrite  yleftparen  ExpList  yrightparen
-                  |  ywriteln
-                  |  ywriteln  yleftparen  ExpList  yrightparen
+IOStatement       : yread yleftparen DesignatorList yrightparen
+                  | yreadln
+                  | yreadln yleftparen DesignatorList yrightparen
+                  | ywrite yleftparen ExpList yrightparen
+                  | ywriteln
+                  | ywriteln yleftparen ExpList yrightparen
                   ;
 
 /***************************  Designator Stuff  ******************************/
 
-DesignatorList     :  Designator
-                  |  DesignatorList  ycomma  Designator
+DesignatorList    : Designator
+                  | DesignatorList ycomma Designator
                   ;
-Designator         :  Identifier  DesignatorStuff
+Designator        : Identifier DesignatorStuff
                   ;
-DesignatorStuff    :  /*** empty ***/
-                  |  DesignatorStuff  theDesignatorStuff
+DesignatorStuff   : /*** empty ***/
+                  | DesignatorStuff theDesignatorStuff
                   ;
-theDesignatorStuff :  ydot Identifier
-                  |  yleftbracket ExpList yrightbracket
-                  |  ycaret
+theDesignatorStuff: ydot Identifier
+                  | yleftbracket ExpList yrightbracket
+                  | ycaret
                   ;
-ActualParameters   :  yleftparen  ExpList  yrightparen
+ActualParameters  : yleftparen ExpList yrightparen
                   ;
-ExpList            :  Expression
-                  |  ExpList  ycomma  Expression
+ExpList           : Expression
+                  | ExpList ycomma Expression
                   ;
-MemoryStatement    :  ynew  yleftparen  Identifier  yrightparen
-                  |  ydispose yleftparen  Identifier yrightparen
+MemoryStatement   : ynew yleftparen Identifier yrightparen
+                  | ydispose yleftparen Identifier yrightparen
                   ;
 
 /***************************  Expression Stuff  ******************************/
 
-Expression         :  SimpleExpression
-                  |  SimpleExpression  Relation  SimpleExpression
+Expression        : SimpleExpression
+                  | SimpleExpression Relation SimpleExpression
                   ;
-SimpleExpression   :  TermExpr
-                  |  UnaryOperator  TermExpr
+SimpleExpression  : TermExpr
+                  | UnaryOperator TermExpr
                   ;
-TermExpr           :  Term
-                  |  TermExpr  AddOperator  Term
+TermExpr          : Term
+                  | TermExpr AddOperator Term
                   ;
-Term               :  Factor
-                  |  Term  MultOperator  Factor
+Term              : Factor
+                  | Term MultOperator Factor
                   ;
-Factor             :  ynumber
-                  |  ytrue
-                  |  yfalse
-                  |  ynil
-                  |  ystring
-                  |  Designator
-                  |  yleftparen  Expression  yrightparen
-                  |  ynot Factor
-                  |  Setvalue
-                  |  FunctionCall
+Factor            : ynumber
+                  | ytrue
+                  | yfalse
+                  | ynil
+                  | ystring
+                  | Designator
+                  | yleftparen Expression yrightparen
+                  | ynot Factor
+                  | Setvalue
+                  | FunctionCall
                   ;
 /*  Functions with no parameters have no parens, but you don't need         */
 /*  to handle that in FunctionCall because it is handled by Designator.     */
 /*  A FunctionCall has at least one parameter in parens, more are           */
 /*  separated with commas.                                                  */
-FunctionCall       :  Identifier {
-
-                                 if(!table->lookup(aProcedure)){}
-                                       /*throw an error*/
-                                 }ActualParameters
+FunctionCall      : Identifier 
+					{
+                     	if(!table->lookup(aProcedure)){}
+                        /*throw an error*/
+                    }
+                    ActualParameters
                   ;
-Setvalue           :  yleftbracket ElementList  yrightbracket
-                  |  yleftbracket yrightbracket
+Setvalue          : yleftbracket ElementList  yrightbracket
+                  | yleftbracket yrightbracket
                   ;
-ElementList        :  Element
-                  |  ElementList  ycomma  Element
+ElementList       : Element
+                  | ElementList  ycomma  Element
                   ;
-Element            :  ConstExpression
-                  |  ConstExpression  ydotdot  ConstExpression
+Element           : ConstExpression
+                  | ConstExpression  ydotdot  ConstExpression
                   ;
 
 /***************************  Subprogram Stuff  ******************************/
 
-SubprogDeclList    :  /*** empty ***/
-                  |  SubprogDeclList ProcedureDecl ysemicolon
-                  |  SubprogDeclList FunctionDecl ysemicolon
+SubprogDeclList   : /*** empty ***/
+                  | SubprogDeclList ProcedureDecl ysemicolon
+                  | SubprogDeclList FunctionDecl ysemicolon
                   ;
-ProcedureDecl      :  ProcedureHeading  ysemicolon  Block {table->exitScope();}
+ProcedureDecl     : ProcedureHeading  ysemicolon  Block 
+                    {table->exitScope();}
                   ;
-FunctionDecl       :  FunctionHeading  ycolon  Identifier  ysemicolon  Block {table->exitScope();}
+FunctionDecl      : FunctionHeading  ycolon  Identifier  ysemicolon  Block 
+                    {table->exitScope();}
                   ;
-ProcedureHeading   :  yprocedure Identifier {
+ProcedureHeading  : yprocedure 
+					Identifier 
+					{
                         aProcedure = new ProcedureRecord(yylval.str);
                         table ->enterScope(aProcedure);
-                  }
-                  |  yprocedure Identifier{
+                  | yprocedure Identifier
+                    {
                         aProcedure = new ProcedureRecord(yylval.str);
                         table ->enterScope(aProcedure);
-                  }
-                     FormalParameters
+                    }
+                    FormalParameters
                   ;
-FunctionHeading    :  yfunction  Identifier {
+FunctionHeading   : yfunction Identifier 
+					{
                         aProcedure = new ProcedureRecord(yylval.str);
                         table ->enterScope(aProcedure);
-                     }
-                  |  yfunction  Identifier {
+                    }
+                  | yfunction Identifier 
+                  	{
                         aProcedure = new ProcedureRecord(yylval.str);
                         table ->enterScope(aProcedure);
-                     }     FormalParameters
+                    }     
+                    FormalParameters
                   ;
-FormalParameters   :  yleftparen FormalParamList yrightparen
+FormalParameters  :  yleftparen FormalParamList yrightparen
                   ;
-FormalParamList    :  OneFormalParam
+FormalParamList   :  OneFormalParam
                   |  FormalParamList ysemicolon OneFormalParam
                   ;
-OneFormalParam     :  yvar  IdentList  ycolon Identifier
+OneFormalParam    :  yvar  IdentList  ycolon Identifier
                   |  IdentList  ycolon Identifier
                   ;
 
 /***************************  More Operators  ********************************/
 
-UnaryOperator      :  yplus
+UnaryOperator     :  yplus
                   |  yminus
                   ;
-MultOperator       :  ymultiply | ydivide | ydiv | ymod | yand
+MultOperator      :  ymultiply | ydivide | ydiv | ymod | yand
                   ;
-AddOperator        :  yplus | yminus | yor
+AddOperator       :  yplus | yminus | yor
                   ;
-Relation           :  yequal  | ynotequal | yless | ygreater
+Relation          :  yequal  | ynotequal | yless | ygreater
                   |  ylessequal | ygreaterequal | yin
                   ;
 %%

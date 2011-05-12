@@ -354,7 +354,7 @@ void BSTree::clone (Node *&copy, const Node *originalTree)
 		// Link the data into our new Node.
 		//copy->item       = new Object (*originalTree->item);
 		// Clone the object.
-		copy->item = originalTree->item->clone();
+		// TODO: Need to figure this out. copy->item = originalTree->item->clone();
 
 		// Now clone left and right subtrees.
 		clone(copy->left,  originalTree->left);

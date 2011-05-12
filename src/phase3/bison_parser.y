@@ -58,21 +58,21 @@ int scope;
 /**************************  Pascal program **********************************/
 
 CompilationUnit    :  ProgramModule
-                  ;
+                   ;
 ProgramModule      :  yprogram {table = new SymbolTable();}
                      Identifier
-                  {
-                        scope = 0;
-                        program = new ProcedureRecord(yylval.str);
-                        table-> enterScope(program);
-                        parent = program;
-                        aProcedure = program;
-                  }
+                        {
+                            scope = 0;
+                            program = new ProcedureRecord(yylval.str);
+                            table-> enterScope(program);
+                            parent = program;
+                            aProcedure = program;
+                        }
                      ProgramParameters ysemicolon Block  ydot
-                     {table->printTable();}
-                  ;
+                     { table->printTable(); }
+                   ;
 ProgramParameters  :  yleftparen  ParamList yrightparen //added paramlist to differentiate
-                  ;
+                   ;
 ParamList          : ParamList ycomma Identifier
                      { param = new Parameter(yylval.str);
                      program-> insertParam(param);

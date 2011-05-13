@@ -222,7 +222,6 @@ void BSTree::deleteRoot (Node *&root)
 	// Replace it with the most left item in the right subtree.
 	else {
 		delete root->item;
-		//root->item = findAndDeleteMostLeft(root->right);
 		root->item = findAndDeleteMostLeft(root->right, root);
 	}
 }
@@ -351,10 +350,9 @@ void BSTree::clone (Node *&copy, const Node *originalTree)
 	else {
 		// Our new Node.
 		copy = new Node;
+
 		// Link the data into our new Node.
-		//copy->item       = new Object (*originalTree->item);
-		// Clone the object.
-		// TODO: Need to figure this out. copy->item = originalTree->item->clone();
+		//copy->item  = new IdentifierRecord (*originalTree->item);
 
 		// Now clone left and right subtrees.
 		clone(copy->left,  originalTree->left);

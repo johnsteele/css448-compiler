@@ -15,19 +15,38 @@
    /************************ C-Declarations Section **************************/
 %{
 #include <iostream>
+#include <stdlib.h>
+using namespace std;
+
 #include "SymbolTable.h"
+#include "IdentifierRecord.h"
+#include "VariableRecord.h"
 #include "ProcedureRecord.h"
 #include "ConstantRecord.h"
-using namespace std;
+#include "Parameter.h"
+#include "ArrayType.h"
+#include "PointerType.h"
+#include "SITtype.h"
+#include "SITtable.h"
+
 SymbolTable * table = NULL;
-ProcedureRecord * program = NULL;
-ProcedureRecord * aProcedure = NULL;
-ProcedureRecord * parent = NULL;
-ConstantRecord * constant = NULL;
-//TypeRecord * theType = NULL;
+IdentifierRecord * program = NULL; //used to always hold program record
+IdentifierRecord * aProcedure = NULL; //holds procedure in current scope
+//IdentifierRecord * parent = NULL;
+IdentifierRecord * constant = NULL; //holds const variable while being entered
+IdentifierRecord * aType = NULL;    //holds type vaiable while being entered
+IdentifierRecord * subType = NULL;  //holds type of type variable while being entered
 //VariableRecord * v = NULL;
-Parameter * param = NULL;
-int scope;
+Parameter * param = NULL;  //holds parameter while being entered
+string uOperator = "";   //keeps track of unary operator
+ArrayType * array = NULL; //holds array while being setup and entered
+//int scope;
+
+	//SITtable *sitTable = new SITtable ();
+	//bool found = sitTable->lookup("true");
+	//if (found) cout << "Found: " << found << endl;
+	//else   cout << "Not Found: " << found << endl;
+	//delete sitTable;
 %}
 
 
@@ -65,8 +84,6 @@ ProgramModule      : yprogram {table = new SymbolTable();}
                             scope = 0;
                             program = new ProcedureRecord(yylval.str);
                             table-> enterScope(program);
-                            parent = program;
-                            aProcedure = program;
                      }
                      ProgramParameters ysemicolon Block  ydot
                      { table->printTable(); }
@@ -78,14 +95,14 @@ ParamList          : ParamList ycomma Identifier
                             ProcedureRecord &r = dynamic_cast<ProcedureRecord &> (*program);
                             r.insertParam(param);
                             param = new Parameter(yylval.str);
-                            program-> insertParam(param);
+                            r.insertParam(param);
                      }
                    | Identifier
                      { 
                             ProcedureRecord &r = dynamic_cast<ProcedureRecord &> (*program);
                             r.insertParam(param);
                             param = new Parameter(yylval.str);
-                            program-> insertParam(param);
+                            r.insertParam(param);
                      }
                    ;
 IdentList          :  Identifier
@@ -120,10 +137,10 @@ VariableDeclList  :  VariableDecl ysemicolon
                   ;
 ConstantDef       :  Identifier {constant = new ConstantRecord(yylval.str);}
                      yequal  ConstExpression
-                     table->addSymbol(constant);
+                     {table->addSymbol(constant);}
                   ;
-TypeDef           :  Identifier { /*theType = new TypeRecord(yylval.str);*/}
-                     yequal  Type {/*theType ->setType(yylval.str);*/}
+TypeDef           :  Identifier { aType = new IdentifierRecord(yylval.str);}
+                     yequal  Type 
                   ;
 VariableDecl      :  IdentList { /*v = new VariableRecord(yylval.str);*/}
                      ycolon  Type {/*v ->setType(yylval.str);*/}
@@ -131,43 +148,70 @@ VariableDecl      :  IdentList { /*v = new VariableRecord(yylval.str);*/}
 
 /***************************  Const/Type Stuff  ******************************/
 
-ConstExpression   :  UnaryOperator ConstFactor
-                  {    /*have to figure out a way to deal with unary operator*/
-                  }
+ConstExpression   :  UnaryOperator 
+                     ConstFactor
                   |  ConstFactor
-                  {   $$ = $1;
-                  }
 
                   |  ystring /*not handling any const but numbers right now*/
                   ;
-ConstFactor       :  Identifier
+ConstFactor       :  Identifier /*const setConstFactor only takes ints.... hmmm*/
                   |  ynumber 
-                    {ConstantRecord &r = dynamic_cast<ConstantRecord &> (*constant);
-                     r.setConstFactor(atoi(yylval.str));}}
+                    {
+                      int n = atoi(yylval.str);
+                      if(!uOperator.empty()){
+                         if(uOperator == "-")
+                            n *= -1;
+                      } //unaray op will count now if negative
+                      ConstantRecord &r = dynamic_cast<ConstantRecord &> (*constant);
+                      r.setConstFactor(n);
+                      uOperator = "";
+                    }
                   |  ytrue   
                      {ConstantRecord &r = dynamic_cast<ConstantRecord &> (*constant);
-                      r.setConstFactor(1);
+                      int n = 1;
+                      if(uOperator == "-")
+                         n *= -1;
+                      r.setConstFactor(n);
                       r.setIsBool();
+                      uOperator = "";
                      }
-                  |  yfalse  {ConstantRecord &r = dynamic_cast<ConstantRecord &> (*constant);
-                      r.setConstFactor(1);
-                      r.setIsBool();}
-                  |  ynil    {ConstantRecord &r = dynamic_cast<ConstantRecord &> (*constant);
-                      r.setConstFactor(atoi(yylval.str));}
+                  |  yfalse
+                     {ConstantRecord &r = dynamic_cast<ConstantRecord &> (*constant);
+                      r.setConstFactor(0);
+                      r.setIsBool();
+                      uOperator = "";
+                     }
+                  |  ynil
+                     {ConstantRecord &r = dynamic_cast<ConstantRecord &> (*constant);
+                      r.setConstFactor(atoi(yylval.str));
+                      uOperator = "";
+                      //I don't really know how to handle ynil. Is it ""?
+                     }
                   ;
-Type              :  Identifier /*will have to work out how to leave the pointer*/
+Type              :  Identifier 
+                     {/* need to do SITtable lookup for type and pass in matching
+                       identRecord found from SitTable. If not found, return error.*/
+                     }
                   |  ArrayType
                   |  PointerType
                   |  RecordType
                   |  SetType
                   ;
-ArrayType         :  yarray yleftbracket SubrangeList yrightbracket  yof Type
+ArrayType         :  yarray 
+                     {array = new ArrayType(aType->getName());
+                     }
+                     yleftbracket SubrangeList yrightbracket  yof
+                     Type
+                     {array ->setType(yylval.str)
                   ;
 SubrangeList      :  Subrange
                   |  SubrangeList ycomma Subrange
                   ;
-Subrange          :  ConstFactor ydotdot ConstFactor
-                  |  ystring ydotdot  ystring
+Subrange          :  ConstFactor{array->setLowDimension(atoi(yylval.str);}
+                     ydotdot
+                     ConstFactor{array->setHighDimension(atoi(yylval.str);}
+                  |  ystring ydotdot  ystring /*we may need an overloaded operator
+                                                that can handle strings for diminsions*/
                   ;
 RecordType        :  yrecord  FieldListSequence  yend
                   ;
@@ -321,6 +365,7 @@ ProcedureHeading  : yprocedure
 					{
                         aProcedure = new ProcedureRecord(yylval.str);
                         table ->enterScope(aProcedure);
+               }
                   | yprocedure Identifier
                     {
                         aProcedure = new ProcedureRecord(yylval.str);
@@ -351,8 +396,8 @@ OneFormalParam    :  yvar  IdentList  ycolon Identifier
 
 /***************************  More Operators  ********************************/
 
-UnaryOperator     :  yplus
-                  |  yminus
+UnaryOperator     :  yplus {uOperator = "+";}
+                  |  yminus {uOperator = "-";}
                   ;
 MultOperator      :  ymultiply | ydivide | ydiv | ymod | yand
                   ;

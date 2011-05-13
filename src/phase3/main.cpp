@@ -35,6 +35,7 @@ int main(void) {
 	bool found = table->lookup("true");
 	if (found) cout << "Found: " << found << endl;
 	else   cout << "Not Found: " << found << endl;
+	delete table;
 
 
 	cout << "=================== Started parsing ===================" << endl;

@@ -49,7 +49,12 @@ ProcedureRecord::ProcedureRecord(string name) : IdentifierRecord(name) {
  * Postconditions: Resources were released.
  */
 ProcedureRecord::~ProcedureRecord() {
+	delete args;
+	args = NULL;
 
+	if (returnType != NULL) delete returnType;
+	args       = NULL;
+	returnType = NULL;
 }
 
 

@@ -75,11 +75,15 @@ ProgramParameters  : yleftparen  ParamList yrightparen //added paramlist to diff
                    ;
 ParamList          : ParamList ycomma Identifier
                      { 
+                            ProcedureRecord &r = dynamic_cast<ProcedureRecord &> (*program);
+                            r.insertParam(param);
                             param = new Parameter(yylval.str);
                             program-> insertParam(param);
                      }
                    | Identifier
                      { 
+                            ProcedureRecord &r = dynamic_cast<ProcedureRecord &> (*program);
+                            r.insertParam(param);
                             param = new Parameter(yylval.str);
                             program-> insertParam(param);
                      }
@@ -116,6 +120,7 @@ VariableDeclList  :  VariableDecl ysemicolon
                   ;
 ConstantDef       :  Identifier {constant = new ConstantRecord(yylval.str);}
                      yequal  ConstExpression
+                     table->addSymbol(constant);
                   ;
 TypeDef           :  Identifier { /*theType = new TypeRecord(yylval.str);*/}
                      yequal  Type {/*theType ->setType(yylval.str);*/}
@@ -136,10 +141,19 @@ ConstExpression   :  UnaryOperator ConstFactor
                   |  ystring /*not handling any const but numbers right now*/
                   ;
 ConstFactor       :  Identifier
-                  |  ynumber {constant -> setConstFactor(yylval.i);}
-                  |  ytrue   {constant -> setConstFactor(yylval.b);}
-                  |  yfalse  {constant -> setConstFactor(yylval.b);}
-                  |  ynil    {constant -> setConstFactor(yylval.i);}
+                  |  ynumber 
+                    {ConstantRecord &r = dynamic_cast<ConstantRecord &> (*constant);
+                     r.setConstFactor(atoi(yylval.str));}}
+                  |  ytrue   
+                     {ConstantRecord &r = dynamic_cast<ConstantRecord &> (*constant);
+                      r.setConstFactor(1);
+                      r.setIsBool();
+                     }
+                  |  yfalse  {ConstantRecord &r = dynamic_cast<ConstantRecord &> (*constant);
+                      r.setConstFactor(1);
+                      r.setIsBool();}
+                  |  ynil    {ConstantRecord &r = dynamic_cast<ConstantRecord &> (*constant);
+                      r.setConstFactor(atoi(yylval.str));}
                   ;
 Type              :  Identifier /*will have to work out how to leave the pointer*/
                   |  ArrayType

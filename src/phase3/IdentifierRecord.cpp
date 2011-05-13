@@ -42,7 +42,7 @@
  */
 IdentifierRecord::IdentifierRecord (string the_name) {
 	name = the_name;
-	type = "";
+	type = NULL;
 }
 
 
@@ -76,15 +76,15 @@ const string IdentifierRecord::getName () const {
 
 //---------------------setType-------------------------------------------------
 /**
- * @brief Sets the name of the type for this identifier.
+ * @brief Sets the type of this identifier.
  *
  * Preconditions: type is initialized.
  *
- * Postconditions: type was returned.
+ * Postconditions: type was set.
  *
- * @param the_type The name of the type of identifier.
+ * @param the_type The identifier type.
  */
-void IdentifierRecord::setType (string the_type) {
+void IdentifierRecord::setType (IdentifierRecord * the_type) {
 	type = the_type;
 }
 
@@ -99,7 +99,7 @@ void IdentifierRecord::setType (string the_type) {
  *
  * @return The type of this IdentifierRecord.
  */
-const string IdentifierRecord::getType () const {
+const IdentifierRecord * IdentifierRecord::getType () const {
 	return type;
 }
 

@@ -24,11 +24,17 @@ using namespace std;
 #include "Parameter.h"
 #include "ArrayType.h"
 #include "PointerType.h"
+#include "SITtype.h"
+#include "SITtable.h"
 
 extern int yyparse();
-#define DEBUG 0 
+#define DEBUG 1
 int main(void) {
- 
+
+	SITtable *table = new SITtable ();
+	bool found = table->lookup("true");
+	if (found) cout << "Found: " << found << endl;
+	else   cout << "Not Found: " << found << endl;
 
 
 	cout << "=================== Started parsing ===================" << endl;

@@ -140,15 +140,15 @@ public:
 
 	//---------------------setType---------------------------------------------
 	/**
-	 * @brief Sets the name of the type for this identifier.
+	 * @brief Sets the type of this identifier.
 	 *
 	 * Preconditions: type is initialized.
 	 *
-	 * Postconditions: type was returned.
+	 * Postconditions: type was set.
 	 *
 	 * @param the_type The name of the type of identifier.
 	 */
-	void setType (string the_type);
+	void setType (IdentifierRecord * the_type);
 
 
 	//---------------------getType---------------------------------------------
@@ -161,7 +161,7 @@ public:
 	 *
 	 * @return The type of this IdentifierRecord.
 	 */
-	const string getType () const;
+	const IdentifierRecord * getType () const;
 
 
 /**
@@ -177,7 +177,7 @@ private:
 	/**
 	 * @brief The type of this identifier.
 	 */
-	string type;
+	IdentifierRecord * type;
 };
 
 #endif /* IDENTIFIERRECORD_H_ */

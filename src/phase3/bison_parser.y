@@ -26,6 +26,7 @@ using namespace std;
 #include "Parameter.h"
 #include "ArrayType.h"
 #include "PointerType.h"
+#include "TypeRecord.h"
 #include "SITtype.h"
 #include "SITtable.h"
 
@@ -35,11 +36,13 @@ IdentifierRecord * aProcedure = NULL; //holds procedure in current scope
 //IdentifierRecord * parent = NULL;
 IdentifierRecord * constant = NULL; //holds const variable while being entered
 IdentifierRecord * aType = NULL;    //holds type vaiable while being entered
+IdentifierRecord * typesType = NULL; //holds the type of type while being entered
 IdentifierRecord * subType = NULL;  //holds type of type variable while being entered
-//VariableRecord * v = NULL;
+VariableRecord * v = NULL;
 Parameter * param = NULL;  //holds parameter while being entered
 string uOperator = "";   //keeps track of unary operator
 ArrayType * array = NULL; //holds array while being setup and entered
+PointerType * pointer = NULL; //holds pointer type while being entered
 //int scope;
 
 	//SITtable *sitTable = new SITtable ();
@@ -81,27 +84,24 @@ CompilationUnit    : ProgramModule
 ProgramModule      : yprogram {table = new SymbolTable();}
                      Identifier
                      {
-                            scope = 0;
                             program = new ProcedureRecord(yylval.str);
                             table-> enterScope(program);
                      }
-                     ProgramParameters ysemicolon Block  ydot
+                     ProgramParameters {program->print(0);} ysemicolon Block  ydot
                      { table->printTable(); }
                    ;
 ProgramParameters  : yleftparen  ParamList yrightparen //added paramlist to differentiate
                    ;
 ParamList          : ParamList ycomma Identifier
                      { 
-                            ProcedureRecord &r = dynamic_cast<ProcedureRecord &> (*program);
-                            r.insertParam(param);
                             param = new Parameter(yylval.str);
+                            ProcedureRecord &r = dynamic_cast<ProcedureRecord &> (*program);
                             r.insertParam(param);
                      }
                    | Identifier
                      { 
-                            ProcedureRecord &r = dynamic_cast<ProcedureRecord &> (*program);
-                            r.insertParam(param);
                             param = new Parameter(yylval.str);
+                            ProcedureRecord &r = dynamic_cast<ProcedureRecord &> (*program);
                             r.insertParam(param);
                      }
                    ;
@@ -120,30 +120,44 @@ Declarations      :  ConstantDefBlock TypeDefBlock VariableDeclBlock SubprogDecl
 ConstantDefBlock  :  /*** empty ***/
                   |  yconst ConstantDefList
                   ;
-ConstantDefList   :  ConstantDef ysemicolon
-                  |  ConstantDefList ConstantDef ysemicolon
+ConstantDefList   :  ConstantDef
+                     {table->addSymbol(constant);}
+                     ysemicolon
+                  |  ConstantDefList ConstantDef {table->addSymbol(constant);}
+                     ysemicolon
                   ;
 TypeDefBlock      :  /*** empty ***/
                   |  ytype  TypeDefList
                   ;
-TypeDefList       :  TypeDef  ysemicolon
-                  |  TypeDefList TypeDef ysemicolon
+TypeDefList       :  TypeDef
+                     {table->addSymbol(aType);}
+                     ysemicolon
+                  |  TypeDefList TypeDef
+                     {table->addSymbol(aType);}
+                     ysemicolon
                   ;
 VariableDeclBlock :  /*** empty ***/
                   |  yvar VariableDeclList
                   ;
-VariableDeclList  :  VariableDecl ysemicolon
-                  |  VariableDeclList VariableDecl ysemicolon
+VariableDeclList  :  VariableDecl
+                     { table->addSymbol(v);}
+                     ysemicolon
+                  |  VariableDeclList VariableDecl
+                     {table->addSymbol(v);}
+                     ysemicolon
                   ;
-ConstantDef       :  Identifier {constant = new ConstantRecord(yylval.str);}
+ConstantDef       :  Identifier
+                     {constant = new ConstantRecord(yylval.str);}
                      yequal  ConstExpression
-                     {table->addSymbol(constant);}
+                     
                   ;
-TypeDef           :  Identifier { aType = new IdentifierRecord(yylval.str);}
-                     yequal  Type 
+TypeDef           :  Identifier
+                     { aType = new TypeRecord(yylval.str);}
+                     yequal  Type
+                     {aType->setType(subType);}
                   ;
-VariableDecl      :  IdentList { /*v = new VariableRecord(yylval.str);*/}
-                     ycolon  Type {/*v ->setType(yylval.str);*/}
+VariableDecl      :  IdentList { v = new VariableRecord(yylval.str);}
+                     ycolon  Type {v ->setType(typesType);}
                   ;
 
 /***************************  Const/Type Stuff  ******************************/
@@ -192,8 +206,8 @@ Type              :  Identifier
                      {/* need to do SITtable lookup for type and pass in matching
                        identRecord found from SitTable. If not found, return error.*/
                      }
-                  |  ArrayType
-                  |  PointerType
+                  |  ArrayType {typesType = array;}
+                  |  PointerType {typesType = pointer;}
                   |  RecordType
                   |  SetType
                   ;
@@ -202,14 +216,17 @@ ArrayType         :  yarray
                      }
                      yleftbracket SubrangeList yrightbracket  yof
                      Type
-                     {array ->setType(yylval.str)
+
                   ;
 SubrangeList      :  Subrange
                   |  SubrangeList ycomma Subrange
                   ;
-Subrange          :  ConstFactor{array->setLowDimension(atoi(yylval.str);}
+
+Subrange          :  ConstFactor{array->setLowDimension(atoi(yylval.str));}
+                     /* I may have to change this due to the way I'm handling
+                        setTypes... hmm...*/
                      ydotdot
-                     ConstFactor{array->setHighDimension(atoi(yylval.str);}
+                     ConstFactor{array->setHighDimension(atoi(yylval.str));}
                   |  ystring ydotdot  ystring /*we may need an overloaded operator
                                                 that can handle strings for diminsions*/
                   ;
@@ -217,7 +234,7 @@ RecordType        :  yrecord  FieldListSequence  yend
                   ;
 SetType           :  yset  yof  Subrange
                   ;
-PointerType       :  ycaret  Identifier
+PointerType       :  ycaret  Identifier {pointer = new PointerType(yylval.str);}
                   ;
 FieldListSequence :  FieldList
                   |  FieldListSequence  ysemicolon  FieldList
@@ -361,11 +378,11 @@ FunctionDecl      : FunctionHeading  ycolon  Identifier  ysemicolon  Block
                     {table->exitScope();}
                   ;
 ProcedureHeading  : yprocedure 
-					Identifier 
-					{
+					     Identifier
+					     {
                         aProcedure = new ProcedureRecord(yylval.str);
                         table ->enterScope(aProcedure);
-               }
+                    }
                   | yprocedure Identifier
                     {
                         aProcedure = new ProcedureRecord(yylval.str);

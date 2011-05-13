@@ -50,7 +50,11 @@ ArrayType::ArrayType(string name) : IdentifierRecord (name) {
  */
 ArrayType::~ArrayType() {
 	delete dimensions;
-	if (currentDimension != NULL) delete currentDimension;
+	if (currentDimension != NULL)
+		delete currentDimension;
+
+	dimensions       = NULL;
+	currentDimension = NULL;
 }
 
 
@@ -111,14 +115,20 @@ bool ArrayType::operator==(const IdentifierRecord &the_other) const {
  * @param scope The scope of this identifier (used for indenting purposes).
  */
 void ArrayType::print(int scope) const {
+
+	// Print the name.
 	IdentifierRecord::print(scope);
 	cout << getName() << " ";
+
+	// Print the dimensions.
 	for (int i = 0; i < (long)dimensions->size(); i++) {
 		Dimension * dim = dimensions->at(i);
 		cout << dim->low << ".." << dim->high;
 		if ((i + 1) < (long)dimensions->size()) cout << ", ";
 	}
-	// TODO: print type.
+
+	// Print the type.
+	if (getType() != NULL) getType()->print(0);
 }
 
 
@@ -140,6 +150,7 @@ void ArrayType::setLowDimension (int lowDim) {
 	Dimension * dimension = new Dimension ();
 	dimension->low = lowDim;
 	currentDimension = dimension;
+	dimension = NULL;
 }
 
 

@@ -52,7 +52,6 @@ ArrayType::~ArrayType() {
 	delete dimensions;
 	if (currentDimension != NULL)
 		delete currentDimension;
-
 	dimensions       = NULL;
 	currentDimension = NULL;
 }
@@ -147,10 +146,8 @@ void ArrayType::setLowDimension (int lowDim) {
 	// If setLowDimension was called twice in a row w/out
 	// completing it by calling setHighDimension.
 	if (currentDimension != NULL) delete currentDimension;
-	Dimension * dimension = new Dimension ();
-	dimension->low = lowDim;
-	currentDimension = dimension;
-	dimension = NULL;
+	currentDimension = new Dimension ();
+	currentDimension->low = lowDim;
 }
 
 

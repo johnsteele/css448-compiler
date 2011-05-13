@@ -96,12 +96,13 @@ SymbolTable::~SymbolTable() {
  */
 void SymbolTable::emptyTable (Node * the_root) {
 	if (the_root == NULL) return;
-	// TODO: This is close.
-	//delete the_root->identifiers;
-	//delete the_root->procedure;
-	//delete the_root; <-- Problem! can't delete then traverse to children.
-	//printTableHelper(the_root->child);
-	//printTableHelper(the_root->sibling);
+
+	emptyTable (the_root->child);
+	emptyTable (the_root->sibling);
+
+	delete the_root->identifiers;
+	delete the_root->procedure;
+	delete the_root;
 }
 
 

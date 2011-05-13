@@ -9,7 +9,7 @@
  * @version 1.0.0                                                             *
  * @date May 1, 2011                                                          *
  *                                                                            *
- * @brief SITtable represents a standard identifier table.   		          *
+ * @brief SITtable represents a standard identifier table.                    *
  *****************************************************************************/
 //-----------------------------------------------------------------------------
 /**

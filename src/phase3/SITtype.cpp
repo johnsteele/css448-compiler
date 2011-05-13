@@ -9,7 +9,7 @@
  * @version 1.0.0                                                             *
  * @date May 1, 2011                                                          *
  *                                                                            *
- * @brief SITtype represents a standard identifier type.   		              *
+ * @brief SITtype represents a standard identifier type.                      *
  *****************************************************************************/
 //-----------------------------------------------------------------------------
 /**
@@ -95,7 +95,7 @@ void SITtype::print() const {
 }
 
 
-//---------------------getName-------------------------------------------------
+//---------------------getType-------------------------------------------------
 /**
  * @brief An accessor method for derived classes.
  *

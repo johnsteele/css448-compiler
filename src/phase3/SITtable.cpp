@@ -59,42 +59,12 @@ SITtable::~SITtable() {
  * Postconditions: Returns true if found, false otherwise.
 	 */
 void SITtable::initIdents () {
-	standard_idents->push_back("False");
-	standard_idents->push_back("True");
-	standard_idents->push_back("Integer");
-	standard_idents->push_back("Boolean");
-	standard_idents->push_back("Real");
-	standard_idents->push_back("Char");
-	standard_idents->push_back("Abs");
-	standard_idents->push_back("ArcTan");
-	standard_idents->push_back("Chr");
-	standard_idents->push_back("Cos");
-	standard_idents->push_back("EOF");
-	standard_idents->push_back("EOLN");
-	standard_idents->push_back("Exp");
-	standard_idents->push_back("Ln");
-	standard_idents->push_back("Odd");
-	standard_idents->push_back("Ord");
-	standard_idents->push_back("Pred");
-	standard_idents->push_back("Round");
-	standard_idents->push_back("Sin");
-	standard_idents->push_back("Sqr");
-	standard_idents->push_back("Sqrt");
-	standard_idents->push_back("Succ");
-	standard_idents->push_back("Trunc");
-	standard_idents->push_back("Get");
-	standard_idents->push_back("New");
-	standard_idents->push_back("Dispose");
-	standard_idents->push_back("Pack");
-	standard_idents->push_back("Page");
-	standard_idents->push_back("Put");
-	standard_idents->push_back("Read");
-	standard_idents->push_back("Readln");
-	standard_idents->push_back("Reset");
-	standard_idents->push_back("Rewrite");
-	standard_idents->push_back("Unpack");
-	standard_idents->push_back("Write");
-	standard_idents->push_back("Writeln");
+	standard_idents->push_back("false");
+	standard_idents->push_back("true");
+	standard_idents->push_back("integer");
+	standard_idents->push_back("boolean");
+	standard_idents->push_back("real");
+	standard_idents->push_back("char");
 }
 
 

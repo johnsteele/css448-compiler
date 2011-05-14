@@ -20,10 +20,8 @@
 //-----------------------------------------------------------------------------
 /**
  * Includes following features:
- *	- Allows displaying the contents of a BSTree using <<.
  * 	- Allows inserting an IdentifierRecord into the tree.
  *	- Allows retrieving a specified IdentifierRecord from the tree.
- *	- Allows removing an IdentifierRecord from the tree.
  *	- Allows making the tree empty.
  * Assumptions:
  * 	- IdentifierRecord objects are not NULL when stored in the tree.
@@ -81,48 +79,101 @@ BSTree::~BSTree()
 
 //---------------------retrieve------------------------------------------------
 /**
- * @brief Searches the tree for the given target, if found true is returned.
+ * @brief Does a lookup for an IdentifierRecord with the provided name.
+ *        Returns true if found in the tree, false otherwise.
  *
- * Preconditions: target is non-NULL.
+ * Preconditions: The tree root is not NULL.
  *
  * Postconditions: Returns true if found, false otherwise.
  *
- * @param target The identifier to search for.
+ * @param name The name of the identifier to lookup.
+ *
  * @return True if found, false otherwise.
  */
-bool BSTree::retrieve (IdentifierRecord * target) const
-{
-	return retrieveHelper(my_root, target);
+bool BSTree::lookup (string name) const {
+	return lookupHelper(my_root, name);
 }
 
 
-//---------------------retrieveHelper---------------------------------
+//---------------------lookupHelper--------------------------------------------
 /**
- * @brief A helper method for recursively finding the provided item in
+ * @brief A helper method for recursively finding the provided name in
  *	      the tree. Returns true if found, false otherwise.
  *
- * Preconditions: item is not NULL, and my_root points to the root of
- *		          the tree, or NULL if the tree is empty.
+ * Preconditions: my_root points to the root of the tree, or NULL if the tree
+ *                is empty.
  *
  * Postconditions: Returns true if found, false otherwise.
  *
  * @param root The root of the subtree.
- * @param the_item The item being retrieved.
+ * @param name The name of the item being looked up.
  * @return True if found, false otherwise.
  */
-bool BSTree::retrieveHelper (const Node *root, IdentifierRecord * the_item) const
+bool BSTree::lookupHelper (const Node *root, string name) const
 {
 	if (root == NULL) return false;
 
-	else if (*the_item == *root->item)
+	else if (*root->item == name)
 		return true;
 
-	else if (*the_item < *root->item)
-		return retrieveHelper (root->left, the_item);
+	else if (*root->item < name)
+		return retrieveHelper (root->left, name);
 
 	else
-		return retrieveHelper (root->right, the_item);
+		return retrieveHelper (root->right, name);
 }
+
+
+//---------------------retrieve------------------------------------------------
+/**
+ * @brief Retrieves a pointer to the IdentifierRecord with the provided
+ *        name. Returns a pointer to the IdentifierRecord if found,
+ *	      NULL otherwise.
+ *
+ * Preconditions: my_root points to the root of the tree, or NULL if the
+ *                tree is empty.
+ *
+ * Postconditions: Returns a pointer to the IdentifierRecord if found,
+ *                 NULL otherwise.
+ *
+ * @param name The name of the item being looked up.
+ * @return A pointer to the IdentifierRecord if found, NULL otherwise.
+ */
+IdentifierRecord * BSTree::retrieve (string name) const {
+	return retrieveHelper (my_root, name);
+}
+
+
+//---------------------retrieve------------------------------------------------
+/**
+ * @brief A helper method for recursively retrieving the provided name in
+ *	      the tree. Returns a pointer to the IdentifierRecord if found,
+ *	      NULL otherwise.
+ *
+ * Preconditions: my_root points to the root of the tree, or NULL if the
+ *                tree is empty.
+ *
+ * Postconditions: Returns a pointer to the IdentifierRecord if found,
+ *                 NULL otherwise.
+ *
+ * @param root The root of the subtree.
+ * @param name The name of the item being looked up.
+ * @return A pointer to the IdentifierRecord if found, NULL otherwise.
+ */
+IdentifierRecord * BSTree::retrieveHelper (const Node *root,
+		                                     string name) const {
+	if (root == NULL) return NULL;
+
+	else if (*root->item == name)
+		return root->item;
+
+	else if (*root->item < name)
+		return retrieveHelper (root->left, name);
+
+	else
+		return retrieveHelper (root->right, name);
+}
+
 
 //---------------------insert--------------------------------------------------
 /**
@@ -179,88 +230,6 @@ bool BSTree::insertHelper (Node *&the_root, IdentifierRecord * ident)
 
 	 else
 		return insertHelper(the_root->right, ident);
-}
-
-
-//---------------------deleteRoot-------------------------------------
-/**
- * @brief Deletes the node the provided pointer points to. If the left
- *	  and right pointers of the node are not NULL we delete the
- *	  item in the node and replace it with the most left node in
- *	  its right subtree.
- *
- * Preconditions: root is not NULL.
- *
- * Postconditions: The root has been deleted.
- *
- * @param root The root to delete.
- */
-void BSTree::deleteRoot (Node *&root)
-{
-	// Only node in the tree, or a leaf, so delete it.
-	if (root->left == NULL && root->right == NULL) {
-		delete root->item;
-		delete root;
-		root = NULL;
-	}
-
-	else if (root->left == NULL) {
-		Node *temp = root;
-		root = root->right;
-		delete temp->item;
-		delete temp;
-	}
-
-	else if (root->right == NULL) {
-		Node *temp = root;
-		root = root->left;
-		delete temp->item;
-		delete temp;
-	}
-
-	// We have a subtree on both sides, delete the root's item.
-	// Replace it with the most left item in the right subtree.
-	else {
-		delete root->item;
-		root->item = findAndDeleteMostLeft(root->right, root);
-	}
-}
-
-
-//---------------------findAndDeleteMostLeft--------------------------
-/**
- * @brief Returns the Object item from the node that is located at the
- *	  most left subtree of the give root.
- *
- * Preconditions: root is not NULL.
- *
- * Postconditions: A pointer to the Object item of the most left node
- *		   is returned. That node that previously stored item
- *		   is then deleted. The occurance cound is also
- *		   handled.
- *
- * @param root The root of the subtree.
- * @param m_root The root of the tree being replaced.
- * @return A pointer to the furthest left node.
- */
-IdentifierRecord * BSTree::findAndDeleteMostLeft (Node *&root, Node *m_root)
-{
-	// If we reached the furthest left node.
-	if (root->left == NULL) {
-		// Get the item to return.
-		IdentifierRecord *result = root->item;
-
-		// Keep a hold on the node to delete.
-		Node *temp     = root;
-
-		// Move the root pointer to the right child.
-		root           = root->right;
-		delete temp;
-		return result;
-	}
-
-	else  // Keep going left until we're NULL.
-		return findAndDeleteMostLeft (root->left, m_root);
 }
 
 

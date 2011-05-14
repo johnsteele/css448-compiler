@@ -20,10 +20,8 @@
 //-----------------------------------------------------------------------------
 /**
  * Includes following features:
- *	- Allows displaying the contents of a BSTree using <<.
  * 	- Allows inserting an IdentifierRecord into the tree.
  *	- Allows retrieving a specified IdentifierRecord from the tree.
- *	- Allows removing an IdentifierRecord from the tree.
  *	- Allows making the tree empty.
  * Assumptions:
  * 	- IdentifierRecord objects are not NULL when stored in the tree.
@@ -89,19 +87,38 @@ public:
 	~BSTree ();
 
 
-
-	//---------------------retrieve------------------------------------------------
+	//---------------------lookup----------------------------------------------
 	/**
-	 * @brief Searches the tree for the given target, if found true is returned.
+	 * @brief Does a lookup for an IdentifierRecord with the provided name.
+	 *        Returns true if found in the tree, false otherwise.
 	 *
-	 * Preconditions: target is non-NULL.
+	 * Preconditions: The tree root is not NULL.
 	 *
 	 * Postconditions: Returns true if found, false otherwise.
 	 *
-	 * @param target The identifier to search for.
+	 * @param name The name of the identifier to lookup.
+	 *
 	 * @return True if found, false otherwise.
 	 */
-	bool retrieve (IdentifierRecord * target) const;
+	bool lookup (string name) const;
+
+
+	//---------------------retrieve--------------------------------------------
+	/**
+	 * @brief Retrieves a pointer to the IdentifierRecord with the provided
+	 *        name. Returns a pointer to the IdentifierRecord if found,
+	 *	      NULL otherwise.
+	 *
+	 * Preconditions: my_root points to the root of the tree, or NULL if the
+	 *                tree is empty.
+	 *
+	 * Postconditions: Returns a pointer to the IdentifierRecord if found,
+	 *                 NULL otherwise.
+	 *
+	 * @param name The name of the item being looked up.
+	 * @return A pointer to the IdentifierRecord if found, NULL otherwise.
+	 */
+	IdentifierRecord * retrieve (string name) const;
 
 
 	//---------------------insert----------------------------------------------
@@ -179,22 +196,40 @@ private:
 	Node *my_root;
 
 
-
-	//---------------------retrieveHelper---------------------------------
+	//---------------------lookupHelper----------------------------------------
 	/**
-	 * @brief A helper method for recursively finding the provided item in
+	 * @brief A helper method for recursively finding the provided name in
 	 *	      the tree. Returns true if found, false otherwise.
 	 *
-	 * Preconditions: item is not NULL, and my_root points to the root of
-	 *		          the tree, or NULL if the tree is empty.
+	 * Preconditions: my_root points to the root of the tree, or NULL if the
+	 *                tree is empty.
 	 *
 	 * Postconditions: Returns true if found, false otherwise.
 	 *
 	 * @param root The root of the subtree.
-	 * @param the_item The item being retrieved.
+	 * @param name The name of the item being looked up.
 	 * @return True if found, false otherwise.
 	 */
-	bool retrieveHelper (const Node * root, IdentifierRecord * the_item) const;
+	bool lookupHelper (const Node *root, string name) const;
+
+
+	//---------------------retrieveHelper--------------------------------------
+	/**
+	 * @brief A helper method for recursively retrieving the provided name in
+	 *	      the tree. Returns a pointer to the IdentifierRecord if found,
+	 *	      NULL otherwise.
+	 *
+	 * Preconditions: my_root points to the root of the tree, or NULL if the
+	 *                tree is empty.
+	 *
+	 * Postconditions: Returns a pointer to the IdentifierRecord if found,
+	 *                 NULL otherwise.
+	 *
+	 * @param root The root of the subtree.
+	 * @param name The name of the item being looked up.
+	 * @return A pointer to the IdentifierRecord if found, NULL otherwise.
+	 */
+	IdentifierRecord * retrieveHelper (const Node *root, string name) const;
 
 
 	//---------------------clone-----------------------------------------------
@@ -246,40 +281,6 @@ private:
 	 * @return True if the identifier was inserted, false otherwise.
 	 */
 	bool insertHelper (Node *&root, IdentifierRecord *ident);
-
-
-	//---------------------deleteRoot------------------------------------------
-	/**
-	 * @brief Deletes the node the provided pointer points to. If the left and
-	 *        right pointers of the node are not NULL we delete the item in the
-	 *        node and replace it with the most left node in its right subtree.
-	 *
-	 * Preconditions: root is not NULL.
-	 *
-	 * Postconditions: The root has been deleted.
-	 *
-	 * @param root The root to delete.
-	 */
-	void deleteRoot (Node *&root);
-
-
-	//---------------------findAndDeleteMostLeft-------------------------------
-	/**
-	 * @brief Returns the IdentifierRecord item from the node that is located
-	 *        at the most left subtree of the give root.
-	 *
-	 * Preconditions: root is not NULL.
-	 *
-	 * Postconditions: A pointer to the IdentifierRecord of the most
-	 *		           left node is returned. That node that
-	 *		           previously stored item is then deleted. The
-	 *		           occurrence.
-	 *
-	 * @param root The root of the subtree.
-	 * @param m_root The root of the tree being replaced.
-	 * @return A pointer to the farthest left node.
-	 */
-	IdentifierRecord * findAndDeleteMostLeft (Node *&root, Node *m_root);
 
 
 	//---------------------printHelper-----------------------------------------

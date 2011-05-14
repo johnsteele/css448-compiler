@@ -105,7 +105,10 @@ public:
 	 */
 	void setIsBool ();
 
-
+	//tells if const is a string
+	bool isStringType();
+   //gives val for int const
+	int getConstVal();
 /**
  * @private
  */

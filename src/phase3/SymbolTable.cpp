@@ -250,7 +250,7 @@ IdentifierRecord * SymbolTable::retrieveHelper (const Node * root,
 	// If not in current scope's identifier tree, and it's not in the
 	// functions parameter list, then go up to the next scope.
 	if (result == NULL) {
-		lookupHelper(root->parent, ident);
+		retrieveHelper(root->parent, ident);
 	}
 
 	// It was found.

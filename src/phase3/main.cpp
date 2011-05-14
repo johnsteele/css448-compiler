@@ -50,16 +50,16 @@ int main(void) {
 
 	SymbolTable * symbolTable = new SymbolTable ();
 
-	IdentifierRecord *proc    = new ProcedureRecord ("program1");
-	IdentifierRecord *proc1   = new ProcedureRecord ("function1");
-	IdentifierRecord *proc2   = new ProcedureRecord ("function2");
-	IdentifierRecord *proc3   = new ProcedureRecord ("function3");
-	IdentifierRecord *proc4   = new ProcedureRecord ("function4");
-	IdentifierRecord *proc5   = new ProcedureRecord ("function5");
-	IdentifierRecord *proc6   = new ProcedureRecord ("function6");
-	IdentifierRecord *proc7   = new ProcedureRecord ("function7");
-	IdentifierRecord *proc8   = new ProcedureRecord ("function8");
-	IdentifierRecord *proc9   = new ProcedureRecord ("function9");
+	ProcedureRecord *proc    = new ProcedureRecord ("program1");
+	ProcedureRecord *proc1   = new ProcedureRecord ("function1");
+	ProcedureRecord *proc2   = new ProcedureRecord ("function2");
+	ProcedureRecord *proc3   = new ProcedureRecord ("function3");
+	ProcedureRecord *proc4   = new ProcedureRecord ("function4");
+	ProcedureRecord *proc5   = new ProcedureRecord ("function5");
+	ProcedureRecord *proc6   = new ProcedureRecord ("function6");
+	ProcedureRecord *proc7   = new ProcedureRecord ("function7");
+	ProcedureRecord *proc8   = new ProcedureRecord ("function8");
+	ProcedureRecord *proc9   = new ProcedureRecord ("function9");
 
 
 	IdentifierRecord *ptr1     = new PointerType ("ptrVal");

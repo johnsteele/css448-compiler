@@ -143,7 +143,7 @@ bool SymbolTable::addSymbol(IdentifierRecord* ident) {
 		}
 
 		bool inserted = currentScope->identifiers->insert(ident);
-		if (inserted == true) cout << "Inserted!" << endl; ident->print(1); cout << endl;
+
 		return inserted;
 	}
 }

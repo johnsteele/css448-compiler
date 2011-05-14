@@ -18,7 +18,6 @@ using namespace std;
  
 #include "SymbolTable.h"
 #include "IdentifierRecord.h"
-#include "VariableRecord.h"
 #include "ProcedureRecord.h"
 #include "ConstantRecord.h"
 #include "Parameter.h"
@@ -26,6 +25,9 @@ using namespace std;
 #include "PointerType.h"
 #include "SITtype.h"
 #include "SITtable.h"
+#include "SetType.h"
+#include "RecordType.h"
+#include "TypeRecord.h"
 
 extern int yyparse();
 #define DEBUG 1
@@ -57,15 +59,6 @@ int main(void) {
 	IdentifierRecord *proc7   = new ProcedureRecord ("function7");
 	IdentifierRecord *proc8   = new ProcedureRecord ("function8");
 	IdentifierRecord *proc9   = new ProcedureRecord ("function9");
-
-
-	IdentifierRecord *var1     = new VariableRecord ("varVal");
-	IdentifierRecord *var2     = new VariableRecord ("varVal2");
-	IdentifierRecord *var3     = new VariableRecord ("varVal3");
-	IdentifierRecord *var4     = new VariableRecord ("varVal4");
-	IdentifierRecord *var5     = new VariableRecord ("varVal5");
-	IdentifierRecord *var6     = new VariableRecord ("varVal6");
-	IdentifierRecord *var7     = new VariableRecord ("varVal7");
 
 
 	IdentifierRecord *ptr1     = new PointerType ("ptrVal");

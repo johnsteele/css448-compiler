@@ -29,11 +29,11 @@ using namespace std;
 #include "TypeRecord.h"
 #include "SITtype.h"
 #include "SITtable.h"
+#include "SetType.h"
 
 SymbolTable * table = NULL;
 IdentifierRecord * program = NULL; //used to always hold program record
 IdentifierRecord * aProcedure = NULL; //holds procedure in current scope
-//IdentifierRecord * parent = NULL;
 IdentifierRecord * constant = NULL; //holds const variable while being entered
 IdentifierRecord * aType = NULL;    //holds type vaiable while being entered
 IdentifierRecord * typesType = NULL; //holds the type of type while being entered
@@ -43,13 +43,14 @@ Parameter * param = NULL;  //holds parameter while being entered
 string uOperator = "";   //keeps track of unary operator
 ArrayType * array = NULL; //holds array while being setup and entered
 PointerType * pointer = NULL; //holds pointer type while being entered
-//int scope;
+SetType * set = NULL;          //holds set type while begin entered
+bool isArray = false;          //used to determine if subrange is for array or set
+IdentifierRecord ** vars = new IdentifierRecord*[30];
 
-	//SITtable *sitTable = new SITtable ();
-	//bool found = sitTable->lookup("true");
+	SITtable *sitTable = new SITtable ();
+	bool found = sitTable->lookup("true");
 	//if (found) cout << "Found: " << found << endl;
 	//else   cout << "Not Found: " << found << endl;
-	//delete sitTable;
 %}
 
 
@@ -68,8 +69,8 @@ PointerType * pointer = NULL; //holds pointer type while being entered
 %union
 {
    /* The identifier which is set from within the lexer. */
-   char *str;
-   int i;
+   char * str;
+   int int_value;
    bool b;
 }
 
@@ -99,14 +100,14 @@ ParamList          : ParamList ycomma Identifier
                             r.insertParam(param);
                      }
                    | Identifier
-                     { 
+                     {
                             param = new Parameter(yylval.str);
                             ProcedureRecord &r = dynamic_cast<ProcedureRecord &> (*program);
                             r.insertParam(param);
                      }
                    ;
-IdentList          :  Identifier
-                   |  IdentList ycomma Identifier
+IdentList          :  Identifier { vars }
+                   |  IdentList ycomma Identifier {}
                    ;
 Identifier         :  yident { /*cout << yylval.str;*/ }
                    ;
@@ -129,12 +130,10 @@ ConstantDefList   :  ConstantDef
 TypeDefBlock      :  /*** empty ***/
                   |  ytype  TypeDefList
                   ;
-TypeDefList       :  TypeDef
+TypeDefList       :  TypeDef {     aType->setType(subType);}ysemicolon
                      {table->addSymbol(aType);}
-                     ysemicolon
-                  |  TypeDefList TypeDef
+                  |  TypeDefList TypeDef  {     aType->setType(subType);} ysemicolon
                      {table->addSymbol(aType);}
-                     ysemicolon
                   ;
 VariableDeclBlock :  /*** empty ***/
                   |  yvar VariableDeclList
@@ -152,26 +151,29 @@ ConstantDef       :  Identifier
                      
                   ;
 TypeDef           :  Identifier
-                     { aType = new TypeRecord(yylval.str);}
+                     { aType = new TypeRecord(yylval.str);
+                       cout<<"I made it here"<< endl;
+                     }
                      yequal  Type
-                     {aType->setType(subType);}
                   ;
 VariableDecl      :  IdentList { v = new VariableRecord(yylval.str);}
-                     ycolon  Type {v ->setType(typesType);}
+                     ycolon  Type 
+                     {  //if(table->lookup(subType) /*|| SITtable->lookup(subType->getName())*/){
+                         v ->setType(subType);
+                        //}
+                     }
                   ;
 
 /***************************  Const/Type Stuff  ******************************/
 
-ConstExpression   :  UnaryOperator 
-                     ConstFactor
+ConstExpression   :  UnaryOperator ConstFactor
                   |  ConstFactor
-
                   |  ystring /*not handling any const but numbers right now*/
                   ;
 ConstFactor       :  Identifier /*const setConstFactor only takes ints.... hmmm*/
                   |  ynumber 
                     {
-                      int n = atoi(yylval.str);
+                      int n = yylval.int_value;
                       if(!uOperator.empty()){
                          if(uOperator == "-")
                             n *= -1;
@@ -197,42 +199,79 @@ ConstFactor       :  Identifier /*const setConstFactor only takes ints.... hmmm*
                      }
                   |  ynil
                      {ConstantRecord &r = dynamic_cast<ConstantRecord &> (*constant);
-                      r.setConstFactor(atoi(yylval.str));
+                      r.setConstFactor(yyval.int_value);
                       uOperator = "";
                       //I don't really know how to handle ynil. Is it ""?
                      }
                   ;
 Type              :  Identifier 
-                     {/* need to do SITtable lookup for type and pass in matching
+                     {
+                       /* need to do SITtable lookup for type and pass in matching
                        identRecord found from SitTable. If not found, return error.*/
+                       subType = new TypeRecord(yylval.str);
+
                      }
-                  |  ArrayType {typesType = array;}
-                  |  PointerType {typesType = pointer;}
+                  |  {isArray = true;} ArrayType {subType = array;}
+                  |  PointerType {subType = pointer;}
                   |  RecordType
-                  |  SetType
+                  |  SetType {subType = set;}
                   ;
 ArrayType         :  yarray 
-                     {array = new ArrayType(aType->getName());
+                     {array = new ArrayType("");
                      }
-                     yleftbracket SubrangeList yrightbracket  yof
+                     yleftbracket SubrangeList yrightbracket  yof 
                      Type
+                     { 
+                        array->setType(subType);
 
+                     }
                   ;
 SubrangeList      :  Subrange
                   |  SubrangeList ycomma Subrange
                   ;
 
-Subrange          :  ConstFactor{array->setLowDimension(atoi(yylval.str));}
-                     /* I may have to change this due to the way I'm handling
-                        setTypes... hmm...*/
+Subrange          :  ConstFactor
+                     {
+                      if(isArray)
+                           array->setLowDimension(yylval.int_value);
+                      else
+                           set-> setLowDimension(yylval.int_value);
+                     }
+
                      ydotdot
-                     ConstFactor{array->setHighDimension(atoi(yylval.str));}
-                  |  ystring ydotdot  ystring /*we may need an overloaded operator
-                                                that can handle strings for diminsions*/
+
+                     ConstFactor{
+                      if(isArray)
+                           array->setHighDimension(yylval.int_value);
+                      else
+                           set-> setHighDimension(yylval.int_value);
+                      }
+
+                  |  ystring{
+                         /*check that length is greater than one and give error if so*/
+                         int charVal = atoi(yylval.str);
+                         if(isArray){
+                              array->setLowDimension(charVal);
+                              //array->isAscii();
+                         }
+                         else{
+                              set-> setLowDimension(charVal);
+                              //set-> isAscii();
+                         }
+                      }  ydotdot  
+                      ystring{
+                         int charVal = atoi(yylval.str);
+                         if(isArray){
+                              array->setHighDimension(charVal);
+                         }
+                         else{
+                              set-> setHighDimension(charVal);
+                         }
+                      }  ydotdot
                   ;
 RecordType        :  yrecord  FieldListSequence  yend
                   ;
-SetType           :  yset  yof  Subrange
+SetType           :  yset  yof {isArray = false;} Subrange
                   ;
 PointerType       :  ycaret  Identifier {pointer = new PointerType(yylval.str);}
                   ;
@@ -374,11 +413,16 @@ SubprogDeclList   : /*** empty ***/
 ProcedureDecl     : ProcedureHeading  ysemicolon  Block 
                     {table->exitScope();}
                   ;
-FunctionDecl      : FunctionHeading  ycolon  Identifier  ysemicolon  Block 
+FunctionDecl      : FunctionHeading  ycolon  
+						  Identifier
+						  { /*check for existence of type first
+						    aType = new TypeRecord(yylval.str);
+						   aProcedure->setReturnType(aType);
+                    ysemicolon  Block 
+
                     {table->exitScope();}
                   ;
-ProcedureHeading  : yprocedure 
-					     Identifier
+ProcedureHeading  : yprocedure Identifier
 					     {
                         aProcedure = new ProcedureRecord(yylval.str);
                         table ->enterScope(aProcedure);
@@ -404,10 +448,11 @@ FunctionHeading   : yfunction Identifier
                   ;
 FormalParameters  :  yleftparen FormalParamList yrightparen
                   ;
-FormalParamList   :  OneFormalParam
+FormalParamList   :  OneFormalParam { }
                   |  FormalParamList ysemicolon OneFormalParam
                   ;
-OneFormalParam    :  yvar  IdentList  ycolon Identifier
+OneFormalParam    :  yvar  IdentList  
+                     ycolon Identifier
                   |  IdentList  ycolon Identifier
                   ;
 

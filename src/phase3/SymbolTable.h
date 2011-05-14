@@ -67,6 +67,7 @@ using namespace std;
 
 #include "Bstree.h"
 #include "IdentifierRecord.h"
+#include "ProcedureRecord.h"
 
 
 /**
@@ -120,35 +121,55 @@ public:
 
 	//---------------------lookup----------------------------------------------
 	/**
- 	 * @brief Does a lookup for the provided IdentifierRecord. If it is not
+ 	 * @brief Does a lookup for the provided identifier name. If it is not
  	 *        in the current scope, a lookup is done on all the scopes above
  	 *        the current. Returns false if the identifier is not in the
  	 *        current or above scopes.
 	 *
-	 * Preconditions: ident is non-NULL.
+	 * Preconditions: current scope is not NULL.
 	 *
 	 * Postconditions: Returns true if the identifier is found in either the
 	 *                 current or above scopes.
 	 *
-	 * @param ident A pointer to an IdentifierRecord.
+	 * @param ident The name of the identifier to search for.
+	 *
 	 * @return True if the identifier was found, false otherwise.
  	 */
-	bool lookup (const IdentifierRecord* ident) const;
+	bool lookup (string ident) const;
+
+
+	//---------------------lookupScope-----------------------------------------
+	/**
+ 	 * @brief Does a lookup for the provided identifier name only in the
+ 	 *        current scope. If it is not in the current scope false is
+ 	 *        returned.
+	 *
+	 * Preconditions: current scope is not NULL.
+	 *
+	 * Postconditions: Returns true if the identifier is found in current
+	 *                 scope.
+	 *
+	 * @param ident The name of the identifier to search for.
+	 *
+	 * @return True if the identifier was found, false otherwise.
+ 	 */
+	bool lookupScope (string ident) const;
 
 
 	//---------------------retrieve--------------------------------------------
 	/**
  	 * @brief Retrieves the provided identifier from this symbol table. Returns
- 	 *        NULL if the identifier was not found.
+ 	 *        NULL if not found.
 	 *
-	 * Preconditions: ident is non-NULL.
+	 * Preconditions: current scope is not NULL.
 	 *
 	 * Postconditions: Returns the identifier if found, NULL otherwise.
 	 *
-	 * @param ident A pointer to an IdentifierRecord.
+	 * @param ident The name of the identifier to search for.
+	 *
 	 * @return The identifier if found, NULL otherwise.
  	 */
-	IdentifierRecord * retrieve (const IdentifierRecord* ident) const;
+	IdentifierRecord * retrieve (string ident) const;
 
 
 	//---------------------printTable------------------------------------------
@@ -170,7 +191,7 @@ public:
 	 *
 	 * Postconditions: A new scope has been entered.
  	 */
-	void enterScope (const IdentifierRecord* procedure);
+	void enterScope (const ProcedureRecord * procedure);
 
 
 	//---------------------exitScope-------------------------------------------
@@ -193,7 +214,7 @@ private:
 	 * @brief The node stored in the tree.
 	 */
 	struct Node {
-		const IdentifierRecord* procedure;
+		const ProcedureRecord * procedure;
 		int     scope;
 		BSTree* identifiers;
 		Node*   sibling;
@@ -248,6 +269,38 @@ private:
      * @param root The root at which to print siblings and children
  	 */
 	void printTableHelper (const Node * root) const;
+
+
+	//---------------------lookupHelper----------------------------------------
+	/**
+ 	 * @brief A helper method to lookup.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: returns true if found, false otherwise.
+	 *
+     * @param root The root at which to search for the identifier.
+     * @param ident The name of identifier to search for.
+     * @return True if found, false otherwise.
+ 	 */
+	bool lookupHelper (const Node * root, string ident) const;
+
+
+	//---------------------retrieveHelper--------------------------------------
+	/**
+ 	 * @brief Retrieves the provided identifier from this symbol table. Returns
+ 	 *        NULL if not found.
+	 *
+	 * Preconditions: current scope is not NULL.
+	 *
+	 * Postconditions: Returns the identifier if found, NULL otherwise.
+	 *
+	 * @param root The scope to search.
+	 * @param ident The name of the identifier to search for.
+	 *
+	 * @return The identifier if found, NULL otherwise.
+ 	 */
+	IdentifierRecord * retrieveHelper (const Node * root, string ident) const;
 };
 
 #endif /* SYMBOLTABLE_H_ */

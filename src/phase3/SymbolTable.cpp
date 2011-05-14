@@ -120,72 +120,171 @@ void SymbolTable::emptyTable (Node * the_root) {
  * @param ident A pointer to the name of the identifier.
  * @return True if identifier was added, false otherwise.
  */
-bool SymbolTable::addSymbol(IdentifierRecord* ident) {
-	bool found = false;
+bool SymbolTable::addSymbol(IdentifierRecord * ident) {
+	bool inserted = false;
 
-	// Check for duplicate identifier in current scope.
-	if (currentScope->identifiers != NULL) {
-		found = currentScope->identifiers->retrieve(ident);
+	// Is this the first symbol being added.
+	if (currentScope->identifiers == NULL) {
+		currentScope->identifiers = new BSTree ();
 	}
 
-	// Already there, return false.
-	if (found == true) {
-		cout << "Already in table!" << endl;
-		return false;
-	}
+	inserted = currentScope->identifiers->insert(ident);
 
-	// Otherwise, add it, return true.
-	else {
-
-		// Is this the first symbol being added.
-		if (currentScope->identifiers == NULL) {
-			currentScope->identifiers = new BSTree ();
-		}
-
-		bool inserted = currentScope->identifiers->insert(ident);
-
-		return inserted;
-	}
+	return inserted;
 }
 
 
 //---------------------lookup--------------------------------------------------
 /**
- * @brief Does a lookup for the provided IdentifierRecord. If it is not
+ * @brief Does a lookup for the provided identifier name. If it is not
  *        in the current scope, a lookup is done on all the scopes above
  *        the current. Returns false if the identifier is not in the
  *        current or above scopes.
  *
- * Preconditions: ident is non-NULL.
+ * Preconditions: current scope is not NULL.
  *
  * Postconditions: Returns true if the identifier is found in either the
  *                 current or above scopes.
  *
- * @param ident A pointer to an IdentifierRecord.
+ * @param ident The name of the identifier to search for.
+ *
  * @return True if the identifier was found, false otherwise.
  */
-bool SymbolTable::lookup (const IdentifierRecord* ident) const {
+bool SymbolTable::lookup (string ident) const {
+	if (rootScope == NULL)    return false;
+	if (currentScope == NULL) return false;
+	return lookupHelper(currentScope, ident);
+}
+
+
+//---------------------lookupHelper----------------------------------------
+/**
+ * @brief A helper method to lookup.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: returns true if found, false otherwise.
+ *
+ * @param root The root at which to search for the identifier.
+ * @param ident The name of identifier to search for.
+ * @return True if found, false otherwise.
+ */
+bool SymbolTable::lookupHelper (const Node * root, string ident) const {
+
+	if (root == NULL) return false;
 	bool result = false;
 
-	return result;
+	// First check current scope identifier tree.
+	result = root->identifiers->lookup(ident);
+
+	// If not in current scope identifier tree,
+	// then check the current scope function parameters.
+	if (result == false) {
+		result = root->procedure->lookup(ident);
+	}
+
+	// If not in current scope's identifier tree, and it's not in the
+	// functions parameter list, then go up to the next scope.
+	if (result == false) {
+		lookupHelper(root->parent, ident);
+	}
+
+	// It was found.
+	return true;
 }
 
 
 //---------------------retrieve------------------------------------------------
 /**
  * @brief Retrieves the provided identifier from this symbol table. Returns
- *        NULL if the identifier was not found.
+ *        NULL if not found.
  *
- * Preconditions: ident is non-NULL.
+ * Preconditions: current scope is not NULL.
  *
  * Postconditions: Returns the identifier if found, NULL otherwise.
  *
- * @param ident A pointer to an IdentifierRecord.
+ * @param ident The name of the identifier to search for.
+ *
+ * @return The identifier if found, NULL otherwise.
+	 */
+IdentifierRecord * SymbolTable::retrieve (string ident) const {
+	if (rootScope == NULL)    return false;
+	if (currentScope == NULL) return false;
+	return retrieveHelper(currentScope, ident);
+}
+
+
+//---------------------retrieveHelper------------------------------------------
+/**
+ * @brief Retrieves the provided identifier from this symbol table. Returns
+ *        NULL if not found.
+ *
+ * Preconditions: current scope is not NULL.
+ *
+ * Postconditions: Returns the identifier if found, NULL otherwise.
+ *
+ * @param root The scope to search.
+ * @param ident The name of the identifier to search for.
+ *
  * @return The identifier if found, NULL otherwise.
  */
-IdentifierRecord * SymbolTable::retrieve (const IdentifierRecord* ident) const {
+IdentifierRecord * SymbolTable::retrieveHelper (const Node * root,
+													string ident) const {
 
-	return NULL;
+	if (root == NULL) return NULL;
+	IdentifierRecord * result = NULL;
+
+	// First check current scope identifier tree.
+	result = root->identifiers->retrieve(ident);
+
+	// If not in current scope identifier tree,
+	// then check the current scope function parameters.
+	if (result == NULL) {
+		result = root->procedure->retrieve(ident);
+	}
+
+	// If not in current scope's identifier tree, and it's not in the
+	// functions parameter list, then go up to the next scope.
+	if (result == NULL) {
+		lookupHelper(root->parent, ident);
+	}
+
+	// It was found.
+	return result;
+}
+
+
+//---------------------lookupScope---------------------------------------------
+/**
+ * @brief Does a lookup for the provided identifier name only in the
+ *        current scope. If it is not in the current scope false is
+ *        returned.
+ *
+ * Preconditions: current scope is not NULL.
+ *
+ * Postconditions: Returns true if the identifier is found in current
+ *                 scope.
+ *
+ * @param ident The name of the identifier to search for.
+ *
+ * @return True if the identifier was found, false otherwise.
+ */
+bool SymbolTable::lookupScope (string ident) const {
+	if (currentScope == NULL || rootScope == NULL)
+		return false;
+
+	bool result = false;
+
+	// First check current scope identifier tree.
+	result = currentScope->identifiers->lookup(ident);
+
+	// If not in current scope identifier tree,
+	// then check the current scope function parameters.
+	if (result == false) {
+		result = currentScope->procedure->lookup(ident);
+	}
+
+	return result;
 }
 
 
@@ -199,7 +298,7 @@ IdentifierRecord * SymbolTable::retrieve (const IdentifierRecord* ident) const {
  *
  * @param procedure The procedure associated with the scope about to enter.
  */
-void SymbolTable::enterScope (const IdentifierRecord* procedure) {
+void SymbolTable::enterScope (const ProcedureRecord * procedure) {
 	
 	// The new scope node we're entering.
 	Node *node        = new Node ();

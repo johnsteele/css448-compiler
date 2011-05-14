@@ -28,6 +28,7 @@ using namespace std;
 #include "SetType.h"
 #include "RecordType.h"
 #include "TypeRecord.h"
+#include <stdlib.h>
 
 extern int yyparse();
 #define DEBUG 1
@@ -76,7 +77,10 @@ int main(void) {
 				r.setHighDimension(5);
 				r.setLowDimension(2);
 				r.setHighDimension(6);
-				char * val = "a";
+				char * val = "c";
+				int ato = (int)*val;
+				char c = (char)ato;
+				cout << "Before: " << ato << " Casted: " << c  << endl;
 				r.setLowDimension(atoi (val));
 				r.isAscii();
 				val = "b";

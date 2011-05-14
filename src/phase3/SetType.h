@@ -124,7 +124,7 @@ private:
 	 *        responsible for already converting the char
 	 *        to it's ascii value.
 	 */
-	bool isAscii;
+	bool ascii;
 
 	/**
 	 * @brief The dimension pf the set.

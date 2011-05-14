@@ -14,6 +14,7 @@
 #ifndef POINTERTYPE_H_
 #define POINTERTYPE_H_
 
+#include <string>
 #include "IdentifierRecord.h"
 
 /**
@@ -63,6 +64,45 @@ public:
 	 * @param scope The scope of this identifier (used for indenting purposes).
  	 */
 	virtual void print (int scope) const;
+
+
+	//---------------------setIdent--------------------------------------------
+	/**
+	 * @brief Sets the name of the identifier this PointerType points to.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: The name of the identifier this PointerType points to
+	 *                 was set.
+	 *
+	 * @param name The the_name of the identifier.
+ 	 */
+	void setIdent (string the_name);
+
+
+	//---------------------getIdent--------------------------------------------
+	/**
+	 * @brief Returns the name of the identifier this pointer type points to.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: The name of the identifier this PointerType points to
+	 *                 was returned.
+	 *
+	 * @return The the_name of the identifier pointed to was returned.
+ 	 */
+	string getIdent () const;
+
+
+/**
+ * @private
+ */
+private:
+
+	/**
+	 * @brief The name of the identifier this PointerType points to.
+	 */
+	string name;
 };
 
 #endif /* POINTERTYTPE_H_ */

@@ -25,7 +25,7 @@
  * @param name The name of the PointerType.
  */
 PointerType::PointerType(string name) : IdentifierRecord (name) {
-
+	name = "";
 }
 
 
@@ -37,9 +37,7 @@ PointerType::PointerType(string name) : IdentifierRecord (name) {
  *
  * Postconditions: Resources were released.
  */
-PointerType::~PointerType() {
-
-}
+PointerType::~PointerType() {}
 
 
 //---------------------print---------------------------------------------------
@@ -54,4 +52,37 @@ PointerType::~PointerType() {
  */
 void PointerType::print(int scope) const {
 	IdentifierRecord::print (scope);
+	cout << "^ " << name;
+}
+
+
+//---------------------setIdent------------------------------------------------
+/**
+ * @brief Sets the name of the identifier this PointerType points to.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: The name of the identifier this PointerType points to
+ *                 was set.
+ *
+ * @param name The the_name of the identifier.
+	 */
+void PointerType::setIdent (string the_name) {
+	name = the_name;
+}
+
+
+//---------------------getIdent------------------------------------------------
+/**
+ * @brief Returns the name of the identifier this pointer type points to.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: The name of the identifier this PointerType points to
+ *                 was returned.
+ *
+ * @return The the_name of the identifier pointed to was returned.
+	 */
+string PointerType::getIdent () const {
+	return name;
 }

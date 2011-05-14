@@ -25,9 +25,7 @@
  * @param name The name of the SetType.
  */
 SetType::SetType(string name) : IdentifierRecord (name) {
-	dimensions       = new vector <Dimension *> ();
-	totalDimensions  = 0;
-	currentDimension = NULL;
+	dimension = new Dimension ();
 }
 
 
@@ -41,11 +39,8 @@ SetType::SetType(string name) : IdentifierRecord (name) {
  * Postconditions: Resources were released.
  */
 SetType::~SetType() {
-	delete dimensions;
-	if (currentDimension != NULL)
-		delete currentDimension;
-	dimensions       = NULL;
-	currentDimension = NULL;
+	delete dimension;
+	dimension = NULL;
 }
 
 
@@ -65,42 +60,23 @@ void SetType::print(int scope) const {
 	// Print the name.
 	IdentifierRecord::print(scope);
 
-	// Print the dimensions.
-	for (int i = 0; i < (long)dimensions->size(); i++) {
-		Dimension * dim = dimensions->at(i);
-		if (dim->isAscii == true) {
-			int low = dim->low + '0';
-			int high = dim->high + '0';
-			cout << low << ".." << high;
-		}
-		else {
-			cout << dim->low << ".." << dim->high;
-		}
-		if ((i + 1) < (long)dimensions->size()) cout << ", ";
-	}
-
-	// Print the type.
-	if (getType() != NULL) getType()->print(0);
+	// Print the dimension.
+	cout << dimension->low << ".." << dimension->high;
 }
 
 
 //---------------------setLowDimenstion----------------------------------------
 /**
- * @brief Sets the low value to a new dimension of this SetType.
+ * @brief Sets the low value to a new dimension of this RecordType.
  *
  * Preconditions: None.
  *
- * Postconditions: A new dimension was created with the provided low value.
+ * Postconditions: The low dimension of this SetType was set.
  *
- * @param lowDim The low value to a new dimension of this SetType.
-	 */
+ * @param lowDim The low value of this SetType was set.
+ */
 void SetType::setLowDimension (int lowDim) {
-
-	// If setLowDimension was called twice in a row w/out
-	// completing it by calling setHighDimension.
-	if (currentDimension != NULL) delete currentDimension;
-	currentDimension = new Dimension ();
-	currentDimension->low = lowDim;
+	dimension->low = lowDim;
 }
 
 
@@ -108,34 +84,13 @@ void SetType::setLowDimension (int lowDim) {
 /**
  * @brief Sets the high value to the dimension of this SetType.
  *
- * Preconditions: setLowDimension has already been called, which created a
- *                new dimension to the array and set it's low value.
+ * Preconditions: None.
  *
  * Postconditions: The high value to the dimension of this SetType was
  *                 set to the provided value.
  *
  * @param highDim The high value to a dimension of this SetType.
-	 */
-void SetType::setHighDimension (int highDim) {
-	if (currentDimension != NULL) {
-		currentDimension->high = highDim;
-		dimensions->push_back(currentDimension);
-		currentDimension = NULL;
-	}
-}
-
-
-//---------------------isAscii-------------------------------------------------
-/**
- * @brief Sets the current dimension's low and high values as
- *        Ascii value.
- *
- * Preconditions: setLowDimension must be called prior to calling
- *                this method.
- *
- * Postconditions: The current dimension's low and high value have been
- *                 marked as ascii values.
  */
-void SetType::isAscii () {
-	currentDimension->isAscii = true;
+void SetType::setHighDimension (int highDim) {
+	dimension->high = highDim;
 }

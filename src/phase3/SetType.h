@@ -68,14 +68,14 @@ public:
 
 	//---------------------setLowDimenstion------------------------------------
 	/**
-	 * @brief Sets the low value to a new dimension of this SetType.
+	 * @brief Sets the low value to a new dimension of this RecordType.
 	 *
 	 * Preconditions: None.
 	 *
-	 * Postconditions: A new dimension was created with the provided low value.
+	 * Postconditions: The low dimension of this SetType was set.
 	 *
-	 * @param lowDim The low value to a new dimension of this SetType.
- 	 */
+	 * @param lowDim The low value of this SetType was set.
+	 */
 	void setLowDimension (int lowDim);
 
 
@@ -83,29 +83,14 @@ public:
 	/**
 	 * @brief Sets the high value to the dimension of this SetType.
 	 *
-	 * Preconditions: setLowDimension has already been called, which created a
-	 *                new dimension to the array and set it's low value.
+	 * Preconditions: None.
 	 *
 	 * Postconditions: The high value to the dimension of this SetType was
 	 *                 set to the provided value.
 	 *
 	 * @param highDim The high value to a dimension of this SetType.
- 	 */
+	 */
 	void setHighDimension (int highDim);
-
-
-	//---------------------isAscii---------------------------------------------
-	/**
-	 * @brief Sets the current dimension's low and high values as
-	 *        Ascii value.
-	 *
-	 * Preconditions: setLowDimension must be called prior to calling
-	 *                this method.
-	 *
-	 * Postconditions: The current dimension's low and high value have been
-	 *                 marked as ascii values.
- 	 */
-	void isAscii ();
 
 
 /**
@@ -119,23 +104,12 @@ private:
 	struct Dimension {
 		int low;
 		int high;
-		bool isAscii;
 	};
 
 	/**
-	 * @brief The total number of dimensions in the array.
+	 * @brief The dimension pf the set.
 	 */
-	int totalDimensions;
-
-	/**
-	 * @brief The current dimension being built.
-	 */
-	Dimension * currentDimension;
-
-	/**
-	 * @brief The dimensions in the array.
-	 */
-	vector <Dimension *> * dimensions;
+	Dimension * dimension;
 };
 
 #endif /* SETTYPE_H_ */

@@ -69,9 +69,9 @@ void ArrayType::print(int scope) const {
 	for (int i = 0; i < (long)dimensions->size(); i++) {
 		Dimension * dim = dimensions->at(i);
 		if (dim->isAscii == true) {
-			int low = dim->low + '0';
-			int high = dim->high + '0';
-			cout << low << ".." << high;
+			int low = dim->low;
+			int high = dim->high;
+			cout << (char)low << ".." << (char)high;
 		}
 		else {
 			cout << dim->low << ".." << dim->high;

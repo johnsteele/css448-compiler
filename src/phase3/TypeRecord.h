@@ -15,9 +15,41 @@
 #ifndef TYPERECORD_H_
 #define TYPERECORD_H_
 
-class TypeRecord {
+#include "IdentifierRecord.h"
+
+/**
+ * @class TypeRecord
+ */
+class TypeRecord : public IdentifierRecord {
+
+/**
+ * @public
+ */
 public:
-	TypeRecord();
+
+	//---------------------Constructor-----------------------------------------
+	/**
+	 * @brief Creates a TypeRecord with the provided name.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: This TypeRecord was instantiated.
+	 *
+	 * @param name The name of the TypeRecord
+	 */
+	TypeRecord(string name);
+
+
+	//---------------------Constructor-----------------------------------------
+	/**
+	 * @brief Creates a TypeRecord with the provided name.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: This TypeRecord was instantiated.
+	 *
+	 * @param name The name of the TypeRecord
+	 */
 	virtual ~TypeRecord();
 };
 

@@ -14,11 +14,30 @@
 
 #include "TypeRecord.h"
 
-TypeRecord::TypeRecord() {
-	// TODO Auto-generated constructor stub
+//---------------------Constructor---------------------------------------------
+/**
+ * @brief Creates a TypeRecord with the provided name.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: This TypeRecord was instantiated.
+ *
+ * @param name The name of the TypeRecord
+ */
+TypeRecord::TypeRecord(string name) : IdentifierRecord (name){
 
 }
 
+//---------------------Constructor---------------------------------------------
+/**
+ * @brief Creates a TypeRecord with the provided name.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: This TypeRecord was instantiated.
+ *
+ * @param name The name of the TypeRecord
+ */
 TypeRecord::~TypeRecord() {
-	// TODO Auto-generated destructor stub
+
 }

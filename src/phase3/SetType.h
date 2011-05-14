@@ -93,6 +93,18 @@ public:
 	void setHighDimension (int highDim);
 
 
+	//---------------------isAscii---------------------------------------------
+	/**
+	 * @brief Sets the lower and upper bound of the dimension as ascii
+	 *        values.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: The lower and upper bounds are now set as ascii.
+	 */
+	void isAscii ();
+
+
 /**
  * @private
  */
@@ -105,6 +117,14 @@ private:
 		int low;
 		int high;
 	};
+
+	/**
+	 * @brief Whether the dimension has ascii values.
+	 *        Used only for printing since the client is
+	 *        responsible for already converting the char
+	 *        to it's ascii value.
+	 */
+	bool isAscii;
 
 	/**
 	 * @brief The dimension pf the set.

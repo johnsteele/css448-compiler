@@ -26,6 +26,7 @@
  */
 SetType::SetType(string name) : IdentifierRecord (name) {
 	dimension = new Dimension ();
+	isAscii = false;
 }
 
 
@@ -61,7 +62,27 @@ void SetType::print(int scope) const {
 	IdentifierRecord::print(scope);
 
 	// Print the dimension.
-	cout << dimension->low << ".." << dimension->high;
+	if (isAscii == true) {
+		int low = dimension->low;
+		int high = dimension->high;
+		cout << (char)low << ".." << (char)high;
+	}
+	else
+		cout << dimension->low << ".." << dimension->high;
+}
+
+
+//---------------------isAscii---------------------------------------------
+/**
+ * @brief Sets the lower and upper bound of the dimension as ascii
+ *        values.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: The lower and upper bounds are now set as ascii.
+ */
+void SetType::isAscii () {
+	isAscii = true;
 }
 
 

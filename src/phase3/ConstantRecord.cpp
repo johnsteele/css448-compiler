@@ -44,6 +44,8 @@ ConstantRecord::ConstantRecord(string name) : IdentifierRecord (name) {
 ConstantRecord::~ConstantRecord() {}
 
 
+bool ConstantRecord::isStringType(){ return isString;}
+
 //---------------------print---------------------------------------------------
 /**
  * @brief Prints the data members of this IdentifierRecord to the
@@ -93,6 +95,7 @@ void ConstantRecord::setConstFactor (string factor) {
 	str_const_factor = factor;
 }
 
+int ConstantRecord::getConstVal(){return int_const_factor;}
 
 //---------------------setIsBool-----------------------------------------------
 /**

@@ -70,6 +70,21 @@ int main(void) {
 	IdentifierRecord *ptr6     = new PointerType ("ptrVal6");
 	IdentifierRecord *ptr7     = new PointerType ("ptrVal7");
 
+	SetType *set1 = new SetType ("setVar1");
+	set1->setLowDimension(10);
+	set1->setHighDimension(20);
+	set1->setType(new IdentifierRecord ("integer"));
+
+	SetType *set2 = new SetType ("setVar2");
+	set2->setLowDimension(10);
+	set2->setHighDimension(20);
+	set2->setType(new IdentifierRecord ("integer"));
+
+	SetType *set3 = new SetType ("setVar3");
+	set3->setLowDimension(10);
+	set3->setHighDimension(20);
+	set3->setType(new IdentifierRecord ("integer"));
+
 	IdentifierRecord *array1     = new ArrayType ("array1Val");
 	try {
 				ArrayType &r = dynamic_cast<ArrayType &> (*array1);
@@ -235,6 +250,9 @@ int main(void) {
 	result      =  symbolTable->addSymbol(const2); // add const2
 	result      =  symbolTable->addSymbol(array1); // add array1
 	result      =  symbolTable->addSymbol(array2); // add array2
+	result      =  symbolTable->addSymbol(set1);
+	result      =  symbolTable->addSymbol(set2);
+	result      =  symbolTable->addSymbol(set3);
 
 
 	symbolTable->enterScope(proc1);  // enter function1

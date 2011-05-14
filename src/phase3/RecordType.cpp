@@ -55,7 +55,7 @@ RecordType::~RecordType() {
  * @param type The type of field.
  * @param name The name fo the field.
  */
-void RecordType::addField(IdentifierRecord * type, string name) {
+void RecordType::addField(const IdentifierRecord * type, string name) {
 	Field * field = new Field ();
 	field->name = name;
 	field->type = type;

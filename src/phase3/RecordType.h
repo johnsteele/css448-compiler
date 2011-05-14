@@ -60,7 +60,7 @@ public:
 	 * @param type The type of field.
 	 * @param name The name fo the field.
 	 */
-	void addField (IdentifierRecord * type, string name);
+	void addField (const IdentifierRecord * type, string name);
 
 
 	//---------------------print-----------------------------------------------
@@ -84,7 +84,7 @@ private:
 	 */
 	struct Field {
 		/* The type for this field. */
-		IdentifierRecord * type;
+		const IdentifierRecord * type;
 		/* The name of this field. */
 		string name;
 	};

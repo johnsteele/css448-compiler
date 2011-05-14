@@ -44,8 +44,6 @@ ConstantRecord::ConstantRecord(string name) : IdentifierRecord (name) {
 ConstantRecord::~ConstantRecord() {}
 
 
-bool ConstantRecord::isStringType(){ return isString;}
-
 //---------------------print---------------------------------------------------
 /**
  * @brief Prints the data members of this IdentifierRecord to the
@@ -95,7 +93,38 @@ void ConstantRecord::setConstFactor (string factor) {
 	str_const_factor = factor;
 }
 
-int ConstantRecord::getConstVal(){return int_const_factor;}
+
+//---------------------setIsBool-------------------------------------------
+/**
+ * @brief Returns a bool value for if the constant factor of this
+ *        ConstantRecord is a string value.
+ *
+ * Preconditions: isString is initialized.
+ *
+ * Postconditions: True was returned if the constant factor is a string,
+ *                 returns false otherwise.
+ *
+ * @return True if the constant factor is a string, false otherwise.
+ */
+bool ConstantRecord::isStringType() const {
+	return isString;
+}
+
+
+//---------------------getConstVal-----------------------------------------
+/**
+ * @brief Returns the integer constant factor of this ConstantRecord.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: The integer constant factor was returned.
+ *
+ * @return The integer constant factor.
+ */
+int ConstantRecord::getConstVal() const {
+	return int_const_factor;
+}
+
 
 //---------------------setIsBool-----------------------------------------------
 /**

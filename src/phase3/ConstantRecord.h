@@ -105,10 +105,34 @@ public:
 	 */
 	void setIsBool ();
 
-	//tells if const is a string
-	bool isStringType();
-   //gives val for int const
-	int getConstVal();
+
+	//---------------------setIsBool-------------------------------------------
+	/**
+	 * @brief Returns a bool value for if the constant factor of this
+	 *        ConstantRecord is a string value.
+	 *
+	 * Preconditions: isString is initialized.
+	 *
+	 * Postconditions: True was returned if the constant factor is a string,
+	 *                 returns false otherwise.
+	 *
+	 * @return True if the constant factor is a string, false otherwise.
+	 */
+	bool isStringType() const;
+
+
+	//---------------------getConstVal-----------------------------------------
+	/**
+	 * @brief Returns the integer constant factor of this ConstantRecord.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: The integer constant factor was returned.
+	 *
+	 * @return The integer constant factor.
+	 */
+	int getConstVal() const;
+
 /**
  * @private
  */

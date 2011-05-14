@@ -26,7 +26,12 @@
  */
 SetType::SetType(string name) : IdentifierRecord (name) {
 	dimension = new Dimension ();
-	ascii = false;
+	dimension->low_ascii   = false;
+	dimension->high_ascii  = false;
+	dimension->str_high    = "";
+	dimension->str_low     = "";
+	dimension->low_isBool  = false;
+	dimension->high_isBool = false;
 }
 
 
@@ -61,34 +66,43 @@ void SetType::print(int scope) const {
 	// Print the name.
 	IdentifierRecord::print(scope);
 
-	// Print the dimension.
-	if (ascii == true) {
-		int low = dimension->low;
-		int high = dimension->high;
-		cout << (char)low << ".." << (char)high;
+	// If low value is string.
+	if (dimension->low_ascii == true) {
+		cout << dimension->str_low;
 	}
+
+	// If low value is bool.
+	else if (dimension->low_isBool) {
+		string low = (dimension->low == 1 ? "true" : "false");
+		cout << low;
+	}
+
+	// Otherwise, low value is an integer.
 	else
-		cout << dimension->low << ".." << dimension->high;
-}
+		cout << dimension->low;
 
+	cout << "..";
 
-//---------------------isAscii---------------------------------------------
-/**
- * @brief Sets the lower and upper bound of the dimension as ascii
- *        values.
- *
- * Preconditions: None.
- *
- * Postconditions: The lower and upper bounds are now set as ascii.
- */
-void SetType::isAscii () {
-	ascii = true;
+	// If high value is string.
+	if (dimension->high_ascii == true) {
+		cout << dimension->str_high;
+	}
+
+	// If high value is bool.
+	else if (dimension->high_isBool == true) {
+		string high = (dimension->high == 1 ? "true" : "false");
+		cout << high;
+	}
+
+	// Otherwise, high value is an integer.
+	else
+		cout << dimension->high;
 }
 
 
 //---------------------setLowDimenstion----------------------------------------
 /**
- * @brief Sets the low value to a new dimension of this RecordType.
+ * @brief Sets the low value to the dimension of this SetType.
  *
  * Preconditions: None.
  *
@@ -114,4 +128,73 @@ void SetType::setLowDimension (int lowDim) {
  */
 void SetType::setHighDimension (int highDim) {
 	dimension->high = highDim;
+}
+
+
+//---------------------setLowDimenstion----------------------------------------
+/**
+ * @brief Sets the low value to a new dimension of this RecordType.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: The low dimension of this SetType was set.
+ *
+ * @param lowDim The low value of this SetType was set.
+ */
+void SetType::setLowDimension (string lowDim) {
+	dimension->low_ascii = true;
+	dimension->str_low   = lowDim;
+	// We're using the first char of string as ascii value.
+	dimension->low       = (int)lowDim.at(0);
+}
+
+
+//---------------------setHighDimenstion---------------------------------------
+/**
+ * @brief Sets the high value to the dimension of this SetType.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: The high value to the dimension of this SetType was
+ *                 set to the provided value.
+ *
+ * @param highDim The high value to a dimension of this SetType.
+ */
+void SetType::setHighDimension (string highDim) {
+	dimension->high_ascii = true;
+	dimension->str_low   = highDim;
+	// We're using the first char of string as ascii value.
+	dimension->high       = (int)highDim.at(0);
+}
+
+
+//---------------------lowBool-------------------------------------------------
+/**
+ * @brief Sets the lower bound value to a boolean value.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: The lower bound was set to the provided value.
+ *
+ * @param lowBool The boolean value.
+ */
+void SetType::setLowBool (int lowBool) {
+	dimension->low_isBool = true;
+	dimension->low = lowBool;
+}
+
+
+//---------------------setHighBool---------------------------------------------
+/**
+ * @brief Sets the high bound value to a boolean value.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: The high bound was set to the provided value.
+ *
+ * @param highBool The boolean value.
+ */
+void SetType::setHighBool (int highBool) {
+	dimension->high_isBool = true;
+	dimension->high = highBool;
 }

@@ -68,7 +68,7 @@ public:
 
 	//---------------------setLowDimenstion------------------------------------
 	/**
-	 * @brief Sets the low value to a new dimension of this RecordType.
+	 * @brief Sets the low value to the dimension of this SetType.
 	 *
 	 * Preconditions: None.
 	 *
@@ -93,16 +93,57 @@ public:
 	void setHighDimension (int highDim);
 
 
-	//---------------------isAscii---------------------------------------------
+	//---------------------setLowDimenstion------------------------------------
 	/**
-	 * @brief Sets the lower and upper bound of the dimension as ascii
-	 *        values.
+	 * @brief Sets the low value to a new dimension of this RecordType.
 	 *
 	 * Preconditions: None.
 	 *
-	 * Postconditions: The lower and upper bounds are now set as ascii.
+	 * Postconditions: The low dimension of this SetType was set.
+	 *
+	 * @param lowDim The low value of this SetType was set.
 	 */
-	void isAscii ();
+	void setLowDimension (string lowDim);
+
+
+	//---------------------setHighDimenstion-----------------------------------
+	/**
+	 * @brief Sets the high value to the dimension of this SetType.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: The high value to the dimension of this SetType was
+	 *                 set to the provided value.
+	 *
+	 * @param highDim The high value to a dimension of this SetType.
+	 */
+	void setHighDimension (string highDim);
+
+
+	//---------------------lowBool---------------------------------------------
+	/**
+	 * @brief Sets the lower bound value to a boolean value.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: The lower bound was set to the provided value.
+	 *
+	 * @param lowBool The boolean value.
+	 */
+	void setLowBool (int lowBool);
+
+
+	//---------------------setHighBool-----------------------------------------
+	/**
+	 * @brief Sets the high bound value to a boolean value.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: The high bound was set to the provided value.
+	 *
+	 * @param highBool The boolean value.
+	 */
+	void setHighBool (int highBool);
 
 
 /**
@@ -111,20 +152,30 @@ public:
 private:
 
 	/**
-	 * @brief A dimension in the the array.
+	 * @brief The dimension in the the set.
 	 */
 	struct Dimension {
+
+		/* If range is integer. */
 		int low;
 		int high;
-	};
 
-	/**
-	 * @brief Whether the dimension has ascii values.
-	 *        Used only for printing since the client is
-	 *        responsible for already converting the char
-	 *        to it's ascii value.
-	 */
-	bool ascii;
+		/*
+		 * If low or high value is a string.
+		 * If so, the value used is the first char of the string.
+		 * It is converted to ascii, and that bool flag is set.
+		 */
+		string str_low;
+		string str_high;
+
+		/* If low or high value is represented as ascii. */
+		bool low_ascii;
+		bool high_ascii;
+
+		/* If low or high value is boolean. The low and high int's are used.*/
+		bool low_isBool;
+		bool high_isBool;
+	};
 
 	/**
 	 * @brief The dimension pf the set.

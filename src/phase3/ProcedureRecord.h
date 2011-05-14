@@ -95,6 +95,38 @@ public:
 	void setReturnType (IdentifierRecord * the_returnType);
 
 
+	//---------------------lookup----------------------------------------------
+	/**
+	 * @brief Does a lookup in this ProcedureRecord's parameters for
+	 *        the provided identifier.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: True was returned if found, false otherwise.
+	 *
+	 * @param ident The name of the identifier to search for.
+	 *
+	 * @return True if found, false otherwise.
+ 	 */
+	bool lookup (string ident) const;
+
+
+	//---------------------retrieve--------------------------------------------
+	/**
+	 * @brief Retrieves the identifier from this procedure's paramaters' with
+	 *        the provided name. Returns NULL if not found.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: The IdentifierRecord if found, NULL otherwise.
+	 *
+	 * @param ident The name of the identifier to retrieve for.
+	 *
+	 * @return The IdentifierRecord if found, false otherwise.
+ 	 */
+	IdentifierRecord * retrieve (string ident) const;
+
+
 /**
  * @private
  */

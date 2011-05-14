@@ -26,7 +26,6 @@
  * @param name The name of the ProcedureRecord.
  */
 ProcedureRecord::ProcedureRecord(string name) : IdentifierRecord(name) {
-
 	args       = new vector <IdentifierRecord *> ();
 	returnType = NULL;
 }
@@ -44,7 +43,6 @@ ProcedureRecord::ProcedureRecord(string name) : IdentifierRecord(name) {
 ProcedureRecord::~ProcedureRecord() {
 	delete args;
 	args = NULL;
-
 	if (returnType != NULL) delete returnType;
 	args       = NULL;
 	returnType = NULL;
@@ -105,4 +103,47 @@ void ProcedureRecord::setReturnType (IdentifierRecord * the_returnType) {
  */
 void ProcedureRecord::insertParam (Parameter * parameter) {
 	args->push_back(parameter);
+}
+
+
+//---------------------lookup--------------------------------------------------
+/**
+ * @brief Does a lookup in this ProcedureRecord's parameters for
+ *        the provided identifier.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: True was returned if found, false otherwise.
+ *
+ * @param ident The name of the identifier to search for.
+ *
+ * @return True if found, false otherwise.
+ */
+bool ProcedureRecord::lookup (string ident) const {
+	for (int i = 0; i < (long)args->size(); i++) {
+		if (args->at(i)->getName() == ident) return true;
+	}
+	return false;
+}
+
+
+//---------------------retrieve--------------------------------------------
+/**
+ * @brief Retrieves the identifier from this procedure's paramater's with
+ *        the provided name. Returns NULL if not found.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: The IdentifierRecord if found, NULL otherwise.
+ *
+ * @param ident The name of the identifier to retrieve for.
+ *
+ * @return The IdentifierRecord if found, false otherwise.
+ */
+IdentifierRecord * ProcedureRecord::retrieve (string ident) const {
+	for (int i = 0; i < (long)args->size(); i++) {
+		if (args->at(i)->getName() == ident)
+			return args->at(i);
+	}
+	return NULL;
 }

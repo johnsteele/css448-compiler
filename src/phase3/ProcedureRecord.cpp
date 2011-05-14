@@ -11,14 +11,7 @@
  *                                                                            *
  * @brief ProcedureRecord represents a function or procedure identifier.      *
  *****************************************************************************/
-//-----------------------------------------------------------------------------
-/**
- * Includes following features:
- * 	- Allows clients to compare ProcedureRecord for equality.
- * 	- Allows clients to compare ProcedureRecords for less than value.
- *	- Allows clients to print the ProcedureRecord.
- */
-//-----------------------------------------------------------------------------
+
 #include "ProcedureRecord.h"
 
 
@@ -58,51 +51,6 @@ ProcedureRecord::~ProcedureRecord() {
 }
 
 
-//---------------------operator<-----------------------------------------------
-/**
- * @brief Compares this IdentfierRecord with the_other for less than value.
- *
- * Preconditions: The data members of this IdentfierRecord have been
- *                initialized.
- *
- * Postconditions: Returned true if this IdentfierRecord was less than
- *		           the_other.
- *
- * @param the_other The other IdentfierRecord to compare with this.
- *
- * @return True if this IdentfierRecord is less than the_other,
- *	       false otherwise.
- */
-bool ProcedureRecord::operator<(const IdentifierRecord &the_other) const {
-	bool result = false;
-
-	return result;
-}
-
-
-//---------------------operator==----------------------------------------------
-/**
- * @brief Compares this IdentfierRecord with the_other IdentfierRecord.
- *
- * Preconditions: The data members of this IdentfierRecord have been
- *		          initialized.
- *
- * Postconditions: Returned true if this IdentfierRecord was equal to
- *		           the_other.
- *
- * @param the_other The other IdentfierRecord to compare with this
- *                  IdentfierRecord.
- *
- * @return True if the_other is equal to this IdentifierRecord,
- *	       false otherwise.
- */
-bool ProcedureRecord::operator==(const IdentifierRecord &the_other) const {
-	bool result = false;
-
-	return result;
-}
-
-
 //---------------------print---------------------------------------------------
 /**
  * @brief Prints the return type if the procedure is a function, followed
@@ -118,14 +66,9 @@ void ProcedureRecord::print (int scope) const {
 
 	IdentifierRecord::print(scope);
 
-	// Print name.
-	cout << getName();
-
 	// Print return type (if this Procedure is a function).
 	if (returnType != NULL)
 		cout << " " << returnType;
-
-	// cout << endl;
 
 	// Print parameters (if there is any).
 	for (int i = 0; i < (long) args->size(); i++) {

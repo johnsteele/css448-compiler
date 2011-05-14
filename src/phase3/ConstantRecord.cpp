@@ -11,14 +11,6 @@
  *                                                                            *
  * @brief ConstantRecord represents a ConstantRecord identifier.              *
  *****************************************************************************/
-//-----------------------------------------------------------------------------
-/**
- * Includes following features:
- *	- Allows client to print a ConstantRecord.
- * 	- Allows clients to compare ConstantRecord for equality.
- * 	- Allows clients to compare ConstantRecords for less than value.
- */
-//-----------------------------------------------------------------------------
 
 #include "ConstantRecord.h"
 
@@ -33,9 +25,12 @@
  * @param name The name of the ConstantRecord.
  */
 ConstantRecord::ConstantRecord(string name) : IdentifierRecord (name) {
-	const_factor = 0;
-	isBool = false;
+	int_const_factor = 0;
+	str_const_factor = "";
+	isBool           = false;
+	isString         = false;
 }
+
 
 //---------------------Destructor----------------------------------------------
 /**
@@ -46,54 +41,7 @@ ConstantRecord::ConstantRecord(string name) : IdentifierRecord (name) {
  *
  * Postconditions: Resources were released.
  */
-ConstantRecord::~ConstantRecord() {
-
-}
-
-
-//---------------------operator<-----------------------------------------------
-/**
- * @brief Compares this IdentfierRecord with the_other for less than value.
- *
- * Preconditions: The data members of this IdentfierRecord have been
- *                initialized.
- *
- * Postconditions: Returned true if this IdentfierRecord was less than
- *		           the_other.
- *
- * @param the_other The other IdentfierRecord to compare with this.
- *
- * @return True if this IdentfierRecord is less than the_other,
- *	       false otherwise.
- */
-bool ConstantRecord::operator<(const IdentifierRecord &the_other) const {
-	bool result = false;
-
-	return result;
-}
-
-
-//---------------------operator==----------------------------------------------
-/**
- * @brief Compares this IdentfierRecord with the_other IdentfierRecord.
- *
- * Preconditions: The data members of this IdentfierRecord have been
- *		          initialized.
- *
- * Postconditions: Returned true if this IdentfierRecord was equal to
- *		           the_other.
- *
- * @param the_other The other IdentfierRecord to compare with this
- *                  IdentfierRecord.
- *
- * @return True if the_other is equal to this IdentifierRecord,
- *	       false otherwise.
- */
-bool ConstantRecord::operator==(const IdentifierRecord &the_other) const {
-	bool result = false;
-
-	return result;
-}
+ConstantRecord::~ConstantRecord() {}
 
 
 //---------------------print---------------------------------------------------
@@ -109,15 +57,15 @@ bool ConstantRecord::operator==(const IdentifierRecord &the_other) const {
  */
 void ConstantRecord::print(int scope) const {
 	IdentifierRecord::print(scope);
-	cout << getName() << " ";
-	if (isBool == true) cout << (const_factor == 1 ? "true" : "false");
-	else cout << const_factor;
+	if (isString == true) cout << str_const_factor;
+	else if (isBool == true)   cout << (int_const_factor == 1 ? "true" : "false");
+	else cout << int_const_factor;
 }
 
 
 //---------------------setConstFactor------------------------------------------
 /**
- * @brief Sets the constant factor value for this constant.
+ * @brief Sets the int constant factor value for this constant.
  *
  * Preconditions: None.
  *
@@ -126,7 +74,23 @@ void ConstantRecord::print(int scope) const {
  * @param factor The constant factor value.
 	 */
 void ConstantRecord::setConstFactor (int factor) {
-	const_factor = factor;
+	int_const_factor = factor;
+}
+
+
+//---------------------setConstFactor------------------------------------------
+/**
+ * @brief Sets the int constant factor value for this constant.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: The constant factor was set to the provided value.
+ *
+ * @param factor The constant factor value.
+	 */
+void ConstantRecord::setConstFactor (string factor) {
+	isString = true;
+	str_const_factor = factor;
 }
 
 

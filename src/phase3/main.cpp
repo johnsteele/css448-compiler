@@ -83,8 +83,11 @@ int main(void) {
 				r.setHighDimension(5);
 				r.setLowDimension(2);
 				r.setHighDimension(6);
-				r.setLowDimension(3);
-				r.setHighDimension(7);
+				char * val = "a";
+				r.setLowDimension(atoi (val));
+				r.isAscii();
+				val = "b";
+				r.setHighDimension(atoi (val));
 			} catch (exception &e) {
 				cout << "Exception: " << e.what() << endl;
 			}

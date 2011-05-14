@@ -11,14 +11,6 @@
  *                                                                            *
  * @brief ArrayType represents a ArrayType identifier.                        *
  *****************************************************************************/
-//-----------------------------------------------------------------------------
-/**
- * Includes following features:
- *	- Allows client to print ArrayType.
- * 	- Allows clients to compare ArrayType for equality.
- * 	- Allows clients to compare ArrayTypes for less than value.
- */
-//-----------------------------------------------------------------------------
 #ifndef ARRAYTYPE_H_
 #define ARRAYTYPE_H_
 
@@ -58,43 +50,6 @@ public:
 	 * Postconditions: Resources were released.
 	 */
 	virtual ~ArrayType();
-
-
-	//---------------------operator<-------------------------------------------
-	/**
-	 * @brief Compares this IdentfierRecord with the_other for less than value.
-	 *
-	 * Preconditions: The data members of this IdentfierRecord have been
-	 *                initialized.
-	 *
-	 * Postconditions: Returned true if this IdentfierRecord was less than
-	 *		           the_other.
-	 *
-	 * @param the_other The other IdentfierRecord to compare with this.
-	 *
-	 * @return True if this IdentfierRecord is less than the_other,
-	 *	       false otherwise.
-	 */
-	virtual bool operator< (const IdentifierRecord &the_other) const;
-
-
-	//---------------------operator==------------------------------------------
-	/**
-	 * @brief Compares this IdentfierRecord with the_other IdentfierRecord.
-	 *
-	 * Preconditions: The data members of this IdentfierRecord have been
-	 *		          initialized.
-	 *
-	 * Postconditions: Returned true if this IdentfierRecord was equal to
-	 *		           the_other.
-	 *
-	 * @param the_other The other IdentfierRecord to compare with this
-	 *                  IdentfierRecord.
-	 *
-	 * @return True if the_other is equal to this IdentifierRecord,
-	 *	       false otherwise.
-	 */
-	virtual bool operator== (const IdentifierRecord &the_other) const;
 
 
 	//---------------------print-----------------------------------------------
@@ -139,6 +94,20 @@ public:
 	void setHighDimension (int highDim);
 
 
+	//---------------------isAscii---------------------------------------------
+	/**
+	 * @brief Sets the current dimension's low and high values as
+	 *        Ascii value.
+	 *
+	 * Preconditions: setLowDimension must be called prior to calling
+	 *                this method.
+	 *
+	 * Postconditions: The current dimension's low and high value have been
+	 *                 marked as ascii values.
+ 	 */
+	void isAscii ();
+
+
 /**
  * @private
  */
@@ -150,6 +119,7 @@ private:
 	struct Dimension {
 		int low;
 		int high;
+		bool isAscii;
 	};
 
 	/**

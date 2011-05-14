@@ -11,15 +11,7 @@
  *                                                                            *
  * @brief ProcedureRecord represents a function or procedure identifier.      *
  *****************************************************************************/
-//-----------------------------------------------------------------------------
-/**
- * Includes following features:
- *	- Allows client to print ProcedureRecord.
- * 	- Allows clients to compare ProcedureRecord for equality.
- * 	- Allows clients to compare ProcedureRecords for less than value.
- * 	- Allows clients to insert a Parameter for the procedure.
- */
-//-----------------------------------------------------------------------------
+
 #ifndef PROCEDURERECORD_H_
 #define PROCEDURERECORD_H_
 
@@ -60,43 +52,6 @@ public:
 	 * Postconditions: Resources were released.
 	 */
 	virtual ~ProcedureRecord();
-
-
-	//---------------------operator<-------------------------------------------
-	/**
-	 * @brief Compares this IdentfierRecord with the_other for less than value.
-	 *
-	 * Preconditions: The data members of this IdentfierRecord have been
-	 *                initialized.
-	 *
-	 * Postconditions: Returned true if this IdentfierRecord was less than
-	 *		           the_other.
-	 *
-	 * @param the_other The other IdentfierRecord to compare with this.
-	 *
-	 * @return True if this IdentfierRecord is less than the_other,
-	 *	       false otherwise.
-	 */
-	virtual bool operator<(const IdentifierRecord &the_other) const;
-
-
-	//---------------------operator==------------------------------------------
-	/**
-	 * @brief Compares this IdentfierRecord with the_other IdentfierRecord.
-	 *
-	 * Preconditions: The data members of this IdentfierRecord have been
-	 *		          initialized.
-	 *
-	 * Postconditions: Returned true if this IdentfierRecord was equal to
-	 *		           the_other.
-	 *
-	 * @param the_other The other IdentfierRecord to compare with this
-	 *                  IdentfierRecord.
-	 *
-	 * @return True if the_other is equal to this IdentifierRecord,
-	 *	       false otherwise.
-	 */
-	virtual bool operator==(const IdentifierRecord &the_other) const;
 
 
 	//---------------------print-----------------------------------------------
@@ -145,7 +100,14 @@ public:
  */
 private:
 
+	/**
+	 * @brief The arguments of this procedure.
+	 */
 	vector<IdentifierRecord *> * args;
+
+	/**
+	 * @brief The function return type.
+	 */
 	IdentifierRecord * returnType;
 };
 

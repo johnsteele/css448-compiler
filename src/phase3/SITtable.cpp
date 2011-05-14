@@ -83,8 +83,9 @@ void SITtable::initIdents () {
 bool SITtable::lookup(const string ident) const {
 
 	// Check in identifier vector.
-	for (int i = 0; i < (long) standard_idents->size(); i++)
+	for (int i = 0; i < (long) standard_idents->size(); i++) {
 		if (standard_idents->at(i) == ident) return true;
+	}
 
 	// Not found.
 	return false;

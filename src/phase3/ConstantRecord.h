@@ -11,16 +11,11 @@
  *                                                                            *
  * @brief ConstantRecord represents a ConstantRecord identifier.              *
  *****************************************************************************/
-//-----------------------------------------------------------------------------
-/**
- * Includes following features:
- * 	- Allows clients to compare ConstantRecord for equality.
- * 	- Allows clients to compare ConstantRecords for less than value.
- *	- Allows clients to print the ConstantRecord.
- */
-//-----------------------------------------------------------------------------
+
 #ifndef CONSTANTRECORD_H_
 #define CONSTANTRECORD_H_
+
+#include <string>
 
 #include "IdentifierRecord.h"
 
@@ -59,43 +54,6 @@ public:
 	virtual ~ConstantRecord();
 
 
-	//---------------------operator<-------------------------------------------
-	/**
-	 * @brief Compares this IdentfierRecord with the_other for less than value.
-	 *
-	 * Preconditions: The data members of this IdentfierRecord have been
-	 *                initialized.
-	 *
-	 * Postconditions: Returned true if this IdentfierRecord was less than
-	 *		           the_other.
-	 *
-	 * @param the_other The other IdentfierRecord to compare with this.
-	 *
-	 * @return True if this IdentfierRecord is less than the_other,
-	 *	       false otherwise.
-	 */
-	virtual bool operator< (const IdentifierRecord &the_other) const;
-
-
-	//---------------------operator==------------------------------------------
-	/**
-	 * @brief Compares this IdentfierRecord with the_other IdentfierRecord.
-	 *
-	 * Preconditions: The data members of this IdentfierRecord have been
-	 *		          initialized.
-	 *
-	 * Postconditions: Returned true if this IdentfierRecord was equal to
-	 *		           the_other.
-	 *
-	 * @param the_other The other IdentfierRecord to compare with this
-	 *                  IdentfierRecord.
-	 *
-	 * @return True if the_other is equal to this IdentifierRecord,
-	 *	       false otherwise.
-	 */
-	virtual bool operator== (const IdentifierRecord &the_other) const;
-
-
 	//---------------------print-----------------------------------------------
 	/**
 	 * @brief Prints the data members of this IdentifierRecord to the
@@ -112,7 +70,7 @@ public:
 
 	//---------------------setConstFactor--------------------------------------
 	/**
-	 * @brief Sets the constant factor value for this constant.
+	 * @brief Sets the int constant factor value for this constant.
 	 *
 	 * Preconditions: None.
 	 *
@@ -121,6 +79,19 @@ public:
 	 * @param factor The constant factor value.
  	 */
 	void setConstFactor (int factor);
+
+
+	//---------------------setConstFactor--------------------------------------
+	/**
+	 * @brief Sets the string constant factor value for this constant.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: The constant factor was set to the provided value.
+	 *
+	 * @param factor The constant factor value.
+ 	 */
+	void setConstFactor (string factor);
 
 
 	//---------------------setIsBool-------------------------------------------
@@ -141,14 +112,24 @@ public:
 private:
 
 	/**
-	 * @brief The constant factor value.
+	 * @brief The integer constant factor value.
 	 */
-	int const_factor;
+	int int_const_factor;
+
+	/**
+	 * @brief The string constant factor value.
+	 */
+	string str_const_factor;
 
 	/**
 	 * @brief If this constant factor is a boolean value.
 	 */
 	int isBool;
+
+	/**
+	 * @brief If this constant factor is a string value.
+	 */
+	int isString;
 };
 
 #endif /* CONSTANTRECORD_H_ */

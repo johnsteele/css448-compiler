@@ -11,14 +11,6 @@
  *                                                                            *
  * @brief PointerType represents a PointerType identifier.                    *
  *****************************************************************************/
-//-----------------------------------------------------------------------------
-/**
- * Includes following features:
- *	- Allows client to print PointerType.
- * 	- Allows clients to compare PointerType for equality.
- * 	- Allows clients to compare PointerTypes for less than value.
- */
-//-----------------------------------------------------------------------------
 #ifndef POINTERTYPE_H_
 #define POINTERTYPE_H_
 
@@ -57,43 +49,6 @@ public:
 	 * Postconditions: Resources were released.
 	 */
 	virtual ~PointerType();
-
-
-	//---------------------operator<-------------------------------------------
-	/**
-	 * @brief Compares this IdentfierRecord with the_other for less than value.
-	 *
-	 * Preconditions: The data members of this IdentfierRecord have been
-	 *                initialized.
-	 *
-	 * Postconditions: Returned true if this IdentfierRecord was less than
-	 *		           the_other.
-	 *
-	 * @param the_other The other IdentfierRecord to compare with this.
-	 *
-	 * @return True if this IdentfierRecord is less than the_other,
-	 *	       false otherwise.
-	 */
-	virtual bool operator< (const IdentifierRecord &the_other) const;
-
-
-	//---------------------operator==------------------------------------------
-	/**
-	 * @brief Compares this IdentfierRecord with the_other IdentfierRecord.
-	 *
-	 * Preconditions: The data members of this IdentfierRecord have been
-	 *		          initialized.
-	 *
-	 * Postconditions: Returned true if this IdentfierRecord was equal to
-	 *		           the_other.
-	 *
-	 * @param the_other The other IdentfierRecord to compare with this
-	 *                  IdentfierRecord.
-	 *
-	 * @return True if the_other is equal to this IdentifierRecord,
-	 *	       false otherwise.
-	 */
-	virtual bool operator== (const IdentifierRecord &the_other) const;
 
 
 	//---------------------print-----------------------------------------------

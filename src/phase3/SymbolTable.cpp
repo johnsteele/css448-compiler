@@ -201,9 +201,6 @@ IdentifierRecord * SymbolTable::retrieve (const IdentifierRecord* ident) const {
  */
 void SymbolTable::enterScope (const IdentifierRecord* procedure) {
 	
-	cout << "Entering Scope: " << endl;
-	if (procedure == NULL) cout << "Procedure is NULL...." << endl;
-	
 	// The new scope node we're entering.
 	Node *node        = new Node ();
 	node->procedure   = procedure;

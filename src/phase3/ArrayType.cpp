@@ -11,14 +11,6 @@
  *                                                                            *
  * @brief ArrayType represents a ArrayType identifier.                        *
  *****************************************************************************/
-//-----------------------------------------------------------------------------
-/**
- * Includes following features:
- *	- Allows client to print ArrayType.
- * 	- Allows clients to compare ArrayType for equality.
- * 	- Allows clients to compare ArrayTypes for less than value.
- */
-//-----------------------------------------------------------------------------
 
 #include "ArrayType.h"
 
@@ -57,51 +49,6 @@ ArrayType::~ArrayType() {
 }
 
 
-//---------------------operator<-----------------------------------------------
-/**
- * @brief Compares this IdentfierRecord with the_other for less than value.
- *
- * Preconditions: The data members of this IdentfierRecord have been
- *                initialized.
- *
- * Postconditions: Returned true if this IdentfierRecord was less than
- *		           the_other.
- *
- * @param the_other The other IdentfierRecord to compare with this.
- *
- * @return True if this IdentfierRecord is less than the_other,
- *	       false otherwise.
- */
-bool ArrayType::operator<(const IdentifierRecord &the_other) const {
-	bool result = false;
-
-	return result;
-}
-
-
-//---------------------operator==----------------------------------------------
-/**
- * @brief Compares this IdentfierRecord with the_other IdentfierRecord.
- *
- * Preconditions: The data members of this IdentfierRecord have been
- *		          initialized.
- *
- * Postconditions: Returned true if this IdentfierRecord was equal to
- *		           the_other.
- *
- * @param the_other The other IdentfierRecord to compare with this
- *                  IdentfierRecord.
- *
- * @return True if the_other is equal to this IdentifierRecord,
- *	       false otherwise.
- */
-bool ArrayType::operator==(const IdentifierRecord &the_other) const {
-	bool result = false;
-
-	return result;
-}
-
-
 //---------------------print---------------------------------------------------
 /**
  * @brief Prints the data members of this IdentifierRecord to the
@@ -117,12 +64,18 @@ void ArrayType::print(int scope) const {
 
 	// Print the name.
 	IdentifierRecord::print(scope);
-	cout << getName() << " ";
 
 	// Print the dimensions.
 	for (int i = 0; i < (long)dimensions->size(); i++) {
 		Dimension * dim = dimensions->at(i);
-		cout << dim->low << ".." << dim->high;
+		if (dim->isAscii == true) {
+			int low = dim->low + '0';
+			int high = dim->high + '0';
+			cout << low << ".." << high;
+		}
+		else {
+			cout << dim->low << ".." << dim->high;
+		}
 		if ((i + 1) < (long)dimensions->size()) cout << ", ";
 	}
 
@@ -169,4 +122,20 @@ void ArrayType::setHighDimension (int highDim) {
 		dimensions->push_back(currentDimension);
 		currentDimension = NULL;
 	}
+}
+
+
+//---------------------isAscii-------------------------------------------------
+/**
+ * @brief Sets the current dimension's low and high values as
+ *        Ascii value.
+ *
+ * Preconditions: setLowDimension must be called prior to calling
+ *                this method.
+ *
+ * Postconditions: The current dimension's low and high value have been
+ *                 marked as ascii values.
+ */
+void ArrayType::isAscii () {
+	currentDimension->isAscii = true;
 }

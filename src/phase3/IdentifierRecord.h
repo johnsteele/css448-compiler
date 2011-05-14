@@ -9,7 +9,7 @@
  * @version 1.0.0                                                             *
  * @date May 1, 2011                                                          *
  *                                                                            *
- * @brief IdentifierRecord in an abstract base class for all identifier types *
+ * @brief IdentifierRecord in a base class for all identifier types           *
  *        to inherit from.                       					          *
  *****************************************************************************/
 //-----------------------------------------------------------------------------
@@ -18,11 +18,6 @@
  * 	- Allows clients to compare IdentifierRecords for equality.
  * 	- Allows clients to compare IdentifierRecords for less than value.
  *	- Allows clients to print the IdentifierRecord.
- *
- * Assumptions:
- * 	- All derived classes of IdentifierRecord implement getNewInstance,
- * 	  and within the method return a dynamically allocated object of
- *	  the derived type.
  */
 //-----------------------------------------------------------------------------
 
@@ -89,7 +84,7 @@ public:
 	 * @return True if this IdentfierRecord is less than the_other,
 	 *	       false otherwise.
  	 */
-	virtual bool operator< (const IdentifierRecord &the_other) const = 0;
+	virtual bool operator< (const IdentifierRecord &the_other) const;
 
 
 	//---------------------operator==------------------------------------------
@@ -108,7 +103,7 @@ public:
 	 * @return True if the_other is equal to this IdentifierRecord,
 	 *	       false otherwise.
  	 */
-	virtual bool operator== (const IdentifierRecord &the_other) const = 0;
+	virtual bool operator== (const IdentifierRecord &the_other) const;
 
 
 	//---------------------print-----------------------------------------------

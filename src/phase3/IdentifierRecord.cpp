@@ -9,7 +9,7 @@
  * @version 1.0.0                                                             *
  * @date May 1, 2011                                                          *
  *                                                                            *
- * @brief IdentifierRecord in an abstract base class for all identifier types *
+ * @brief IdentifierRecord in a base class for all identifier types           *
  *        to inherit from.                       					          *
  *****************************************************************************/
 //-----------------------------------------------------------------------------
@@ -18,11 +18,6 @@
  * 	- Allows clients to compare IdentifierRecords for equality.
  * 	- Allows clients to compare IdentifierRecords for less than value.
  *	- Allows clients to print the IdentifierRecord.
- *
- * Assumptions:
- * 	- All derived classes of IdentifierRecord implement getNewInstance,
- * 	  and within the method return a dynamically allocated object of
- *	  the derived type.
  */
 //-----------------------------------------------------------------------------
 
@@ -120,5 +115,46 @@ void IdentifierRecord::print (int scope) const {
 	for (int i = 0; i < scope; i++) {
 		cout << "   ";
 	}
+	cout << name << " ";
 }
 
+
+//---------------------operator<-----------------------------------------------
+/**
+ * @brief Compares this IdentfierRecord with the_other for less than value.
+ *
+ * Preconditions: The data members of this IdentfierRecord have been
+ *                initialized.
+ *
+ * Postconditions: Returned true if this IdentfierRecord was less than
+ *		           the_other.
+ *
+ * @param the_other The other IdentfierRecord to compare with this.
+ *
+ * @return True if this IdentfierRecord is less than the_other,
+ *	       false otherwise.
+ */
+bool IdentifierRecord::operator< (const IdentifierRecord &the_other) const {
+	return (name < the_other.name);
+}
+
+
+//---------------------operator==----------------------------------------------
+/**
+ * @brief Compares this IdentfierRecord with the_other IdentfierRecord.
+ *
+ * Preconditions: The data members of this IdentfierRecord have been
+ *		          initialized.
+ *
+ * Postconditions: Returned true if this IdentfierRecord was equal to
+ *		           the_other.
+ *
+ * @param the_other The other IdentfierRecord to compare with this
+ *                  IdentfierRecord.
+ *
+ * @return True if the_other is equal to this IdentifierRecord,
+ *	       false otherwise.
+ */
+bool IdentifierRecord::operator== (const IdentifierRecord &the_other) const {
+	return (name == the_other.name);
+}

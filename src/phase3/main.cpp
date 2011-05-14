@@ -29,6 +29,8 @@ using namespace std;
 #include "RecordType.h"
 #include "TypeRecord.h"
 #include <stdlib.h>
+#include <stack>
+#include <queue>
 
 extern int yyparse();
 #define DEBUG 1
@@ -40,6 +42,20 @@ int main(void) {
 	else   cout << "Not Found: " << found << endl;
 	delete table;
 
+	char *str = "ass";
+	string s(str);
+	cout << s << endl;
+
+	cout << (int)s.at(0) << endl;
+
+	queue<IdentifierRecord *> q;
+	q.push(new Parameter ("test"));
+	cout << "Q Size: " << q.size() << endl;
+	q.front()->print(0); cout << endl;
+	q.front() = NULL;
+	cout << "Q Size: " << q.size() << endl;
+	q.pop();
+	cout << "Q Size: " << q.size() << endl;
 
 	cout << "=================== Started parsing ===================" << endl;
 	// yyparse();
@@ -92,12 +108,12 @@ int main(void) {
 				r.setHighDimension(5);
 				r.setLowDimension(2);
 				r.setHighDimension(6);
-				char * val = "c";
+				char * val = "test";
 				int ato = (int)*val;
 				char c = (char)ato;
 				cout << "Before: " << ato << " Casted: " << c  << endl;
 				r.setLowDimension(atoi (val));
-				r.isAscii();
+				//r.isAscii();
 				val = "b";
 				r.setHighDimension(atoi (val));
 			} catch (exception &e) {

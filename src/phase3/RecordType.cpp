@@ -75,8 +75,13 @@ void RecordType::addField(IdentifierRecord * type, string name) {
 	 */
 void RecordType::print (int scope) const {
 	IdentifierRecord::print(scope);
+	cout << endl;
 	for (int i = 0; i < (long) field_list->size(); i++) {
+		for (int x = 0; x < scope + 1; x++) {
+			cout << "   ";
+		}
 		cout << field_list->at(i)->name << " ";
 		cout << field_list->at(i)->type << " ";
+		cout << endl;
 	}
 }

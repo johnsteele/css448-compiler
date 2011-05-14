@@ -100,8 +100,12 @@ void SymbolTable::emptyTable (Node * the_root) {
 	emptyTable (the_root->child);
 	emptyTable (the_root->sibling);
 
-	delete the_root->identifiers;
-	delete the_root->procedure;
+	if (the_root->identifiers != NULL)
+		delete the_root->identifiers;
+
+	if (the_root->procedure != NULL)
+		delete the_root->procedure;
+
 	delete the_root;
 }
 
@@ -394,12 +398,18 @@ void SymbolTable::printTable() const {
  */
 void SymbolTable::printTableHelper (const Node * root) const {
 	if (root == NULL) return;
+
+	// Print procedure/function name and parameters.
 	root->procedure->print(root->scope);
 	cout << endl;
+
+	// Print this scopes identifier tree.
 	if (root->identifiers != NULL)
 		root->identifiers->print(root->scope + 1);
 	else
 		cout << endl;
+
+	// Do the same for the children and siblings.
 	printTableHelper(root->child);
 	printTableHelper(root->sibling);
 }

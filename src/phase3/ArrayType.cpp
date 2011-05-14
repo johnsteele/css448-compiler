@@ -67,15 +67,41 @@ void ArrayType::print(int scope) const {
 
 	// Print the dimensions.
 	for (int i = 0; i < (long)dimensions->size(); i++) {
-		Dimension * dim = dimensions->at(i);
-		if (dim->isAscii == true) {
-			int low = dim->low;
-			int high = dim->high;
-			cout << (char)low << ".." << (char)high;
+
+		Dimension * dimension = dimensions->at(i);
+
+		// If low value is string.
+		if (dimension->low_ascii == true) {
+			cout << dimension->str_low;
 		}
-		else {
-			cout << dim->low << ".." << dim->high;
+
+		// If low value is bool.
+		else if (dimension->low_isBool) {
+			string low = (dimension->low == 1 ? "true" : "false");
+			cout << low;
 		}
+
+		// Otherwise, low value is an integer.
+		else
+			cout << dimension->low;
+
+		cout << "..";
+
+		// If high value is string.
+		if (dimension->high_ascii == true) {
+			cout << dimension->str_high;
+		}
+
+		// If high value is bool.
+		else if (dimension->high_isBool == true) {
+			string high = (dimension->high == 1 ? "true" : "false");
+			cout << high;
+		}
+
+		// Otherwise, high value is an integer.
+		else
+			cout << dimension->high;
+
 		if ((i + 1) < (long)dimensions->size()) cout << ", ";
 	}
 
@@ -100,6 +126,14 @@ void ArrayType::setLowDimension (int lowDim) {
 	// completing it by calling setHighDimension.
 	if (currentDimension != NULL) delete currentDimension;
 	currentDimension = new Dimension ();
+	currentDimension->low_isBool  = false;
+	currentDimension->high_isBool = false;
+	currentDimension->low_ascii   = false;
+	currentDimension->high_ascii  = false;
+	currentDimension->str_low     = "";
+	currentDimension->str_high    = "";
+	currentDimension->high        = 0;
+
 	currentDimension->low = lowDim;
 }
 
@@ -125,17 +159,102 @@ void ArrayType::setHighDimension (int highDim) {
 }
 
 
-//---------------------isAscii-------------------------------------------------
+//---------------------setLowDimenstion----------------------------------------
 /**
- * @brief Sets the current dimension's low and high values as
- *        Ascii value.
+ * @brief Sets the low value of a new dimension.
  *
- * Preconditions: setLowDimension must be called prior to calling
- *                this method.
+ * Preconditions: None.
  *
- * Postconditions: The current dimension's low and high value have been
- *                 marked as ascii values.
+ * Postconditions: A new dimension was created with the provided low value.
+ *
+ * @param lowDim The low value to a new dimension of this ArrayType.
  */
-void ArrayType::isAscii () {
-	currentDimension->isAscii = true;
+void ArrayType::setLowDimension (string lowDim) {
+	// If setLowDimension was called twice in a row w/out
+	// completing it by calling setHighDimension.
+	if (currentDimension != NULL) delete currentDimension;
+	currentDimension = new Dimension ();
+	currentDimension->low_isBool  = false;
+	currentDimension->high_isBool = false;
+	currentDimension->high_ascii  = false;
+	currentDimension->str_high    = "";
+	currentDimension->high        = 0;
+
+	currentDimension->low_ascii   = true;
+	currentDimension->str_low     = lowDim;
+	currentDimension->low         = (int)lowDim.at(0);
+}
+
+
+//---------------------setHighDimenstion---------------------------------------
+/**
+ * @brief Sets the high value to the current dimension of this ArrayType.
+ *
+ * Preconditions: setLowDimension has already been called, which created a
+ *                new dimension to the array and set it's low value.
+ *
+ * Postconditions: The high value to the dimension of this ArrayType was
+ *                 set to the provided value.
+ *
+ * @param highDim The high value to a dimension of this ArrayType.
+ */
+void ArrayType::setHighDimension (string highDim) {
+
+	if (currentDimension != NULL) {
+		currentDimension->high_ascii   = true;
+		currentDimension->str_high     = highDim;
+		currentDimension->high         = (int)highDim.at(0);
+		dimensions->push_back(currentDimension);
+		currentDimension = NULL;
+	}
+}
+
+
+
+//---------------------lowBool-------------------------------------------------
+/**
+ * @brief Sets the lower bound value to a boolean value.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: The lower bound was set to the provided value.
+ *
+ * @param lowBool The boolean value.
+ */
+void ArrayType::setLowBool (int lowBool) {
+
+	// If setLowBool was called twice in a row w/out
+	// completing it by calling setHighDimension.
+	if (currentDimension != NULL) delete currentDimension;
+	currentDimension = new Dimension ();
+	currentDimension->high_isBool = false;
+	currentDimension->low_ascii   = false;
+	currentDimension->high_ascii  = false;
+	currentDimension->high        = 0;
+	currentDimension->str_low     = "";
+	currentDimension->str_high    = "";
+
+	currentDimension->low_isBool  = true;
+	currentDimension->low         = lowBool;
+}
+
+
+//---------------------setHighBool---------------------------------------------
+/**
+ * @brief Sets the high bound value to a boolean value.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: The high bound was set to the provided value.
+ *
+ * @param highBool The boolean value.
+ */
+void ArrayType::setHighBool (int highBool) {
+
+	if (currentDimension != NULL) {
+			currentDimension->high_isBool = true;
+			currentDimension->high        = highBool;
+			dimensions->push_back(currentDimension);
+			currentDimension = NULL;
+	}
 }

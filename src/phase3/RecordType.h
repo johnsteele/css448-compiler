@@ -19,6 +19,7 @@
 #include <vector>
 
 #include "IdentifierRecord.h"
+#include "TypeRecord.h"
 
 class RecordType : public IdentifierRecord {
 public:
@@ -59,7 +60,7 @@ public:
 	 * @param type The type of field.
 	 * @param name The name fo the field.
 	 */
-	void addField (TypeRecord * type, string name);
+	void addField (IdentifierRecord * type, string name);
 
 
 	//---------------------print-----------------------------------------------

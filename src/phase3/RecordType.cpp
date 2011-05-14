@@ -24,7 +24,7 @@
  *
  * @param name The name of the RecordType.
  */
-RecordType::RecordType(string name) : IdenifierRecord (name) {
+RecordType::RecordType(string name) : IdentifierRecord (name) {
 	field_list = new vector <Field *> ();
 }
 
@@ -55,7 +55,7 @@ RecordType::~RecordType() {
  * @param type The type of field.
  * @param name The name fo the field.
  */
-void RecordType::addField(TypeRecord * type, string name) {
+void RecordType::addField(IdentifierRecord * type, string name) {
 	Field * field = new Field ();
 	field->name = name;
 	field->type = type;

@@ -51,6 +51,20 @@ public:
 	 * @param name The name of the TypeRecord
 	 */
 	virtual ~TypeRecord();
+
+
+	//---------------------print-----------------------------------------------
+	/**
+	 * @brief Prints the data members of this IdentifierRecord to the standard
+	 *        output stream.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: For every level of scope, three spaces were printed.
+	 *
+	 * @param scope The scope of this identifier (used for indenting purposes).
+ 	 */
+	virtual void print(int scope) const;
 };
 
 #endif /* TYPERECORD_H_ */

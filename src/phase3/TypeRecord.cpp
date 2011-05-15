@@ -25,7 +25,6 @@
  * @param name The name of the TypeRecord
  */
 TypeRecord::TypeRecord(string name) : IdentifierRecord (name){
-
 }
 
 //---------------------Constructor---------------------------------------------
@@ -39,5 +38,22 @@ TypeRecord::TypeRecord(string name) : IdentifierRecord (name){
  * @param name The name of the TypeRecord
  */
 TypeRecord::~TypeRecord() {
+}
 
+
+//---------------------print-----------------------------------------------
+/**
+ * @brief Prints the data members of this IdentifierRecord to the standard
+ *        output stream.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: For every level of scope, three spaces were printed.
+ *
+ * @param scope The scope of this identifier (used for indenting purposes).
+ */
+void TypeRecord::print(int scope) const {
+	IdentifierRecord::print(scope);
+	if (getType() != NULL)
+		getType()->print(0);
 }

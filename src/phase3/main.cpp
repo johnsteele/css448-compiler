@@ -37,6 +37,65 @@ extern int yyparse();
 int main(void) {
 
 	SITtable *table = new SITtable ();
+	SymbolTable * symbolTable = new SymbolTable ();
+
+	ProcedureRecord *prog = new ProcedureRecord ("program");
+
+
+
+
+
+
+	symbolTable->enterScope(prog);
+	TypeRecord *int3d = new TypeRecord ("int3d");
+
+	ArrayType  *type  = new ArrayType ("_array");
+	type->setLowDimension(1);
+	type->setHighDimension(5);
+	type->setLowDimension(2);
+	type->setHighDimension(3);
+	type->setLowDimension(0);
+	type->setHighDimension(2);
+
+	TypeRecord *intRec = new TypeRecord ("integer");
+	type->setType(intRec);
+	int3d->setType(type);
+
+	symbolTable->addSymbol(int3d);
+
+
+
+	if (symbolTable->lookup(int3d->getName()))
+		cout << "Lookup Found: " << int3d->getName() << endl;
+
+	else
+		cout << "Not looked up." << endl;
+
+	IdentifierRecord *temp;
+	if ((temp = symbolTable->retrieve(int3d->getName())) != NULL) {
+		cout << "Retrieve Found: ";
+		temp->print(0);
+	}
+
+	else
+		cout << "Not retrieved" << endl;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	bool found = table->lookup("true");
 	if (found) cout << "Found: " << found << endl;
 	else   cout << "Not Found: " << found << endl;
@@ -65,7 +124,7 @@ int main(void) {
 #if DEBUG
 	cout << "=============== Start Print Symbol Table ==============" << endl;
 
-	SymbolTable * symbolTable = new SymbolTable ();
+
 
 	ProcedureRecord *proc    = new ProcedureRecord ("program1");
 	ProcedureRecord *proc1   = new ProcedureRecord ("function1");

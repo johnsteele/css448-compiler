@@ -81,7 +81,37 @@ void RecordType::print (int scope) const {
 			cout << "   ";
 		}
 		cout << field_list->at(i)->name << " ";
-		cout << field_list->at(i)->type << " ";
-		cout << endl;
+		field_list->at(i)->type->print(0);
+		cout << " " << endl;
 	}
+}
+
+
+//---------------------getFieldName--------------------------------------------
+/**
+ * @brief Returns the name of the identifier at the provided index.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: This RecordType members have been printed.
+ *
+ * @param index The index of the identifier.
+ */
+string RecordType::getFieldName (int index) const {
+	return field_list->at(index);
+}
+
+
+//---------------------getFieldSize--------------------------------------------
+/**
+ * @brief Returns the size of the the argument vector.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: The number of fields was returned.
+ *
+ * @return The number of fields.
+ */
+int RecordType::getFieldSize () const {
+	return field_list->size();
 }

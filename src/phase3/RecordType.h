@@ -77,6 +77,32 @@ public:
 	virtual void print (int scope) const;
 
 
+	//---------------------getFieldName----------------------------------------
+	/**
+	 * @brief Returns the name of the identifier at the provided index.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: This RecordType members have been printed.
+	 *
+	 * @param index The index of the identifier.
+ 	 */
+	string getFieldName (int index) const;
+
+
+	//---------------------getFieldSize----------------------------------------
+	/**
+	 * @brief Returns the size of the the argument vector.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: The number of fields was returned.
+	 *
+	 * @return The number of fields.
+ 	 */
+	int getFieldSize () const;
+
+
 private:
 
 	/**

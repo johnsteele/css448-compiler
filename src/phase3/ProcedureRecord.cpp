@@ -72,8 +72,10 @@ void ProcedureRecord::print (int scope) const {
 	// Print parameters (if there is any).
 	for (int i = 0; i < (long) args->size(); i++) {
 		args->at(i)->print(scope);
-		cout << endl;
+		cout << " ";
 	}
+
+	returnType->print(0);
 }
 
 

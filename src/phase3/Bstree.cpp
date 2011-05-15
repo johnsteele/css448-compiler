@@ -116,7 +116,7 @@ bool BSTree::lookupHelper (const Node *root, string name) const
 	else if (*root->item == name)
 		return true;
 
-	else if (*root->item < name)
+	else if (name < *root->item)
 		return retrieveHelper (root->left, name);
 
 	else
@@ -164,10 +164,10 @@ IdentifierRecord * BSTree::retrieveHelper (const Node *root,
 		                                     string name) const {
 	if (root == NULL) return NULL;
 
-	else if (*root->item == name)
+	else if (root->item->getName() == name)
 		return root->item;
 
-	else if (*root->item < name)
+	else if (name < root->item->getName())
 		return retrieveHelper (root->left, name);
 
 	else

@@ -105,6 +105,8 @@ void ArrayType::print(int scope) const {
 		if ((i + 1) < (long)dimensions->size()) cout << ", ";
 	}
 
+	cout << " ";
+
 	// Print the type.
 	if (getType() != NULL) getType()->print(0);
 }

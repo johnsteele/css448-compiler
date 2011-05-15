@@ -172,19 +172,24 @@ TypeDefList       :  TypeDef ysemicolon
                      {
 								if(validType){
 									table->addSymbol(aType);
-								}
+                           table->printTable();
+                         }
 								else{
 								 cout<<"Error: "<< name <<" already exists in this scope."<<endl;
 								}
+
 							}
                   |  TypeDefList TypeDef ysemicolon
                      {
-								if(validType)
-									table->addSymbol(constant);
+								if(validType){
+									table->addSymbol(aType);
+                           table->printTable();
+                         }
 									
 								else{
-								 cout<<"Error: "<< name <<" already exists in this     scope."<<endl;
+								 cout<<"Error: "<< name <<" already exists in this scope."<<endl;
 								}
+
 							}
                   ;
 VariableDeclBlock :  /*** empty ***/
@@ -210,6 +215,7 @@ ConstantDef       :  Identifier
 TypeDef           :  Identifier
 
                      { 	if(!table->lookupScope(name)){
+                           cout<<"about to insert " <<name<<endl;
 								   aType = new TypeRecord(name);
 									validType = true;
 									}
@@ -405,9 +411,12 @@ ArrayType         :  yarray
                      Type
                      {
                         if(validType){
+
 									array->setType(subTypes.top());
+
 									subTypes.top() = NULL;
 									subTypes.pop();
+                            cout<<"set array type"<<endl;
 									}
 								else{
 									cout<<"Error: Type not valid"<<endl;
@@ -428,16 +437,16 @@ Subrange          :  ConstFactor
 									array->setLowBool(1);
 									isTrue = false;
 								 }
-							    if(isFalse){
+							    else if(isFalse){
 									array->setLowBool(0);
 									isFalse = false;
 								 }
-								 if(isNum){
+								 else if(isNum){
                            array->setLowDimension(yylval.int_value);
 									isNum = false;
 								 }
 								 
-								 if(isNil){
+								 else if(isNil){
 									array->setLowDimension(nullPtr);
 								   isNil = false;
 							    }
@@ -459,16 +468,16 @@ Subrange          :  ConstFactor
 									isTrue = false;
 									}
 									
-							    if(isFalse){
+							    else if(isFalse){
 									set->setLowBool(0);
 									isFalse = false;
 									}
-								 if(isNum){
+								 else if(isNum){
                            set->setLowDimension(yylval.int_value);
 									isNum = false;
 									}
 									
-								if(isNil){
+								else if(isNil){
 									set->setLowDimension(nullPtr);
 									isNil = false;
 							   }
@@ -499,16 +508,16 @@ Subrange          :  ConstFactor
 									isTrue = false;
 									}
 									
-							    if(isFalse){
+							    else if(isFalse){
 									array->setHighBool(0);
 									isFalse = false;
 								 }
-								 if(isNum){
+								 else if(isNum){
                            array->setHighDimension(yylval.int_value);
 									isNum = false;
 								 }
 								 
-								 if(isNil){
+								 else if(isNil){
 									array->setHighDimension(nullPtr);
 									isNil = false;
 							   }
@@ -529,16 +538,16 @@ Subrange          :  ConstFactor
 									isTrue = false;
 									}
 									
-							    if(isFalse){
+							    else if(isFalse){
 									set->setHighBool(0);
 									isFalse = false;
 									}
-								 if(isNum){
+								 else if(isNum){
                            set->setHighDimension(yylval.int_value);
 									isNum = false;
 								 }
 								 
-								 if(isNil){
+								 else if(isNil){
 									set->setHighDimension(nullPtr);
 									isNil = false;
 							   }
@@ -848,7 +857,7 @@ OneFormalParam    :  yvar  IdentList  ycolon Identifier
                              if(!table->lookupScope(vars.front()->getName()) &&
                                 !sitTable->lookup(vars.front()->getName())){
 
-                                 param  = new Parameter(vars.front()->getName());
+                                 param  = new Parameter(vars.front()->getName(), true);
                                  param ->setType(subTypes.top());
 											vars.front() = NULL;
 											vars.pop();
@@ -882,7 +891,7 @@ OneFormalParam    :  yvar  IdentList  ycolon Identifier
                              if(!table->lookupScope(vars.front()->getName()) &&
                                 !sitTable->lookup(vars.front()->getName())){
 
-                                 param  = new Parameter(vars.front()->getName());
+                                 param  = new Parameter(vars.front()->getName(), false);
                                  param ->setType(subTypes.top());
 											vars.front() = NULL;
 											vars.pop();

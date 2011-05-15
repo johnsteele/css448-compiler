@@ -66,16 +66,18 @@ void ProcedureRecord::print (int scope) const {
 	IdentifierRecord::print(scope);
 
 	// Print return type (if this Procedure is a function).
-	if (returnType != NULL)
-		cout << " " << returnType;
+	if (returnType != NULL) {
+		cout << " ";
+		returnType->print(0);
+	}
+
+	cout << endl;
 
 	// Print parameters (if there is any).
 	for (int i = 0; i < (long) args->size(); i++) {
 		args->at(i)->print(scope);
 		cout << " ";
 	}
-
-	returnType->print(0);
 }
 
 

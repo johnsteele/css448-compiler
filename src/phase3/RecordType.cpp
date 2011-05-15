@@ -98,7 +98,7 @@ void RecordType::print (int scope) const {
  * @param index The index of the identifier.
  */
 string RecordType::getFieldName (int index) const {
-	return field_list->at(index);
+	return field_list->at(index)->name;
 }
 
 

@@ -179,7 +179,9 @@ bool SymbolTable::lookupHelper (const Node * root, string ident) const {
 	bool result = false;
 
 	// First check current scope identifier tree.
-	result = root->identifiers->lookup(ident);
+	if (root->identifiers != NULL) {
+		result = root->identifiers->lookup(ident);
+	}
 
 	// If not in current scope identifier tree,
 	// then check the current scope function parameters.
@@ -239,7 +241,9 @@ IdentifierRecord * SymbolTable::retrieveHelper (const Node * root,
 	IdentifierRecord * result = NULL;
 
 	// First check current scope identifier tree.
-	result = root->identifiers->retrieve(ident);
+	if (root->identifiers != NULL) {
+		result = root->identifiers->retrieve(ident);
+	}
 
 	// If not in current scope identifier tree,
 	// then check the current scope function parameters.
@@ -274,18 +278,21 @@ IdentifierRecord * SymbolTable::retrieveHelper (const Node * root,
  * @return True if the identifier was found, false otherwise.
  */
 bool SymbolTable::lookupScope (string ident) const {
+
 	if (currentScope == NULL || rootScope == NULL)
 		return false;
 
 	bool result = false;
 
 	// First check current scope identifier tree.
-	result = currentScope->identifiers->lookup(ident);
+	if (currentScope->identifiers != NULL) {
+		result = currentScope->identifiers->lookup(ident);
+	}
 
 	// If not in current scope identifier tree,
 	// then check the current scope function parameters.
 	if (result == false) {
-		return result = currentScope->procedure->lookup(ident);
+		result = currentScope->procedure->lookup(ident);
 	}
 
 	return result;

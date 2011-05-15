@@ -115,14 +115,12 @@ const IdentifierRecord * IdentifierRecord::getType () const {
  * @param scope The scope of this identifier (used for indenting purposes).
  */
 void IdentifierRecord::print (int scope) const {
-
 	for (int i = 0; i < scope; i++) {
 		cout << "   ";
 	}
 
 	if (name != "_array" && name != "_ptr" && name != "_set" && name != "_record")
 		cout << name;
-
 	cout << " ";
 }
 

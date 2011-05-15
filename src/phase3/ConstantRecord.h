@@ -94,6 +94,19 @@ public:
 	void setConstFactor (string factor);
 
 
+	//---------------------setConstFactor--------------------------------------
+	/**
+	 * @brief Sets the constant factor value for this constant.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: The constant factor was set to the provided value.
+	 *
+	 * @param factor The constant factor value.
+ 	 */
+	void setConstFactor (IdentifierRecord * the_ident);
+
+
 	//---------------------setIsBool-------------------------------------------
 	/**
 	 * @brief Sets this constant record as a bool value. With this set, the
@@ -151,12 +164,27 @@ private:
 	/**
 	 * @brief If this constant factor is a boolean value.
 	 */
-	int isBool;
+	bool isBool;
 
 	/**
 	 * @brief If this constant factor is a string value.
 	 */
-	int isString;
+	bool isString;
+
+	/**
+	 * @brief If this constant factor is an identifier.
+	 */
+	bool isIdent;
+
+	/**
+	 * @brief The identifier if the const factor is an identifier.
+	 */
+	IdentifierRecord * ident;
+
+	/**
+	 * @brief If the const factor is nil.
+	 */
+	bool isNil;
 };
 
 #endif /* CONSTANTRECORD_H_ */

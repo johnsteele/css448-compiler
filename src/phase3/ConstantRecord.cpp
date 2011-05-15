@@ -29,6 +29,9 @@ ConstantRecord::ConstantRecord(string name) : IdentifierRecord (name) {
 	str_const_factor = "";
 	isBool           = false;
 	isString         = false;
+	isNil            = false;
+	isIdent          = false;
+	ident            = NULL;
 }
 
 
@@ -41,7 +44,9 @@ ConstantRecord::ConstantRecord(string name) : IdentifierRecord (name) {
  *
  * Postconditions: Resources were released.
  */
-ConstantRecord::~ConstantRecord() {}
+ConstantRecord::~ConstantRecord() {
+	ident = NULL;
+}
 
 
 //---------------------print---------------------------------------------------
@@ -59,6 +64,8 @@ void ConstantRecord::print(int scope) const {
 	IdentifierRecord::print(scope);
 	if (isString == true) cout << str_const_factor;
 	else if (isBool == true)   cout << (int_const_factor == 1 ? "true" : "false");
+	else if (isIdent == true)  ident->print(0);
+	else if (isNil == true)    cout << "nil";
 	else cout << int_const_factor;
 }
 
@@ -94,7 +101,7 @@ void ConstantRecord::setConstFactor (string factor) {
 }
 
 
-//---------------------setIsBool-------------------------------------------
+//---------------------isStringType--------------------------------------------
 /**
  * @brief Returns a bool value for if the constant factor of this
  *        ConstantRecord is a string value.
@@ -122,7 +129,33 @@ bool ConstantRecord::isStringType() const {
  * @return The integer constant factor.
  */
 int ConstantRecord::getConstVal() const {
+	/* TODO: This needs to be fixed. */
 	return int_const_factor;
+}
+
+
+//---------------------setConstFactor------------------------------------------
+/**
+ * @brief Sets the constant factor value for this constant.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: The constant factor was set to the provided value.
+ *
+ * @param factor The constant factor value.
+	 */
+void ConstantRecord::setConstFactor (IdentifierRecord * the_ident) {
+
+	/* If it's an identifier const factor. */
+	if (the_ident != NULL) {
+		isIdent = true;
+		ident   = the_ident;
+	}
+
+	/* Otherwise, it's a ynil token factor. */
+	else {
+		isNil = true;
+	}
 }
 
 

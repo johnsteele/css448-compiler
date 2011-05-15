@@ -76,7 +76,7 @@ void ProcedureRecord::print (int scope) const {
 	// Print parameters (if there is any).
 	for (int i = 0; i < (long) args->size(); i++) {
 		args->at(i)->print(scope + 1);
-		cout << args->at(i)->type->getName();
+		cout << args->at(i)->getType()->getName();
 		cout << endl;
 	}
 }

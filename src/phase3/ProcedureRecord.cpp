@@ -68,15 +68,16 @@ void ProcedureRecord::print (int scope) const {
 	// Print return type (if this Procedure is a function).
 	if (returnType != NULL) {
 		cout << " ";
-		returnType->print(0);
+		returnType->getName();
 	}
 
 	cout << endl;
 
 	// Print parameters (if there is any).
 	for (int i = 0; i < (long) args->size(); i++) {
-		args->at(i)->print(scope);
-		cout << " ";
+		args->at(i)->print(scope + 1);
+		cout << args->at(i)->type->getName();
+		cout << endl;
 	}
 }
 

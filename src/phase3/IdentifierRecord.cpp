@@ -69,7 +69,10 @@ IdentifierRecord::~IdentifierRecord() {
  * @return The name of this IdentifierRecord.
  */
 const string IdentifierRecord::getName () const {
-	return name;
+	if (name != "_array" && name != "_ptr" && name != "_set" && name != "_record")
+			return "";
+	else
+		return name;
 }
 
 
@@ -121,6 +124,7 @@ void IdentifierRecord::print (int scope) const {
 
 	if (name != "_array" && name != "_ptr" && name != "_set" && name != "_record")
 		cout << name;
+
 	cout << " ";
 }
 

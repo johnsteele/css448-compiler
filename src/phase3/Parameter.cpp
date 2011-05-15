@@ -23,8 +23,10 @@
  * Postconditions: This Parameter was instantiated.
  *
  * @param name The name of the Parameter.
+ * @param is_var If this identifier is a variable.
  */
-Parameter::Parameter(string name) : IdentifierRecord (name){
+Parameter::Parameter(string name, bool is_var) : IdentifierRecord (name){
+	isVar = is_var;
 }
 
 
@@ -53,5 +55,13 @@ Parameter::~Parameter() {
  * @param scope The scope of this identifier (used for indenting purposes).
  */
 void Parameter::print(int scope) const {
+	for (int i = 0; i < scope; i++) {
+		cout << "   ";
+	}
+
+	if (isVar) {
+		cout << "var ";
+	}
+
 	IdentifierRecord::print(scope);
 }

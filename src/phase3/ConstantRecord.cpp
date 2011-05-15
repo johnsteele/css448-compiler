@@ -65,7 +65,7 @@ void ConstantRecord::print(int scope) const {
 	if (isString == true) cout << str_const_factor;
 	else if (isBool == true)   cout << (int_const_factor == 1 ? "true" : "false");
 	else if (isIdent == true)  ident->print(0);
-	else if (isNil == true)    cout << "nil";
+	else if (isNil == true) cout << "nil";
 	else cout << int_const_factor;
 }
 

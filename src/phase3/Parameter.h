@@ -35,8 +35,9 @@ public:
 	 * Postconditions: This Parameter was instantiated.
 	 *
 	 * @param name The name of the Parameter.
+	 * @param is_var If this identifier is a variable.
 	 */
-	Parameter(string name);
+	Parameter(string name, bool is_var);
 
 
 	//---------------------Destructor------------------------------------------
@@ -63,6 +64,26 @@ public:
 	 * @param scope The scope of this identifier (used for indenting purposes).
  	 */
 	virtual void print (int scope) const;
+
+
+	//---------------------print-----------------------------------------------
+	/**
+	 * @brief Prints the data members of this IdentifierRecord to the
+	 *        output stream.
+	 *
+	 * Preconditions: Data members have been initialized.
+	 *
+	 * Postconditions: This IdentifierRecord's members have been printed.
+	 *
+	 * @param scope The scope of this identifier (used for indenting purposes).
+ 	 */
+
+private:
+
+	/**
+	 * @brief If this identifier is a variable.
+	 */
+	bool isVar;
 };
 
 #endif /* PARAMETER_H_ */

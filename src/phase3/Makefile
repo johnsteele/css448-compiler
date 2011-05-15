@@ -6,7 +6,7 @@
 OBJ = main.o lex.yy.o y.tab.o      # all object files, the .o  files
                                    # change lex.o to lex.yy.o if (f)lex used
 
-ACT=SymbolTable.o Bstree.o IdentifierRecord.o ProcedureRecord.o ConstantRecord.o Parameter.o VariableRecord.o PointerType.o  ArrayType.o 
+ACT=SymbolTable.o Bstree.o IdentifierRecord.o ProcedureRecord.o ConstantRecord.o Parameter.o PointerType.o  ArrayType.o SITtable.o SITtype.o SetType.o RecordType.o TypeRecord.o
 H = y.tab.h tokenconst.h
 
 # The $ is a macro reference.  The following ident is replaced with the
@@ -15,8 +15,8 @@ H = y.tab.h tokenconst.h
 a.out: $(ACT) $(OBJ) $H                   # a.out depends on everything
 	g++ $(OBJ) $(ACT) -o a.out
 
-$(ACT): SymbolTable.cpp Bstree.cpp IdentifierRecord.cpp ProcedureRecord.cpp ConstantRecord.cpp Parameter.cpp VariableRecord.cpp PointerType.cpp  ArrayType.cpp
-	g++ -c SymbolTable.cpp Bstree.cpp IdentifierRecord.cpp ProcedureRecord.cpp ConstantRecord.cpp Parameter.cpp VariableRecord.cpp PointerType.cpp  ArrayType.cpp
+$(ACT): SymbolTable.cpp Bstree.cpp IdentifierRecord.cpp ProcedureRecord.cpp ConstantRecord.cpp Parameter.cpp PointerType.cpp  ArrayType.cpp SITtable.cpp SITtype.cpp SetType.cpp RecordType.cpp TypeRecord.cpp
+	g++ -c -g SymbolTable.cpp Bstree.cpp IdentifierRecord.cpp ProcedureRecord.cpp ConstantRecord.cpp Parameter.cpp PointerType.cpp  ArrayType.cpp SITtable.cpp SITtype.cpp SetType.cpp RecordType.cpp TypeRecord.cpp
 
 main.o: main.cpp                   # main.o depends on main.cpp
 	g++ -c  main.cpp

@@ -32,6 +32,20 @@ SetType::SetType(string name) : IdentifierRecord (name) {
 	dimension->str_low     = "";
 	dimension->low_isBool  = false;
 	dimension->high_isBool = false;
+	dimension->low_isNil   = false;
+	dimension->high_isNil  = false;
+	dimension->low_isBool  = false;
+	dimension->high_isBool = false;
+	dimension->low_ascii   = false;
+	dimension->high_ascii  = false;
+	dimension->low_isIdent = false;
+	dimension->high_isIdent= false;
+	dimension->low_ident   = NULL;
+	dimension->high_ident  = NULL;
+	dimension->str_low     = "";
+	dimension->str_high    = "";
+	dimension->low         = 0;
+	dimension->high        = 0;
 }
 
 
@@ -45,6 +59,8 @@ SetType::SetType(string name) : IdentifierRecord (name) {
  * Postconditions: Resources were released.
  */
 SetType::~SetType() {
+	dimension->low_ident  = NULL;
+	dimension->high_ident = NULL;
 	delete dimension;
 	dimension = NULL;
 }
@@ -77,6 +93,18 @@ void SetType::print(int scope) const {
 		cout << low;
 	}
 
+	// If low value is an identifier.
+	else if (dimension->low_isIdent == true) {
+		if (dimension->low_ident != NULL) {
+			cout << dimension->low_ident->getName();
+		}
+	}
+
+	// If low value is a nil.
+	else if (dimension->low_isNil == true) {
+		cout << "nil";
+	}
+
 	// Otherwise, low value is an integer.
 	else
 		cout << dimension->low;
@@ -92,6 +120,18 @@ void SetType::print(int scope) const {
 	else if (dimension->high_isBool == true) {
 		string high = (dimension->high == 1 ? "true" : "false");
 		cout << high;
+	}
+
+	// If high value is an identifier.
+	else if (dimension->high_isIdent == true) {
+		if (dimension->high_ident != NULL) {
+			cout << dimension->high_ident->getName();
+		}
+	}
+
+	// If high value is a nil.
+	else if (dimension->high_isNil == true) {
+		cout << "nil";
 	}
 
 	// Otherwise, high value is an integer.
@@ -162,7 +202,7 @@ void SetType::setLowDimension (string lowDim) {
  */
 void SetType::setHighDimension (string highDim) {
 	dimension->high_ascii = true;
-	dimension->str_low   = highDim;
+	dimension->str_high   = highDim;
 	// We're using the first char of string as ascii value.
 	dimension->high       = (int)highDim.at(0);
 }
@@ -197,4 +237,53 @@ void SetType::setLowBool (int lowBool) {
 void SetType::setHighBool (int highBool) {
 	dimension->high_isBool = true;
 	dimension->high = highBool;
+}
+
+
+//---------------------setLowDimenstion----------------------------------------
+/**
+ * @brief Sets the low value of a new dimension.
+ *
+ * Preconditions: lowDim is not NULL.
+ *
+ * Postconditions: A new dimension was created with the provided low value.
+ *
+ * @param lowDim The low value to a new dimension of this SetType.
+ */
+void SetType::setLowDimension (IdentifierRecord * lowDim) {
+
+	if (lowDim != NULL) {
+		dimension->low_isIdent = true;
+		dimension->low_ident   = lowDim;
+	}
+
+	/* If it's NULL, it's a ynil token. */
+	else {
+		dimension->low_isNil = true;
+	}
+}
+
+
+//---------------------setHighDimenstion---------------------------------------
+/**
+ * @brief Sets the high value to the current dimension of this SetType.
+ *
+ * Preconditions: setLowDimension has already been called, which created a
+ *                new dimension to the array and set it's low value.
+ *
+ * Postconditions: The high value to the dimension of this SetType was
+ *                 set to the provided value.
+ *
+ * @param highDim The high value to a dimension of this SetType.
+ */
+void SetType::setHighDimension (IdentifierRecord *highDim) {
+	if (highDim != NULL) {
+		dimension->high_isIdent = true;
+		dimension->high_ident   = highDim;
+	}
+
+	// If it's NULL, it's a ynil token. */
+	else {
+		dimension->high_isNil = true;
+	}
 }

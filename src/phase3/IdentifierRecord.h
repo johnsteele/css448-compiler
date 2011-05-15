@@ -29,6 +29,8 @@
 #include <string>
 #include <iomanip>
 
+#include "SITtable.h"
+
 /**
  * @namespace std
  */

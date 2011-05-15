@@ -26,7 +26,6 @@
  */
 ArrayType::ArrayType(string name) : IdentifierRecord (name) {
 	dimensions       = new vector <Dimension *> ();
-	totalDimensions  = 0;
 	currentDimension = NULL;
 }
 
@@ -41,6 +40,7 @@ ArrayType::ArrayType(string name) : IdentifierRecord (name) {
  * Postconditions: Resources were released.
  */
 ArrayType::~ArrayType() {
+	dimensions->empty();
 	delete dimensions;
 	if (currentDimension != NULL)
 		delete currentDimension;

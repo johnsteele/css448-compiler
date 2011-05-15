@@ -50,7 +50,11 @@ IdentifierRecord::IdentifierRecord (string the_name) {
  * Postconditions: Resources have been released.
  */
 IdentifierRecord::~IdentifierRecord() {
+	SITtable sits;
+	if (sits.lookup(name) == true)
+		delete type;
 
+	type = NULL;
 }
 
 
@@ -115,7 +119,11 @@ void IdentifierRecord::print (int scope) const {
 	for (int i = 0; i < scope; i++) {
 		cout << "   ";
 	}
-	cout << name << " ";
+
+	if (name != "_array" && name != "_ptr" && name != "_set" && name != "_record")
+		cout << name;
+
+	cout << " ";
 }
 
 

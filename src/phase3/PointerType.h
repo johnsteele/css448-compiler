@@ -102,7 +102,7 @@ private:
 	/**
 	 * @brief The name of the identifier this PointerType points to.
 	 */
-	string name;
+	string my_name;
 };
 
 #endif /* POINTERTYTPE_H_ */

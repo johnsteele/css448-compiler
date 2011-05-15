@@ -180,11 +180,6 @@ private:
 	};
 
 	/**
-	 * @brief The total number of dimensions in the array.
-	 */
-	int totalDimensions;
-
-	/**
 	 * @brief The current dimension being built.
 	 */
 	Dimension * currentDimension;

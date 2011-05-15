@@ -25,7 +25,6 @@
  * @param name The name of the Parameter.
  */
 Parameter::Parameter(string name) : IdentifierRecord (name){
-
 }
 
 
@@ -39,7 +38,6 @@ Parameter::Parameter(string name) : IdentifierRecord (name){
  * Postconditions: Resources were released.
  */
 Parameter::~Parameter() {
-
 }
 
 

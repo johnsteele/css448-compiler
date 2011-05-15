@@ -25,7 +25,7 @@
  * @param name The name of the PointerType.
  */
 PointerType::PointerType(string name) : IdentifierRecord (name) {
-	name = "";
+	my_name = "";
 }
 
 
@@ -52,7 +52,7 @@ PointerType::~PointerType() {}
  */
 void PointerType::print(int scope) const {
 	IdentifierRecord::print (scope);
-	cout << "^ " << name;
+	cout << "^ " << my_name;
 }
 
 
@@ -68,7 +68,7 @@ void PointerType::print(int scope) const {
  * @param name The the_name of the identifier.
 	 */
 void PointerType::setIdent (string the_name) {
-	name = the_name;
+	my_name = the_name;
 }
 
 
@@ -84,5 +84,5 @@ void PointerType::setIdent (string the_name) {
  * @return The the_name of the identifier pointed to was returned.
 	 */
 string PointerType::getIdent () const {
-	return name;
+	return my_name;
 }

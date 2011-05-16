@@ -36,8 +36,55 @@
  * @param the_name The name of the identifier record.
  */
 IdentifierRecord::IdentifierRecord (string the_name) {
+	if (the_name == "_ptr") { my_isPointer = true; my_isDefined = false; }
+	my_isDefined = true;
+	my_isPointer = false;
 	name = the_name;
 	type = NULL;
+}
+
+//---------------------isDefined-------------------------------------------
+/**
+ * @brief Returns true if this identifier is
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: isDefined was returned.
+ *
+ * @return True if defined, false otherwise.
+ */
+bool IdentifierRecord::isDefined  () const {
+	return my_isDefined;
+}
+
+
+//---------------------setDefined------------------------------------------
+/**
+ * @brief Sets this identifier as defined.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: isDefined was set to identifier.
+ *
+ * @return True if defined, false otherwise.
+ */
+void IdentifierRecord::setDefined () {
+	my_isDefined = true;
+}
+
+
+//---------------------isPointer-------------------------------------------
+/**
+ * @brief Returns if this identifier is a pointer.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: isPointer was set to identifier.
+ *
+ * @return True if pointer, false otherwise.
+ */
+bool IdentifierRecord::isPointer () const {
+	return my_isPointer;
 }
 
 

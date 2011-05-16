@@ -162,6 +162,45 @@ public:
 	const IdentifierRecord * getType () const;
 
 
+	//---------------------isDefined-------------------------------------------
+	/**
+	 * @brief Returns true if this identifier is
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: isDefined was returned.
+	 *
+	 * @return True if defined, false otherwise.
+	 */
+	bool isDefined  () const;
+
+
+	//---------------------setDefined------------------------------------------
+	/**
+	 * @brief Sets this identifier as defined.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: isDefined was set to identifier.
+	 *
+	 * @return True if defined, false otherwise.
+	 */
+	void setDefined ();
+
+
+	//---------------------isPointer-------------------------------------------
+	/**
+	 * @brief Returns if this identifier is a pointer.
+	 *
+	 * Preconditions: None.
+	 *
+	 * Postconditions: isPointer was set to identifier.
+	 *
+	 * @return True if pointer, false otherwise.
+	 */
+	bool isPointer () const;
+
+
 /**
  * @private
  */
@@ -176,6 +215,9 @@ private:
 	 * @brief The type of this identifier.
 	 */
 	IdentifierRecord * type;
+
+	bool my_isPointer;
+	bool my_isDefined;
 };
 
 #endif /* IDENTIFIERRECORD_H_ */

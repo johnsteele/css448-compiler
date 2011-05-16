@@ -28,8 +28,9 @@
 #include <fstream>
 #include <string>
 #include <iomanip>
-
 #include "SITtable.h"
+
+enum TYPES {A_VAR, A_CONST, A_TYPE};
 
 /**
  * @namespace std

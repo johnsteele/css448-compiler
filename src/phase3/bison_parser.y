@@ -50,8 +50,8 @@ RecordType * rec = NULL;
 SetType * set = NULL;          //holds set type while being entered
 bool isArray = false;          //used to determine if subrange is for array or set
 
-IdentifierRecord * v = NULL;    //used to hold variable while entering into vector
-queue <IdentifierRecord *> vars; //holds vector of vars for identlist
+Parameter * v = NULL;    //used to hold variable while entering into vector
+queue <Parameter *> vars; //holds vector of vars for identlist
 stack <IdentifierRecord *> subTypes; //holds typed
 IdentifierRecord * nullPtr = NULL;
 
@@ -102,20 +102,20 @@ ProgramModule      : yprogram {table = new SymbolTable();}
                             program = new ProcedureRecord(name);
                             table-> enterScope(program);
                      }
-                     ProgramParameters {program->print(0);} ysemicolon Block  ydot
+                     ProgramParameters ysemicolon Block  ydot
                      { table->printTable(); }
                    ;
 ProgramParameters  : yleftparen  ParamList yrightparen //added paramlist to differentiate
                    ;
 ParamList          : ParamList ycomma Identifier
                      { 
-                            param = new Parameter(name);
+                            param = new Parameter(name, false);
                             ProcedureRecord &r = dynamic_cast<ProcedureRecord &> (*program);
                             r.insertParam(param);
                      }
                    | Identifier
                      {
-                            param = new Parameter(name);
+                            param = new Parameter(name, false);
                             ProcedureRecord &r = dynamic_cast<ProcedureRecord &> (*program);
                             r.insertParam(param);
                      }
@@ -123,22 +123,34 @@ ParamList          : ParamList ycomma Identifier
 IdentList          :  Identifier 
                      {
                         if(!table->lookupScope(name)){
-                          v = new IdentifierRecord(name);
+                          v = new Parameter(name, false );
 							     vars.push(v);
                           v = NULL;
+                        }
+
+                        else{
+                          cout<< "Error: (" <<name<<") already exists in this scope."<<endl;
                         }
 							}
                    |  IdentList ycomma 
 						    Identifier
                      {
                         if(!table->lookupScope(name)){
-                          v = new IdentifierRecord(name);
+                          v = new Parameter(name, false );
 							     vars.push(v);
                           v = NULL;
                         }
-                     }
+                        else
+                          cout<< "Error: (" <<name<<") already exists in this scope."<<endl;
+							}
 							;
-Identifier         :  yident { name = yylval.str;  }
+Identifier         :  yident
+                     {
+                        name = yylval.str;
+                        for (int i = 0; yylval.str[i] != '\0'; i++) {
+                           name.at(i) = tolower (name[i]);
+                        }
+                      }
                    ;
 /* We need to put the print Identifier here. */
 /**************************  Declarations section ***************************/
@@ -172,7 +184,6 @@ TypeDefList       :  TypeDef ysemicolon
                      {
 								if(validType){
 									table->addSymbol(aType);
-                           table->printTable();
                          }
 								else{
 								 cout<<"Error: "<< name <<" already exists in this scope."<<endl;
@@ -183,7 +194,6 @@ TypeDefList       :  TypeDef ysemicolon
                      {
 								if(validType){
 									table->addSymbol(aType);
-                           table->printTable();
                          }
 									
 								else{
@@ -215,7 +225,6 @@ ConstantDef       :  Identifier
 TypeDef           :  Identifier
 
                      { 	if(!table->lookupScope(name)){
-                           cout<<"about to insert " <<name<<endl;
 								   aType = new TypeRecord(name);
 									validType = true;
 									}
@@ -237,34 +246,16 @@ TypeDef           :  Identifier
 VariableDecl      :  IdentList
                      ycolon  Type 
                      {  
-							   if(table->lookup(subTypes.top()->getName())
-                           || sitTable->lookup(subTypes.top()->getName()))
-								{
                            while(!vars.empty()){
-                              if(!table->lookup(vars.front()->getName())
-                                 && !sitTable->lookup(vars.front()->getName())){
-
                                  vars.front()->setType(subTypes.top());
-                                 subTypes.top() = NULL;
-                                 subTypes.pop();
-
                                  table->addSymbol(vars.front());
                                  vars.front() = NULL;
                                  vars.pop();
-                              }
-                               else{
-                                 cout<<" Error: value already exists in this scope."<<endl;
-                                 vars.pop();
-                               }
                            }
-                        }
+                           subTypes.top() = NULL;
+                           subTypes.pop();
 
-                        else{
-                           cout<< "Error: Type does not exist in this scope."<<endl;
-                           while(!vars.empty())
-                             vars.pop();
-                        }
-                     }
+                      }
                   ;
 
 /***************************  Const/Type Stuff  ******************************/
@@ -363,7 +354,8 @@ ConstExpression   :  UnaryOperator ConstFactor
                                     constant->setConstFactor(yylval.str);
                                  else{
                                     validConst = false;
-                                    cout<<" Error: invalid assignment of type: "; cout<< yylval.str<<endl;
+                                    cout<<" Error: invalid assignment of type: ";
+                                    cout<< yylval.str<<endl;
                                  }
                                 }
                   ;
@@ -376,25 +368,21 @@ ConstFactor       :  Identifier
 Type              :  Identifier 
                      {
 							  if(sitTable->lookup(name)){
-								  cout<< "the value was " <<name<<endl;
 							     subType = new TypeRecord(name);
                           subTypes.push(subType);
-                          cout<<subType->getName()<<" was created" <<endl;
                           subType = NULL;
                           
 							  }
 							  else if(table->lookup(name) == true){
 								  IdentifierRecord* temp = table->retrieve(name);
 							     subTypes.push(temp);
-                          if(temp != NULL)
-                             cout<<"Subtype's not null"<<endl;
-                          else
-                             cout<<"SubType's NULL. Problem found."<<endl;
 								}
 							  else
-							  { cout<< "Error: " << name ;
-                         cout<< " is not a valid type in this scope."<<endl;
-								 validType = false;}
+							  {
+                           cout<< "Error: " << name;
+                           cout<< " is not a valid type in this scope."<<endl;
+                           validType = false;
+                        }
                      }
                   |  ArrayType 
                   |  PointerType 
@@ -416,7 +404,6 @@ ArrayType         :  yarray
 
 									subTypes.top() = NULL;
 									subTypes.pop();
-                            cout<<"set array type"<<endl;
 									}
 								else{
 									cout<<"Error: Type not valid"<<endl;
@@ -457,13 +444,13 @@ Subrange          :  ConstFactor
 										
 									else{
 										validType = false;
-										cout<<" Error: invalid assignment of type: "; cout<< name<<endl;
+										cout<<" Error: invalid assignment of type: ";
+                              cout<< name<<endl;
 										}
 								}
 							  }
                       else{
 								if(isTrue){
-								   cout<<"It's true and shouldn't be."<<endl;
 									set->setLowBool(1);
 									isTrue = false;
 									}
@@ -488,7 +475,8 @@ Subrange          :  ConstFactor
 										
 									else{
 										validType = false;
-										cout<<" Error: invalid assignment of type: "; cout<< name<<endl;
+										cout<<" Error: invalid assignment of type: ";
+                              cout<< name<<endl;
 										}
 								}
 							 }
@@ -598,19 +586,24 @@ Subrange          :  ConstFactor
 									cout<<"Error: Invalid type"<<endl;
                       }
                   ;
-RecordType        :  yrecord { rec = new RecordType(""); subTypes.push(rec);}
-                     FieldListSequence  yend {table->printTable();}
+RecordType        :  yrecord {
+                        if(validType){
+                           rec = new RecordType("_record");
+                           subTypes.push(rec);
+                        }
+                     }
+
+                     FieldListSequence  yend
                   ;
-SetType           :    yset {cout<< "I'm in setType about to create a new setType."<<endl;
+SetType           :  yset {
 							set = new SetType("_set");
 							subTypes.push(set); 
 							isArray = false;
-							 cout<<"after"<<endl;
 							 } yof Subrange
                   ;
 PointerType       :  ycaret  Identifier 
                      {
-							 pointer = new PointerType(name);
+							 pointer = new PointerType("_ptr", name);
                       subTypes.push(pointer);
                      }
                   ;
@@ -620,16 +613,14 @@ FieldListSequence :  FieldList
 FieldList         :  IdentList 
                      ycolon  Type 
 							{	
-                       if(table->lookup(subTypes.top()->getName()) || sitTable->lookup(subTypes.top()->getName())){
-                           cout<<"I'm about to add some idents to a record"<<endl;
-										
+                       if(table->lookup(subTypes.top()->getName())
+                           || sitTable->lookup(subTypes.top()->getName())){
                            while(!vars.empty()){
 										bool isDup = false;
-									   cout<<"size is "<<vars.size()<<endl;
                               if(!table->lookupScope(vars.front()->getName())){
 											for(int i = 0; i < rec->getFieldSize(); i++){
 											  if(vars.front()->getName() == rec->getFieldName(i)){
-													cout<< "error: " <<vars.front()->getName()<< "already exists" << endl;
+													cout<< "Error: " <<vars.front()->getName()<< " already exists" << endl;
 													vars.pop();
 													subTypes.top() = NULL;
 													subTypes.pop();
@@ -639,8 +630,6 @@ FieldList         :  IdentList
 												  
 											}
 											if(!isDup){   
-												cout<<"About to add "<< vars.front()->getName() << " to the record"<<endl;
-												cout<<" Type is: "<< subTypes.top()->getName()<<endl;
 												vars.front()->setType(subTypes.top());
 												rec->addField( vars.front()->getType(), vars.front()->getName());
 												vars.front()=NULL;
@@ -652,13 +641,11 @@ FieldList         :  IdentList
                               }
 										
 										else{
-											cout<< "error: " <<vars.front()->getName()<< "already exists" << endl;
+											cout<< "Error: " <<vars.front()->getName()<< "already exists" << endl;
 										   vars.pop();
 											subTypes.top() = NULL;
                                  subTypes.pop();
 										}
-										
-										cout<<8 <<endl;
                            }
                        }
 							}   
@@ -847,23 +834,18 @@ FormalParamList   :  OneFormalParam
                   |  FormalParamList ysemicolon OneFormalParam
                   ;
 OneFormalParam    :  yvar  IdentList  ycolon Identifier 
-                     { cout<<"I'm about to lookup my identifier"<<endl;
+                     {
                        if(table->lookup(name)){
-									cout<<"push successful"<<endl;
                           subTypes.push(table->retrieve(name));
-								  cout<<"push successful"<<endl;
                           while(!vars.empty()){
-										cout<<"in loop"<<endl;
                              if(!table->lookupScope(vars.front()->getName()) &&
                                 !sitTable->lookup(vars.front()->getName())){
-
-                                 param  = new Parameter(vars.front()->getName(), true);
-                                 param ->setType(subTypes.top());
-											vars.front() = NULL;
+                                 vars.front()->setIsVar();
+                                 vars.front() ->setType(subTypes.top());
+                                 aProcedure->insertParam(vars.front());
+                                 vars.front() = NULL;
 											vars.pop();
-                                 aProcedure->insertParam(param);
                              }
-									  
 									  else{
 									      cout<< "Error: value " <<vars.front()->getName();
 											cout<<" already exists in the current scope."<<endl;
@@ -874,30 +856,21 @@ OneFormalParam    :  yvar  IdentList  ycolon Identifier
 									subTypes.top() = NULL;
                            subTypes.pop();
                         }
-								
-								else{
-								
-								   cout<<"this is crappy"<<endl;
-								}
+				
 						   }
                   |  IdentList ycolon Identifier 
-                     { cout<<"I'm about to lookup my identifier"<<endl;
+                     {
                        if(table->lookup(name)){
-									cout<<"push successful"<<endl;
                           subTypes.push(table->retrieve(name));
-								  cout<<"push successful"<<endl;
                           while(!vars.empty()){
-										cout<<"in loop"<<endl;
+
                              if(!table->lookupScope(vars.front()->getName()) &&
                                 !sitTable->lookup(vars.front()->getName())){
-
-                                 param  = new Parameter(vars.front()->getName(), false);
-                                 param ->setType(subTypes.top());
-											vars.front() = NULL;
+                                 vars.front()->setIsVar();
+                                 aProcedure->insertParam(vars.front());
+                                 vars.front() = NULL;
 											vars.pop();
-                                 aProcedure->insertParam(param);
                              }
-									  
 									  else{
 									      cout<< "Error: value " <<vars.front()->getName();
 											cout<<" already exists in the current scope."<<endl;
@@ -908,11 +881,6 @@ OneFormalParam    :  yvar  IdentList  ycolon Identifier
 									subTypes.top() = NULL;
                            subTypes.pop();
                         }
-								
-								else{
-								
-								   cout<<"this is crappy"<<endl;
-								}
                      }
                   ;
 

@@ -28,6 +28,11 @@ using namespace std;
 extern int yyparse();
 #define DEBUG 0
 int main(void) {
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> af3c22ad7e08a025db720dab9e0c51dbe833f81c
 	yyparse();
 
 #if DEBUG

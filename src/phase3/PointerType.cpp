@@ -23,9 +23,10 @@
  * Postconditions: This PointerType was instantiated.
  *
  * @param name The name of the PointerType.
+ * @param ptr_name The name of the pointer it points to.
  */
-PointerType::PointerType(string name) : IdentifierRecord (name) {
-	my_name = "";
+PointerType::PointerType(string name, ptr_name) : IdentifierRecord (name) {
+	my_name = ptr_name;
 }
 
 
@@ -51,7 +52,7 @@ PointerType::~PointerType() {}
  * @param scope The scope of this identifier (used for indenting purposes).
  */
 void PointerType::print(int scope) const {
-	IdentifierRecord::print (scope);
+	//IdentifierRecord::print (scope);
 	cout << "^ " << my_name;
 }
 
@@ -67,8 +68,8 @@ void PointerType::print(int scope) const {
  *
  * @param name The the_name of the identifier.
 	 */
-void PointerType::setIdent (string the_name) {
-	my_name = the_name;
+void PointerType::setIdent (IdentifierRecord * the_ident) {
+	ident = the_name;
 }
 
 

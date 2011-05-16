@@ -36,8 +36,9 @@ public:
 	 * Postconditions: This PointerType was instantiated.
 	 *
 	 * @param name The name of the PointerType.
+	 * @param ptr_name The name of the pointer it points to.
 	 */
-	PointerType(string name);
+	PointerType(string name, string ptr_name);
 
 
 	//---------------------Destructor------------------------------------------
@@ -101,6 +102,10 @@ private:
 
 	/**
 	 * @brief The name of the identifier this PointerType points to.
+	 *        It could not have already been defined. You don't know.
+	 *        Kind of like a forward declaration. Later when using
+	 *        it you have to use getPtrName, then do a lookup on that
+	 *        name to ensure it exists.
 	 */
 	string my_name;
 };

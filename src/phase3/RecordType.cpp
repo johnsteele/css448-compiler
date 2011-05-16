@@ -77,7 +77,7 @@ void RecordType::print (int scope) const {
 	IdentifierRecord::print(scope);
 	cout << endl;
 	for (int i = 0; i < (long) field_list->size(); i++) {
-		for (int x = 0; x < scope + 1; x++) {
+		for (int x = 0; x < scope + 2; x++) {
 			cout << "   ";
 		}
 		cout << field_list->at(i)->name << " ";

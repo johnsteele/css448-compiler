@@ -66,18 +66,19 @@ public:
 	virtual void print (int scope) const;
 
 
-	//---------------------print-----------------------------------------------
+	//---------------------setIsVar--------------------------------------------
 	/**
-	 * @brief Prints the data members of this IdentifierRecord to the
-	 *        output stream.
+	 * @brief Sets this parameter as a var.
 	 *
-	 * Preconditions: Data members have been initialized.
+	 * Preconditions: None.
 	 *
-	 * Postconditions: This IdentifierRecord's members have been printed.
-	 *
-	 * @param scope The scope of this identifier (used for indenting purposes).
+	 * Postconditions: This var is now marked as a var.
  	 */
+	void setIsVar ();
 
+/**
+ * @public
+ */
 private:
 
 	/**

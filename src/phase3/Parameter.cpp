@@ -43,6 +43,19 @@ Parameter::~Parameter() {
 }
 
 
+//---------------------setIsVar------------------------------------------------
+/**
+ * @brief Sets this parameter as a var.
+ *
+ * Preconditions: None.
+ *
+ * Postconditions: This var is now marked as a var.
+ */
+void Parameter::setIsVar () {
+	isVar = true;
+}
+
+
 //---------------------print---------------------------------------------------
 /**
  * @brief Prints the data members of this IdentifierRecord to the

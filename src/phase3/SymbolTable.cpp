@@ -418,11 +418,11 @@ void SymbolTable::printTableHelper (const Node * root) const {
 		root->identifiers->print(root->scope + 1);
 	else
 		cout << endl;
-	cout << "exit " << root->procedure->getName() << endl;
-	cout << "***************************************************************************\n";
 
 	// Do the same for the children and siblings.
 	printTableHelper(root->child);
+	cout << "exit " << root->procedure->getName() << endl;
+	cout << "***************************************************************************\n";
 	printTableHelper(root->sibling);
 }
 

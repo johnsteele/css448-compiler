@@ -406,6 +406,9 @@ void SymbolTable::printTable() const {
 void SymbolTable::printTableHelper (const Node * root) const {
 	if (root == NULL) return;
 
+	cout << "enter " << root->procedure->getName() << endl;
+	cout << "---------------------------------------------------------------------------\n";
+
 	// Print procedure/function name and parameters.
 	root->procedure->print(root->scope);
 	cout << endl;
@@ -415,6 +418,8 @@ void SymbolTable::printTableHelper (const Node * root) const {
 		root->identifiers->print(root->scope + 1);
 	else
 		cout << endl;
+	cout << "exit " << root->procedure->getName() << endl;
+	cout << "***************************************************************************\n";
 
 	// Do the same for the children and siblings.
 	printTableHelper(root->child);

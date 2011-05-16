@@ -81,7 +81,14 @@ void RecordType::print (int scope) const {
 			cout << "   ";
 		}
 		cout << field_list->at(i)->name << " ";
-		field_list->at(i)->type->print(0);
+
+		if (field_list->at(i)->type->getName() == "") {
+			field_list->at(i)->type->print(0);
+		}
+
+		else {
+			cout << field_list->at(i)->type->getName();
+		}
 		cout << " " << endl;
 	}
 }

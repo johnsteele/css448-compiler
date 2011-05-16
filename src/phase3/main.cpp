@@ -26,7 +26,7 @@ using namespace std;
 #include "SITtable.h"
 
 extern int yyparse();
-#define DEBUG 1
+#define DEBUG 0
 int main(void) {
 
 	cout << "=================== Started parsing ===================" << endl;

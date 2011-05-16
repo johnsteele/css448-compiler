@@ -82,9 +82,15 @@ void SITtable::initIdents () {
  */
 bool SITtable::lookup(const string ident) const {
 
+	/* Convert to lower case. Pascal is not case sensitive. */
+	string temp = ident;
+	for (int i = 0; temp[i] != '\0'; i++) {
+		temp.at(i) = tolower (temp.at(i));
+	}
+
 	// Check in identifier vector.
 	for (int i = 0; i < (long) standard_idents->size(); i++) {
-		if (standard_idents->at(i) == ident) return true;
+		if (standard_idents->at(i) == temp) return true;
 	}
 
 	// Not found.

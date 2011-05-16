@@ -63,7 +63,7 @@ int main(void) {
 	IdentifierRecord *array1 = new ArrayType("array1Val");
 	try {
 		ArrayType &r = dynamic_cast<ArrayType &> (*array1);
-		r.setLowDimension(1);
+		r.setLowDimension(1); // test
 		r.setHighDimension(5);
 		r.setLowDimension(2);
 		r.setHighDimension(6);

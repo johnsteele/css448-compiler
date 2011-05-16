@@ -29,9 +29,8 @@ extern int yyparse();
 #define DEBUG 0
 int main(void) {
 
-	cout << "=================== Started parsing ===================" << endl;
-	// yyparse();
-	cout << "=================== Finished parsing ==================" << endl;
+
+	yyparse();
 
 #if DEBUG
 	cout << "=============== Start Print Symbol Table ==============" << endl;

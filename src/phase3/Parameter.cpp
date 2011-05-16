@@ -63,5 +63,16 @@ void Parameter::print(int scope) const {
 		cout << "var ";
 	}
 
-	IdentifierRecord::print(scope);
+	IdentifierRecord::print(0);
+
+	if (getType() != NULL) {
+
+		if (getType()->getName() == "") {
+			getType()->print(0);
+		}
+
+		else {
+			cout << getType()->getName();
+		}
+	}
 }

@@ -52,7 +52,7 @@ TypeRecord::~TypeRecord() {
  *
  * @param scope The scope of this identifier (used for indenting purposes).
  */
-void TypeRecord::print(int scope) const {
+void TypeRecord::print(int scope) {
 	IdentifierRecord::print(scope);
 	if (getType() != NULL)
 		getType()->print(0);

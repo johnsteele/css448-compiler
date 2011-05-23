@@ -61,7 +61,7 @@ ArrayType::~ArrayType() {
  *
  * @param scope The scope of this identifier (used for indenting purposes).
  */
-void ArrayType::print(int scope) const {
+void ArrayType::print(int scope){
 
 	// Print the name.
 	IdentifierRecord::print(scope);

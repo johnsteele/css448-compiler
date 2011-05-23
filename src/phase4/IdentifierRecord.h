@@ -159,7 +159,7 @@ public:
 	 *
 	 * @return The type of this IdentifierRecord.
 	 */
-	const IdentifierRecord * getType () const;
+	const IdentifierRecord * getType ();
 
 
 /**

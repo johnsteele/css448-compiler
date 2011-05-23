@@ -67,7 +67,7 @@ void Parameter::setIsVar () {
  *
  * @param scope The scope of this identifier (used for indenting purposes).
  */
-void Parameter::print(int scope) const {
+void Parameter::print(int scope){
 	for (int i = 0; i < scope; i++) {
 		cout << "   ";
 	}

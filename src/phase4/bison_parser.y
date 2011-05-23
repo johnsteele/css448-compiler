@@ -16,8 +16,11 @@
 %{
 #include <iostream>
 #include <stdlib.h>
+#include <stack>
+#include <queue>
 using namespace std;
 
+#include "yaccExecute.cpp"
 #include "SymbolTable.h"
 #include "IdentifierRecord.h"
 #include "ProcedureRecord.h"
@@ -30,8 +33,7 @@ using namespace std;
 #include "SITtable.h"
 #include "SetType.h"
 #include "RecordType.h"
-#include <stack>
-#include <queue>
+
 
 SymbolTable * table = NULL;    //points to symbolTable
 
@@ -49,22 +51,29 @@ PointerType * pointer = NULL; //holds pointer type while being entered
 RecordType * rec = NULL;
 SetType * set = NULL;          //holds set type while being entered
 bool isArray = false;          //used to determine if subrange is for array or set
-
+bool isPointer = false;
+bool isRecord = false;
 Parameter * v = NULL;    //used to hold variable while entering into vector
 queue <Parameter *> vars; //holds vector of vars for identlist
 stack <IdentifierRecord *> subTypes; //holds typed
 IdentifierRecord * nullPtr = NULL;
-
+bool isFound = false;
 
 bool isNum = false;
 bool isNil = false;
 bool isTrue = false;
 bool isFalse = false;
-SITtable *sitTable = new SITtable (); //points to SIT table
+SITtable sitTable; //points to SIT table
 string name = "";
 bool validType = false;
 bool validVar = false;
 bool validConst = false;
+TypeRecord* anInt = new TypeRecord("integer");
+TypeRecord* aReal = new TypeRecord("real");
+TypeRecord* aBool = new TypeRecord("boolean");
+TypeRecord* aChar = new TypeRecord("char");
+queue <IdentifierRecord*> pointerHolder;
+
 %}
 
 
@@ -101,9 +110,24 @@ ProgramModule      : yprogram {table = new SymbolTable();}
                      {
                             program = new ProcedureRecord(name);
                             table-> enterScope(program);
+                            cout<< "int main(){"<<endl;
                      }
                      ProgramParameters ysemicolon Block  ydot
-                     { table->printTable(); }
+                        {cout<<"return 0;"<<endl;
+                         cout<<"}"<<endl;
+
+                      //table->printTable();
+                       //delete table;
+                       //delete anInt;
+                      // delete aChar;
+                       //delete aBool;
+                       //delete aReal;
+                       table = NULL;
+                       anInt = NULL;
+                       aChar = NULL;
+                       aBool = NULL;
+                       aReal = NULL;
+                     }
                    ;
 ProgramParameters  : yleftparen  ParamList yrightparen //added paramlist to differentiate
                    ;
@@ -126,6 +150,7 @@ IdentList          :  Identifier
                           v = new Parameter(name, false );
 							     vars.push(v);
                           v = NULL;
+
                         }
 
                         else{
@@ -150,6 +175,7 @@ Identifier         :  yident
                         for (int i = 0; yylval.str[i] != '\0'; i++) {
                            name.at(i) = tolower (name[i]);
                         }
+                        delete yylval.str;
                       }
                    ;
 /* We need to put the print Identifier here. */
@@ -179,14 +205,37 @@ ConstantDefList   :  ConstantDef
                   ;
 TypeDefBlock      :  /*** empty ***/
                   |  ytype  TypeDefList
+                     {  table->printTable();
+
+                        while(!pointerHolder.empty()){
+                           TypeRecord &type = dynamic_cast<TypeRecord &>(*pointerHolder.front());
+                           PointerType &p = dynamic_cast<PointerType &> (*type.getType());
+
+                           if(table->lookup(p.getIdent())){
+
+                              p.setType(table->retrieve(p.getIdent()));
+                              table->addSymbol(pointerHolder.front());
+                              pointerHolder.front() = NULL;
+                              pointerHolder.pop();
+                           }
+                           else{
+                              cout<<"Error: Unable to instantiate pointer " << pointerHolder.front()->getName();
+                              cout<<". Pointer type does not exist in this scope. "<<endl;
+
+                              pointerHolder.pop();
+                           }
+
+
+                        }
+                     }
                   ;
 TypeDefList       :  TypeDef ysemicolon
-                     {
+                     { 
 								if(validType){
 									table->addSymbol(aType);
                          }
 								else{
-								 cout<<"Error: "<< name <<" already exists in this scope."<<endl;
+								 cout<<"Error: "<< name <<" is an invalid type."<<endl;
 								}
 
 							}
@@ -224,7 +273,8 @@ ConstantDef       :  Identifier
                   ;
 TypeDef           :  Identifier
 
-                     { 	if(!table->lookupScope(name)){
+                     { 	
+                        if(!table->lookupScope(name)){
 								   aType = new TypeRecord(name);
 									validType = true;
 									}
@@ -236,7 +286,8 @@ TypeDef           :  Identifier
 							}
                      yequal 
                      Type 
-                     { if(validType){
+                     { if(!validType)
+                       if(validType && aType != NULL){
 							   aType->setType(subTypes.top());
                         subTypes.top() = NULL;
                         subTypes.pop();
@@ -245,7 +296,8 @@ TypeDef           :  Identifier
                   ;
 VariableDecl      :  IdentList
                      ycolon  Type 
-                     {  
+                     {
+                        if(validType){
                            while(!vars.empty()){
                                  vars.front()->setType(subTypes.top());
                                  table->addSymbol(vars.front());
@@ -254,7 +306,13 @@ VariableDecl      :  IdentList
                            }
                            subTypes.top() = NULL;
                            subTypes.pop();
-
+                        }
+                        else{
+                           while(!vars.empty()){
+                               vars.pop();
+                           }
+                        }
+                        validType = true;
                       }
                   ;
 
@@ -308,7 +366,8 @@ ConstExpression   :  UnaryOperator ConstFactor
 											
 										else{
 											validConst = false;
-											cout<<" Error: invalid assignment of type: "; cout<< name<<endl;
+											cout<<" Error: invalid assignment of type: ";
+                                 cout<< name<<endl;
 											}
 									}
 								}
@@ -350,14 +409,18 @@ ConstExpression   :  UnaryOperator ConstFactor
 							}
 						}
                   |  
-								ystring {if(validConst)
-                                    constant->setConstFactor(yylval.str);
-                                 else{
-                                    validConst = false;
-                                    cout<<" Error: invalid assignment of type: ";
-                                    cout<< yylval.str<<endl;
-                                 }
-                                }
+								ystring 
+                     {
+                        if(validConst) {
+                            constant->setConstFactor(yylval.str);
+                        }
+                        else{
+                           validConst = false;
+                           cout<<" Error: invalid assignment of type: ";
+                           cout<< yylval.str<<endl;
+                        }
+                        delete yylval.str;
+                     }
                   ;
 ConstFactor       :  Identifier 
                   |  ynumber {isNum = true;}
@@ -367,8 +430,15 @@ ConstFactor       :  Identifier
                   ;
 Type              :  Identifier 
                      {
-							  if(sitTable->lookup(name)){
-							     subType = new TypeRecord(name);
+							  if(sitTable.lookup(name)){
+                           if(name == "integer")
+                              subType = anInt;
+                           if(name == "real")
+                              subType = aReal;
+                           if(name == "boolean")
+                              subType = aBool;
+                           if(name == "char")
+                              subType = aChar;
                           subTypes.push(subType);
                           subType = NULL;
                           
@@ -377,15 +447,34 @@ Type              :  Identifier
 								  IdentifierRecord* temp = table->retrieve(name);
 							     subTypes.push(temp);
 								}
+
 							  else
 							  {
-                           cout<< "Error: " << name;
-                           cout<< " is not a valid type in this scope."<<endl;
-                           validType = false;
+                           IdentifierRecord* temp = NULL;
+                           int size = pointerHolder.size();
+                           isFound = false;
+                           if(pointerHolder.size() != 0 && isRecord){
+                              for (int i = 0; i < size; i++){
+                                 if(name == pointerHolder.front()->getName()){
+                                    subTypes.push(pointerHolder.front());
+                                    isFound = true;
+                                 }
+
+                                 temp = pointerHolder.front();
+                                 pointerHolder.front() = NULL;
+                                 pointerHolder.pop();
+                                 pointerHolder.push(temp); //move it to the back
+                              }
+                           }
+                           if(!isFound){
+                              cout<< "Error: " << name;
+                              cout<< " is not a valid type in this scope."<<endl;
+                              validType = false;
+                           }
                         }
                      }
                   |  ArrayType 
-                  |  PointerType 
+                  |  PointerType
                   |  RecordType 
                   |  SetType
                   ;
@@ -398,17 +487,15 @@ ArrayType         :  yarray
                      yleftbracket SubrangeList yrightbracket  yof 
                      Type
                      {
-                        if(validType){
-
-									array->setType(subTypes.top());
-
+                       if(validType){
+                          array->setType(subTypes.top());
 									subTypes.top() = NULL;
 									subTypes.pop();
-									}
+                       }
 								else{
 									cout<<"Error: Type not valid"<<endl;
 									subTypes.pop();
-									}
+								}
                      }
                   ;
 SubrangeList      :  Subrange
@@ -569,6 +656,8 @@ Subrange          :  ConstFactor
 								}
 								 else
 									cout<<"Error: Invalid type"<<endl;
+
+                         delete yylval.str;
 									
                       }  ydotdot  
                       ystring
@@ -584,16 +673,20 @@ Subrange          :  ConstFactor
 								}
 								else
 									cout<<"Error: Invalid type"<<endl;
+
+                        delete yylval.str;
                       }
                   ;
 RecordType        :  yrecord {
                         if(validType){
+                           cout<<"record type is valid"<<endl;
+                           isRecord = true;
                            rec = new RecordType("_record");
                            subTypes.push(rec);
                         }
                      }
 
-                     FieldListSequence  yend
+                     FieldListSequence {validType = true;subTypes.top()->print(0); cout<<endl;} yend
                   ;
 SetType           :  yset {
 							set = new SetType("_set");
@@ -603,8 +696,40 @@ SetType           :  yset {
                   ;
 PointerType       :  ycaret  Identifier 
                      {
+                      isPointer = true;
+                      IdentifierRecord* pType;
 							 pointer = new PointerType("_ptr", name);
-                      subTypes.push(pointer);
+                      if(table->lookup(name)){
+                           pType = table->retrieve(name);
+                           pointer->setType(pType);
+                           pointer->setValid();
+                           subTypes.push(pointer);
+                       }
+                      else if(sitTable.lookup(name)){
+                           if(name == "integer")
+                              pType = anInt;
+                           if(name == "real")
+                              pType = aReal;
+                           if(name == "boolean")
+                              pType = aBool;
+                           if(name == "char")
+                              pType = aChar;
+
+                           pointer->setType(pType);
+                           pointer->setValid();
+                           subTypes.push(pointer);
+                      }
+
+                      else{
+                           aType->setType(pointer);
+                           pointerHolder.push(aType);
+                           aType = NULL;
+                           validType = false;
+                           //aType->print(0);
+
+                          }
+
+
                      }
                   ;
 FieldListSequence :  FieldList
@@ -614,39 +739,40 @@ FieldList         :  IdentList
                      ycolon  Type 
 							{	
                        if(table->lookup(subTypes.top()->getName())
-                           || sitTable->lookup(subTypes.top()->getName())){
+                           || sitTable.lookup(subTypes.top()->getName()) || isFound){
                            while(!vars.empty()){
 										bool isDup = false;
                               if(!table->lookupScope(vars.front()->getName())){
 											for(int i = 0; i < rec->getFieldSize(); i++){
 											  if(vars.front()->getName() == rec->getFieldName(i)){
-													cout<< "Error: " <<vars.front()->getName()<< " already exists" << endl;
+													cout<< "Error: " <<vars.front()->getName();
+                                       cout<< " already exists" << endl;
 													vars.pop();
-													subTypes.top() = NULL;
-													subTypes.pop();
+
 													isDup = true;
 													break;
 											  }
 												  
 											}
-											if(!isDup){   
+											if(!isDup){
 												vars.front()->setType(subTypes.top());
-												rec->addField( vars.front()->getType(), vars.front()->getName());
+												rec->addField( vars.front()->getType(),
+                                       vars.front()->getName());
 												vars.front()=NULL;
 												vars.pop();
-												subTypes.top() = NULL;
-												subTypes.pop();
 											}
 
                               }
 										
 										else{
-											cout<< "Error: " <<vars.front()->getName()<< "already exists" << endl;
+											cout<< "Error: " <<vars.front()->getName();
+                                 cout<< "already exists" << endl;
 										   vars.pop();
-											subTypes.top() = NULL;
-                                 subTypes.pop();
+
 										}
                            }
+											subTypes.top() = NULL;
+                                 subTypes.pop();
                        }
 							}   
                   ;
@@ -672,11 +798,11 @@ Assignment        :  Designator yassign Expression
                   ;
 ProcedureCall     :  Identifier 
                      {if(!table->lookup(name))
-							    cout<< name <<" is not define in this scope."<<endl;
+							    cout<< name <<" is not defined in this scope."<<endl;
                      }
                   |  Identifier 
 						   {if(!table->lookup(name))
-							    cout<< name <<" is not define in this scope."<<endl;
+							    cout<< name <<" is not defined in this scope."<<endl;
                      }
 						   ActualParameters
                   ;
@@ -707,9 +833,10 @@ WhichWay          : yto | ydownto
 IOStatement       : yread yleftparen DesignatorList yrightparen
                   | yreadln
                   | yreadln yleftparen DesignatorList yrightparen
-                  | ywrite yleftparen ExpList yrightparen
-                  | ywriteln
-                  | ywriteln yleftparen ExpList yrightparen
+                  | ywrite {cout<<"cout<<";}yleftparen ExpList yrightparen{cout<<";";}
+
+                  | ywriteln {cout<<"cout<<endl;";}
+                  | ywriteln {cout<<"cout<<";}yleftparen ExpList yrightparen{cout<<"<<endl;"<<endl;}
                   ;
 
 /***************************  Designator Stuff  ******************************/
@@ -753,7 +880,7 @@ Factor            : ynumber
                   | ytrue
                   | yfalse
                   | ynil
-                  | ystring
+                  | ystring {cout<<'"'<<yylval.str <<'"';}
                   | Designator
                   | yleftparen Expression yrightparen
                   | ynot Factor
@@ -794,11 +921,26 @@ ProcedureDecl     : ProcedureHeading  ysemicolon  Block
 FunctionDecl      : FunctionHeading  ycolon  
 						  Identifier
 						  {
-							if(table->lookup(name) || sitTable->lookup(name)){
+                     if(sitTable.lookup(name)){
+                         if(name == "integer")
+                              aProcedure->setReturnType(anInt);
+                         else if(name == "real")
+                              aProcedure->setReturnType(aReal);
+                         else if(name == "boolean")
+                              aProcedure->setReturnType(aBool);
+                         else if(name == "char")
+                              aProcedure->setReturnType(aChar);
+                     }
+
+							else if(table->lookup(name)){
                         aType = table->retrieve(name);
                         if(aType != NULL)
                            aProcedure->setReturnType(aType);
-							}
+                     }
+
+							else{
+                        cout<<"Error: Return type invalid"<<endl;
+                     }
                     }
                     ysemicolon  Block 
 
@@ -839,7 +981,7 @@ OneFormalParam    :  yvar  IdentList  ycolon Identifier
                           subTypes.push(table->retrieve(name));
                           while(!vars.empty()){
                              if(!table->lookupScope(vars.front()->getName()) &&
-                                !sitTable->lookup(vars.front()->getName())){
+                                !sitTable.lookup(vars.front()->getName())){
                                  vars.front()->setIsVar();
                                  vars.front() ->setType(subTypes.top());
                                  aProcedure->insertParam(vars.front());
@@ -865,7 +1007,7 @@ OneFormalParam    :  yvar  IdentList  ycolon Identifier
                           while(!vars.empty()){
 
                              if(!table->lookupScope(vars.front()->getName()) &&
-                                !sitTable->lookup(vars.front()->getName())){
+                                !sitTable.lookup(vars.front()->getName())){
                                  vars.front()->setIsVar();
                                  aProcedure->insertParam(vars.front());
                                  vars.front() = NULL;

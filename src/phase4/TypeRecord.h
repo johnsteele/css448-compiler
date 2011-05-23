@@ -64,7 +64,7 @@ public:
 	 *
 	 * @param scope The scope of this identifier (used for indenting purposes).
  	 */
-	virtual void print(int scope) const;
+	virtual void print(int scope);
 };
 
 #endif /* TYPERECORD_H_ */

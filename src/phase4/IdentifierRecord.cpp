@@ -101,7 +101,7 @@ void IdentifierRecord::setType (IdentifierRecord * the_type) {
  *
  * @return The type of this IdentifierRecord.
  */
-const IdentifierRecord * IdentifierRecord::getType () {
+IdentifierRecord * IdentifierRecord::getType () {
 	return type;
 }
 

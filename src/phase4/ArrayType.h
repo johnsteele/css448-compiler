@@ -179,7 +179,7 @@ public:
 /**
  * @private
  */
-private:
+//private:
 
 	/**
 	 * @brief A dimension in the the array.
@@ -223,7 +223,8 @@ private:
 	 * @brief The current dimension being built.
 	 */
 	Dimension * currentDimension;
-
+        bool isInt;
+        bool isChar;
 	/**
 	 * @brief The dimensions in the array.
 	 */

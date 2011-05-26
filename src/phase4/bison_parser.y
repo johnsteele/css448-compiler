@@ -14,13 +14,14 @@
 
    /************************ C-Declarations Section **************************/
 %{
+
 #include <iostream>
 #include <stdlib.h>
 #include <stack>
 #include <queue>
 using namespace std;
 
-#include "yaccExecute.cpp"
+//#include "yaccExecute.h"
 #include "SymbolTable.h"
 #include "IdentifierRecord.h"
 #include "ProcedureRecord.h"
@@ -35,10 +36,10 @@ using namespace std;
 #include "RecordType.h"
 
 
-SymbolTable * table = NULL;    //points to symbolTable
+SymbolTable * table = NULL;         //points to symbolTable
 
-ProcedureRecord * program = NULL; //used to always hold program record
-ProcedureRecord * aProcedure = NULL; //holds procedure in current scope
+ProcedureRecord * program = NULL;   //used to always hold program record
+ProcedureRecord * aProcedure = NULL;//holds procedure in current scope
 
 ConstantRecord * constant = NULL; //holds const variable while being entered
 string uOperator = "";          //keeps track of unary operator
@@ -73,6 +74,11 @@ TypeRecord* aReal = new TypeRecord("real");
 TypeRecord* aBool = new TypeRecord("boolean");
 TypeRecord* aChar = new TypeRecord("char");
 queue <IdentifierRecord*> pointerHolder;
+int indent = 0;
+//void setLowVal();
+int constType = -1;
+bool inElse = false;
+int countIfs = 0;
 
 %}
 
@@ -110,23 +116,25 @@ ProgramModule      : yprogram {table = new SymbolTable();}
                      {
                             program = new ProcedureRecord(name);
                             table-> enterScope(program);
+                            cout<<"#include <iostream>"<<endl;
+                            cout<<"using namespace std;"<<endl;
                             cout<< "int main(){"<<endl;
                      }
                      ProgramParameters ysemicolon Block  ydot
                         {cout<<"return 0;"<<endl;
                          cout<<"}"<<endl;
 
-                      //table->printTable();
-                       //delete table;
-                       //delete anInt;
-                      // delete aChar;
-                       //delete aBool;
-                       //delete aReal;
-                       table = NULL;
-                       anInt = NULL;
-                       aChar = NULL;
-                       aBool = NULL;
-                       aReal = NULL;
+                        //table->printTable();
+                        //delete table;
+                        //delete anInt;
+                         // delete aChar;
+                        //delete aBool;
+                        //delete aReal;
+                        table = NULL;
+                        anInt = NULL;
+                        aChar = NULL;
+                        aBool = NULL;
+                        aReal = NULL;
                      }
                    ;
 ProgramParameters  : yleftparen  ParamList yrightparen //added paramlist to differentiate
@@ -205,8 +213,7 @@ ConstantDefList   :  ConstantDef
                   ;
 TypeDefBlock      :  /*** empty ***/
                   |  ytype  TypeDefList
-                     {  table->printTable();
-
+                     {
                         while(!pointerHolder.empty()){
                            TypeRecord &type = dynamic_cast<TypeRecord &>(*pointerHolder.front());
                            PointerType &p = dynamic_cast<PointerType &> (*type.getType());
@@ -280,7 +287,7 @@ TypeDef           :  Identifier
 									}
 									
 								else{
-								   cout<< "Error: Type " << name<<" already exists in this scope." <<endl;
+								   cout<< "Error: Type " << name <<" already exists in this scope." <<endl;
 									validType = false;
 								}
 							}
@@ -300,6 +307,9 @@ VariableDecl      :  IdentList
                         if(validType){
                            while(!vars.empty()){
                                  vars.front()->setType(subTypes.top());
+                                 if(vars.front()->getType()->getName() == "integer")
+                                    cout<< "int";
+                                 cout<<" "<<vars.front()->getName()<<";"<<endl;
                                  table->addSymbol(vars.front());
                                  vars.front() = NULL;
                                  vars.pop();
@@ -320,92 +330,61 @@ VariableDecl      :  IdentList
 
 ConstExpression   :  UnaryOperator ConstFactor 
 							{if(validConst){
-								  if(isNum && uOperator != "-")
+								  if(constType == 0 && uOperator != "-")
 									{
 										int n = yylval.int_value;
 										constant-> setConstFactor(n);
 										isNum = false;
 										uOperator = "";
 									}
-									else if(isNum)
+									else if(constType == 1 && uOperator =="-")
 									{
 										int n = yylval.int_value * -1;
 										constant-> setConstFactor(n);
-										isNum = false;
 										uOperator = "";
 									}
 									
-									else if(isNil)
-									{
-										constant ->setConstFactor(nullPtr);
-										isNil  = false;
-										uOperator = "";
-									}	
-									else if(isTrue){
-										int n;
-										if(uOperator == "-")
-											n = -1;
-										else
-											n = 1;
-										constant-> setConstFactor(n);
-										constant->setIsBool();
-										isTrue = false;
-										uOperator = "";
-									}
-									
-									else if(isFalse){
-										constant->setConstFactor(0);
-										constant->setIsBool();
-										isFalse = false;
-										uOperator = "";
-									}
-									
-									else{
+									else if (constType == 4){
 										if(table->lookup(name))
                             	  constant->setConstFactor(table->retrieve(name));
-											
-										else{
-											validConst = false;
-											cout<<" Error: invalid assignment of type: ";
-                                 cout<< name<<endl;
-											}
 									}
-								}
+                           else{
+                              validConst = false;
+                              cout<<" Error: invalid assignment of type: ";
+                              cout<< name<<endl;
+                              }
+                       }
 							}
                   |  ConstFactor{
 							if(validConst){
-								if(isNum)
+								if(constType == 0)
 							   {
 							      int n = yylval.int_value;
 								   constant-> setConstFactor(n);
-									isNum = false;
 								}
-								else if(isNil)
-								{;
+								else if(constType == 3)
+								{
 									constant ->setConstFactor(nullPtr);
-									isNil  = false;
 								}	
-								else if(isTrue){
+								else if(constType == 1){
 								   constant-> setConstFactor(1);
 									constant->setIsBool();
-									isTrue = false;
 								}
 								
-								else if(isFalse){
+								else if(constType == 2){
 									constant->setConstFactor(0);
 									constant->setIsBool();
-									isFalse = false;
 								}
 								
-								else{
+                        else if (constType == 4){
 									if(table->lookup(name))
-										constant->setConstFactor(table->retrieve(name));
-										
-									else{
-										validConst = false;
-										cout<<" Error: invalid assignment of type: "; cout<< name<<endl;
-										}
+                            	  constant->setConstFactor(table->retrieve(name));
 								}
+
+                        else{
+                           validConst = false;
+                           cout<<" Error: invalid assignment of type: "; cout<< name<<endl;
+                        }
 							}
 						}
                   |  
@@ -422,17 +401,18 @@ ConstExpression   :  UnaryOperator ConstFactor
                         delete yylval.str;
                      }
                   ;
-ConstFactor       :  Identifier 
-                  |  ynumber {isNum = true;}
-                  |  ytrue   { isTrue = true;}
-                  |  yfalse  { isFalse = true;}
-                  |  ynil    { isNil = true;}
+ConstFactor       :  Identifier {constType = 4;}
+                  |  ynumber {constType = 0;}
+                  |  ytrue   { constType = 1;}
+                  |  yfalse  { constType = 2;}
+                  |  ynil    { constType = 3;}
                   ;
 Type              :  Identifier 
                      {
 							  if(sitTable.lookup(name)){
-                           if(name == "integer")
+                           if(name == "integer"){
                               subType = anInt;
+                           }
                            if(name == "real")
                               subType = aReal;
                            if(name == "boolean")
@@ -441,6 +421,7 @@ Type              :  Identifier
                               subType = aChar;
                           subTypes.push(subType);
                           subType = NULL;
+                          validType = true;
                           
 							  }
 							  else if(table->lookup(name) == true){
@@ -504,177 +485,162 @@ SubrangeList      :  Subrange
 
 Subrange          :  ConstFactor
                      {
-
 							if(validType){
-                      if(isArray){
-								 if(isTrue){
-									array->setLowBool(1);
-									isTrue = false;
-								 }
-							    else if(isFalse){
-									array->setLowBool(0);
-									isFalse = false;
-								 }
-								 else if(isNum){
-                           array->setLowDimension(yylval.int_value);
-									isNum = false;
-								 }
-								 
-								 else if(isNil){
-									array->setLowDimension(nullPtr);
-								   isNil = false;
-							    }
-								 
-								else{
-									if(table->lookup(name))
-										array->setLowDimension(table->retrieve(name));
-										
-									else{
-										validType = false;
-										cout<<" Error: invalid assignment of type: ";
-                              cout<< name<<endl;
-										}
-								}
-							  }
+                        if(isArray){
+                           if(constType == 0)
+                                 array->setLowDimension(yylval.int_value);
+
+                            else if(constType == 4 && table->lookup(name)){
+                              IdentifierRecord* temp = table->retrieve(name);
+                              if(temp->recordType == 1){
+                                 ConstantRecord &c = dynamic_cast<ConstantRecord &>(*temp);
+                                 if(c.isString && c.str_const_factor.size() == 1)
+                                    array->setLowDimension(c.str_const_factor);
+                                 else{
+                                    cout<<" Error: Invalid type for subrange."<<endl;
+                                    validType = false;
+                                 }
+                              }
+                              else{
+                                 cout<<" Error: Invalid type for subrange."<<endl;
+                                 validType = false;
+                              }
+                           }
+                           else{
+                              cout<<" Error: Invalid type for subrange."<<endl;
+                              validType = false;
+                           }
+                        }
                       else{
-								if(isTrue){
-									set->setLowBool(1);
-									isTrue = false;
-									}
-									
-							    else if(isFalse){
-									set->setLowBool(0);
-									isFalse = false;
-									}
-								 else if(isNum){
-                           set->setLowDimension(yylval.int_value);
-									isNum = false;
-									}
-									
-								else if(isNil){
-									set->setLowDimension(nullPtr);
-									isNil = false;
-							   }
-								 
-								else{
-									if(table->lookup(name))
-										set->setLowDimension(table->retrieve(name));
-										
-									else{
-										validType = false;
-										cout<<" Error: invalid assignment of type: ";
-                              cout<< name<<endl;
-										}
-								}
-							 }
-							}
-							
-							 else{
-							    cout<< "Error: Invalid type"<<endl;
-							   }
+								if(constType == 0)
+                              set->setLowDimension(yylval.int_value);
+
+								 else if(constType == 4 && table->lookup(name)){
+                           IdentifierRecord* temp = table->retrieve(name);
+                           if(temp->recordType == 1){
+                              ConstantRecord &c = dynamic_cast<ConstantRecord &>(*temp);
+                              if(c.isString && c.str_const_factor.size() == 1)
+                                 set->setLowDimension(c.str_const_factor);
+                              else{
+                                 cout<<" Error: Invalid type for subrange."<<endl;
+                                 validType = false;
+                              }
+                           }
+                           else{
+                              cout<<" Error: Invalid type for subrange."<<endl;
+                              validType = false;
+                           }
+                        }
+
+                        else{
+                           cout<<" Error: Invalid type for subrange."<<endl;
+                           validType = false;
+                        }
+                     }
+                     }
                      }
 
                      ydotdot ConstFactor{
 							if(validType){
                       if(isArray){
-							 
-								 if(isTrue){
-									array->setHighBool(1);
-									isTrue = false;
+								 if(constType == 0 && array->isInt == true
+                           && array->currentDimension->low < yylval.int_value){
+                              array->setHighDimension(yylval.int_value);
 									}
-									
-							    else if(isFalse){
-									array->setHighBool(0);
-									isFalse = false;
-								 }
-								 else if(isNum){
-                           array->setHighDimension(yylval.int_value);
-									isNum = false;
-								 }
-								 
-								 else if(isNil){
-									array->setHighDimension(nullPtr);
-									isNil = false;
-							   }
-								 
+
+                        else if (constType == 4 && table->lookup(name)){
+                            IdentifierRecord* temp = table->retrieve(name);
+                            if(temp->recordType == 1){ //only if const record
+                              ConstantRecord &c = dynamic_cast<ConstantRecord &>(*temp);
+                               if(c.isString && c.str_const_factor.size() == 1
+                                 && array->currentDimension!= NULL
+                                 && array->isChar)
+                                    array->setHighDimension(c.str_const_factor);
+                               else{
+                                 cout<<" Error: Invalid type for subrange."<<endl;
+                                 validType = false;
+                               }
+                            }
+								}
+
 								else{
-									if(table->lookup(name))
-										array->setHighDimension(table->retrieve(name));
-										
-									else{
-										validType = false;
-										cout<<" Error: invalid assignment of type: "; cout<< name<<endl;
-										}
+                           cout<<" Error: Invalid type for subrange."<<endl;
+                           validType = false;
 								}
 							 }
                       else{
-								if(isTrue){
-									set->setHighBool(1);
-									isTrue = false;
+								 if(constType == 0 && array->isInt == true
+                           && set->dimension->low < yylval.int_value){
+                              array->setHighDimension(yylval.int_value);
 									}
-									
-							    else if(isFalse){
-									set->setHighBool(0);
-									isFalse = false;
-									}
-								 else if(isNum){
-                           set->setHighDimension(yylval.int_value);
-									isNum = false;
-								 }
-								 
-								 else if(isNil){
-									set->setHighDimension(nullPtr);
-									isNil = false;
-							   }
-								 
+
+                        else if (constType == 4 && table->lookup(name)){
+                            IdentifierRecord* temp = table->retrieve(name);
+                            if(temp->recordType == 1){ //only if const record
+                                ConstantRecord &c = dynamic_cast<ConstantRecord &>(*temp);
+                               if(c.isString && c.str_const_factor.size() == 1
+                                 && set->isChar
+                                 && set->dimension->str_low.compare(c.str_const_factor) < 0)
+                                    set->setHighDimension(c.str_const_factor);
+                               else{
+                                 cout<<" Error: Invalid type for subrange."<<endl;
+                                 validType = false;
+                               }
+                            }
+								}
+
 								else{
-									if(table->lookup(name))
-										set->setHighDimension(table->retrieve(name));
-										
-									else{
-										validType = false;
-										cout<<" Error: invalid assignment of type: "; cout<< name<<endl;
-										}
+                           cout<<" Error: Invalid type for subrange."<<endl;
+                           validType = false;
 								}
-								}
-							}	
-							else
-									cout<<"Error: Invalid type"<<endl;
-							 
+							}							 
                     }
+                  }
 
                   |  ystring
                      {     
 								if(validType){
 									string s(yylval.str);
-									 if(isArray){
+
+									 if(isArray && s.size() == 1){
 											array->setLowDimension(s);
 									 }
-									 else{
+									 else if(!isArray && s.size() == 1){
 											set-> setLowDimension(s);
 									 }
-								}
-								 else
-									cout<<"Error: Invalid type"<<endl;
-
+                            else{
+                               cout<<" Error: Invalid type for subrange."<<endl;
+                               validType = false;
+                            }
+                         }
+                         else{
+                            cout<<" Error: Invalid type for subrange."<<endl;
+                            validType = false;
+                         }
                          delete yylval.str;
 									
                       }  ydotdot  
                       ystring
                       {
 								if(validType){
-                           string s(yylval.str);
-                          if(isArray){
-										array->setHighDimension(s);
-									}
-									else{
-										set-> setHighDimension(s);
-									}
-								}
-								else
-									cout<<"Error: Invalid type"<<endl;
+									string s(yylval.str);
 
-                        delete yylval.str;
+									 if(isArray && s.size() == 1 && array->isChar){
+											array->setLowDimension(s);
+									 }
+									 else if(!isArray && s.size() == 1 && set->isChar){
+											set-> setLowDimension(s);
+									 }
+                            else{
+                               cout<<" Error: Invalid type for subrange."<<endl;
+                               validType = false;
+                            }
+                         }
+                         else{
+                            cout<<" Error: Invalid type for subrange."<<endl;
+                            validType = false;
+                         }
+                         delete yylval.str;
                       }
                   ;
 RecordType        :  yrecord {
@@ -686,7 +652,7 @@ RecordType        :  yrecord {
                         }
                      }
 
-                     FieldListSequence {validType = true;subTypes.top()->print(0); cout<<endl;} yend
+                     FieldListSequence {validType = true;} yend
                   ;
 SetType           :  yset {
 							set = new SetType("_set");
@@ -702,7 +668,7 @@ PointerType       :  ycaret  Identifier
                       if(table->lookup(name)){
                            pType = table->retrieve(name);
                            pointer->setType(pType);
-                           pointer->setValid();
+                           //pointer->setValid();
                            subTypes.push(pointer);
                        }
                       else if(sitTable.lookup(name)){
@@ -716,7 +682,7 @@ PointerType       :  ycaret  Identifier
                               pType = aChar;
 
                            pointer->setType(pType);
-                           pointer->setValid();
+                           //pointer->setValid();
                            subTypes.push(pointer);
                       }
 
@@ -794,22 +760,54 @@ Statement         :  Assignment
                   |  ybegin StatementSequence yend
                   |  /*** empty ***/
                   ;
-Assignment        :  Designator yassign Expression
+Assignment        :
+                     Designator yassign Expression
                   ;
-ProcedureCall     :  Identifier 
+ProcedureCall     :
+                     Identifier
                      {if(!table->lookup(name))
 							    cout<< name <<" is not defined in this scope."<<endl;
                      }
-                  |  Identifier 
+                  |
+                      Identifier
 						   {if(!table->lookup(name))
 							    cout<< name <<" is not defined in this scope."<<endl;
                      }
 						   ActualParameters
                   ;
-IfStatement       :  yif  Expression  ythen  Statement  ElsePart
+IfStatement       :  yif 
+                  {
+                     if(inElse)
+                        inElse = false;
+
+                     cout<<"  if( ";
+                  }
+                     Expression  
+                  { 
+                     cout<<" ){"<<endl;
+                  }
+
+                  ythen  Statement
+                  {cout<<"}"<<endl;
+                  }
+                  ElsePart {
+                        if(countIfs == 0){
+                           cout<<"}"<<endl;}
+                  }
                   ;
 ElsePart          :  /*** empty ***/
-                  |  yelse  Statement
+                  |  yelse
+                  {
+                     cout<< "else ";
+                     countIfs++;
+                     inElse = true;
+                  }
+                     Statement
+                  {
+                     //if(inElse)
+                     //   cout<<"}"<<endl;
+                     countIfs--;
+                  }
                   ;
 CaseStatement     :  ycase  Expression  yof  CaseList  yend
                   ;
@@ -821,7 +819,11 @@ Case              :  CaseLabelList  ycolon  Statement
 CaseLabelList     :  ConstExpression
                   |  CaseLabelList  ycomma  ConstExpression
                   ;
-WhileStatement    :  ywhile  Expression  ydo  Statement
+WhileStatement    :  ywhile 
+                  {  cout<<"while(";}
+                     Expression  
+                  {  cout<<" ){" <<endl; }
+                  ydo  Statement {cout<< "}"<<endl;}
                   ;
 RepeatStatement   :  yrepeat StatementSequence yuntil Expression
                   ;
@@ -830,13 +832,20 @@ ForStatement      :  yfor Identifier yassign Expression WhichWay Expression
                   ;
 WhichWay          : yto | ydownto
                   ;
-IOStatement       : yread yleftparen DesignatorList yrightparen
-                  | yreadln
-                  | yreadln yleftparen DesignatorList yrightparen
-                  | ywrite {cout<<"cout<<";}yleftparen ExpList yrightparen{cout<<";";}
+IOStatement       : yread { cout<<"cin>>";} yleftparen DesignatorList yrightparen {cout<<";"<<endl;}
+                  | yreadln{ cout<<"cin>> ;";}
+                  | yreadln{ cout<<"cin>>";} yleftparen DesignatorList yrightparen
+                    {cout<<"; <<endl;"<<endl;}
+                  | ywrite 
+                     { if(inElse)cout<<"{"<<endl;
+                       cout<<"   ";
+                       cout<<"cout<<";}yleftparen ExpList yrightparen{cout<<";";
+                     }
 
                   | ywriteln {cout<<"cout<<endl;";}
-                  | ywriteln {cout<<"cout<<";}yleftparen ExpList yrightparen{cout<<"<<endl;"<<endl;}
+                  | ywriteln {cout<<"cout<<";}
+                    yleftparen ExpList yrightparen
+                  { cout<<"<<endl;"<<endl;}
                   ;
 
 /***************************  Designator Stuff  ******************************/
@@ -844,7 +853,14 @@ IOStatement       : yread yleftparen DesignatorList yrightparen
 DesignatorList    : Designator
                   | DesignatorList ycomma Designator
                   ;
-Designator        : Identifier DesignatorStuff
+Designator        : Identifier
+                     {if(table->lookup(name))
+                        cout<<name;
+                      else
+                        cout<<"Error: identifier " <<name<<" is invalid."<<endl;
+                     }
+
+                     DesignatorStuff
                   ;
 DesignatorStuff   : /*** empty ***/
                   | DesignatorStuff theDesignatorStuff
@@ -876,17 +892,17 @@ TermExpr          : Term
 Term              : Factor
                   | Term MultOperator Factor
                   ;
-Factor            : ynumber
+Factor            : ynumber {cout<<yylval.int_value;}
                   | ytrue
                   | yfalse
                   | ynil
-                  | ystring {cout<<'"'<<yylval.str <<'"';}
+                  | ystring {cout<<'"'<< yylval.str <<'"';}
                   | Designator
                   | yleftparen Expression yrightparen
                   | ynot Factor
                   | Setvalue
                   | FunctionCall {//if (!table->lookup(name))
-}						
+                  }
                   ;
 /*  Functions with no parameters have no parens, but you don't need         */
 /*  to handle that in FunctionCall because it is handled by Designator.     */
@@ -1031,12 +1047,23 @@ OneFormalParam    :  yvar  IdentList  ycolon Identifier
 UnaryOperator     :  yplus {uOperator = "+";}
                   |  yminus {uOperator = "-";}
                   ;
-MultOperator      :  ymultiply | ydivide | ydiv | ymod | yand
+MultOperator      :  ymultiply { cout<<" * ";}
+                  | ydivide { cout<<" / ";}
+                  | ydiv
+                  | ymod
+                  | yand  { cout<<" && ";}
                   ;
-AddOperator       :  yplus | yminus | yor
+AddOperator       :  yplus
+                  | yminus
+                  | yor {cout<< " || ";}
                   ;
-Relation          :  yequal  | ynotequal | yless | ygreater
-                  |  ylessequal | ygreaterequal | yin
+Relation          :  yequal {cout<<" == ";}
+                  | ynotequal {cout<<" != ";}
+                  | yless {cout<< " < ";}
+                  | ygreater {cout<<" >";}
+                  |  ylessequal {cout<< " <= ";}
+                  | ygreaterequal {cout<< " >= ";}
+                  | yin
                   ;
 %%
 
@@ -1047,3 +1074,4 @@ void yyerror(char *s) {
 }
 
 extern int yylex();
+

@@ -161,6 +161,8 @@ public:
 	 */
 	IdentifierRecord * getType ();
 
+         int recordType; //set By children classes determines if they are const, type, or var
+
 
 /**
  * @private

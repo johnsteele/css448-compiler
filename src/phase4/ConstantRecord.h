@@ -149,7 +149,7 @@ public:
 /**
  * @private
  */
-private:
+//private:
 
 	/**
 	 * @brief The integer constant factor value.

@@ -120,64 +120,10 @@ public:
 	void setHighDimension (string highDim);
 
 
-	//---------------------lowBool---------------------------------------------
-	/**
-	 * @brief Sets the lower bound value to a boolean value.
-	 *
-	 * Preconditions: None.
-	 *
-	 * Postconditions: The lower bound was set to the provided value.
-	 *
-	 * @param lowBool The boolean value.
-	 */
-	void setLowBool (int lowBool);
-
-
-	//---------------------setHighBool-----------------------------------------
-	/**
-	 * @brief Sets the high bound value to a boolean value.
-	 *
-	 * Preconditions: None.
-	 *
-	 * Postconditions: The high bound was set to the provided value.
-	 *
-	 * @param highBool The boolean value.
-	 */
-	void setHighBool (int highBool);
-
-
-
-	//---------------------setLowDimenstion------------------------------------
-	/**
-	 * @brief Sets the low value of a new dimension.
-	 *
-	 * Preconditions: lowDim is not NULL.
-	 *
-	 * Postconditions: A new dimension was created with the provided low value.
-	 *
-	 * @param lowDim The low value to a new dimension of this SetType.
- 	 */
-	void setLowDimension (IdentifierRecord * lowDim);
-
-
-	//---------------------setHighDimenstion-----------------------------------
-	/**
-	 * @brief Sets the high value to the current dimension of this SetType.
-	 *
-	 * Preconditions: setLowDimension has already been called, which created a
-	 *                new dimension to the array and set it's low value.
-	 *
-	 * Postconditions: The high value to the dimension of this SetType was
-	 *                 set to the provided value.
-	 *
-	 * @param highDim The high value to a dimension of this SetType.
- 	 */
-	void setHighDimension (IdentifierRecord *highDIm);
-
 /**
  * @private
  */
-private:
+//private:
 
 	/**
 	 * @brief The dimension in the the set.
@@ -196,31 +142,20 @@ private:
 		string str_low;
 		string str_high;
 
-		/* If low or high is an identifier. */
-		IdentifierRecord * low_ident;
-		IdentifierRecord * high_ident;
-
 		/* If low or high value is represented as ascii. */
 		bool low_ascii;
 		bool high_ascii;
 
-		/* If low or high value is boolean. The low and high int's are used.*/
-		bool low_isBool;
-		bool high_isBool;
 
-		/* If low or high is an identifier. */
-		bool low_isIdent;
-		bool high_isIdent;
 
-		/* If low or high is a NIL */
-		bool low_isNil;
-		bool high_isNil;
 	};
 
 	/**
 	 * @brief The dimension pf the set.
 	 */
 	Dimension * dimension;
+        bool isInt;
+        bool isChar;
 };
 
 #endif /* SETTYPE_H_ */

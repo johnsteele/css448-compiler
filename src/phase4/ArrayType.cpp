@@ -27,6 +27,9 @@
 ArrayType::ArrayType(string name) : IdentifierRecord (name) {
 	dimensions       = new vector <Dimension *> ();
 	currentDimension = NULL;
+    isInt = false;
+    isChar = false;
+
 }
 
 
@@ -47,6 +50,7 @@ ArrayType::~ArrayType() {
 	}
 	dimensions       = NULL;
 	currentDimension = NULL;
+
 }
 
 
@@ -153,22 +157,16 @@ void ArrayType::setLowDimension (int lowDim) {
 	// completing it by calling setHighDimension.
 	if (currentDimension != NULL) delete currentDimension;
 	currentDimension = new Dimension ();
-	currentDimension->low_isNil   = false;
-	currentDimension->high_isNil  = false;
-	currentDimension->low_isBool  = false;
-	currentDimension->high_isBool = false;
+
 	currentDimension->low_ascii   = false;
 	currentDimension->high_ascii  = false;
-	currentDimension->low_isIdent = false;
-	currentDimension->high_isIdent= false;
-	currentDimension->low_ident   = NULL;
-	currentDimension->high_ident  = NULL;
 	currentDimension->str_low     = "";
 	currentDimension->str_high    = "";
 	currentDimension->low         = 0;
 	currentDimension->high        = 0;
 
 	currentDimension->low = lowDim;
+    isInt = true;
 }
 
 
@@ -190,6 +188,7 @@ void ArrayType::setHighDimension (int highDim) {
 		dimensions->push_back(currentDimension);
 		currentDimension = NULL;
 	}
+    isInt = false;
 }
 
 
@@ -224,6 +223,7 @@ void ArrayType::setLowDimension (string lowDim) {
 	currentDimension->low_ascii   = true;
 	currentDimension->str_low     = lowDim;
 	currentDimension->low         = (int)lowDim.at(0);
+    isChar = true;
 }
 
 
@@ -321,6 +321,8 @@ void ArrayType::setHighDimension (string highDim) {
 		currentDimension->high         = (int)highDim.at(0);
 		dimensions->push_back(currentDimension);
 		currentDimension = NULL;
+
+        isChar = false;
 	}
 }
 

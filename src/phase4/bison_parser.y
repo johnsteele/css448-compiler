@@ -21,7 +21,6 @@
 #include <queue>
 using namespace std;
 
-//#include "yaccExecute.h"
 #include "SymbolTable.h"
 #include "IdentifierRecord.h"
 #include "ProcedureRecord.h"
@@ -111,23 +110,27 @@ int countIfs = 0;
 
 CompilationUnit    : ProgramModule
                    ;
-ProgramModule      : yprogram {table = new SymbolTable();}
+ProgramModule      : yprogram 
+                   {
+                        table = new SymbolTable();
+                   }
                      Identifier
-                     {
+                   {
                             program = new ProcedureRecord(name);
-                            table-> enterScope(program);
-                            cout<<"#include <iostream>"<<endl;
-                            cout<<"using namespace std;"<<endl;
-                            cout<< "int main(){"<<endl;
-                     }
+                            table->enterScope(program);
+                            cout<< "#include <iostream>"    <<endl;
+                            cout<< "using namespace std;"   << endl << endl;
+                            cout<< "int " << name <<" () {" << endl << endl;
+                   }
                      ProgramParameters ysemicolon Block  ydot
-                        {cout<<"return 0;"<<endl;
-                         cout<<"}"<<endl;
+                   {
+                         cout << "return 0;" << endl;
+                         cout << "}" << endl;
 
                         //table->printTable();
                         //delete table;
                         //delete anInt;
-                         // delete aChar;
+                        //delete aChar;
                         //delete aBool;
                         //delete aReal;
                         table = NULL;
@@ -135,25 +138,25 @@ ProgramModule      : yprogram {table = new SymbolTable();}
                         aChar = NULL;
                         aBool = NULL;
                         aReal = NULL;
-                     }
+                   }
                    ;
 ProgramParameters  : yleftparen  ParamList yrightparen //added paramlist to differentiate
                    ;
 ParamList          : ParamList ycomma Identifier
-                     { 
-                            param = new Parameter(name, false);
-                            ProcedureRecord &r = dynamic_cast<ProcedureRecord &> (*program);
-                            r.insertParam(param);
-                     }
+                   { 
+                        param = new Parameter(name, false);
+                        ProcedureRecord &r = dynamic_cast<ProcedureRecord &> (*program);
+                        r.insertParam(param);
+                   }
                    | Identifier
-                     {
-                            param = new Parameter(name, false);
-                            ProcedureRecord &r = dynamic_cast<ProcedureRecord &> (*program);
-                            r.insertParam(param);
-                     }
+                   {
+                        param = new Parameter(name, false);
+                        ProcedureRecord &r = dynamic_cast<ProcedureRecord &> (*program);
+                        r.insertParam(param);
+                   }
                    ;
 IdentList          :  Identifier 
-                     {
+                   {
                         if(!table->lookupScope(name)){
                           v = new Parameter(name, false );
 							     vars.push(v);
@@ -161,30 +164,30 @@ IdentList          :  Identifier
 
                         }
 
-                        else{
-                          cout<< "Error: (" <<name<<") already exists in this scope."<<endl;
+                        else {
+                          cout << "Error: (" << name << ") already exists in this scope." << endl;
                         }
-							}
-                   |  IdentList ycomma 
-						    Identifier
-                     {
+				   }
+                   |  IdentList ycomma Identifier
+                   {
                         if(!table->lookupScope(name)){
                           v = new Parameter(name, false );
 							     vars.push(v);
                           v = NULL;
                         }
+
                         else
                           cout<< "Error: (" <<name<<") already exists in this scope."<<endl;
-							}
-							;
+				   }
+				   ;
 Identifier         :  yident
-                     {
+                   {
                         name = yylval.str;
                         for (int i = 0; yylval.str[i] != '\0'; i++) {
                            name.at(i) = tolower (name[i]);
                         }
                         delete yylval.str;
-                      }
+                   }
                    ;
 /* We need to put the print Identifier here. */
 /**************************  Declarations section ***************************/
@@ -197,18 +200,18 @@ ConstantDefBlock  :  /*** empty ***/
                   |  yconst ConstantDefList
                   ;
 ConstantDefList   :  ConstantDef
-                     {
-								if(validConst){
-									table->addSymbol(constant);
-								}
-							}
+                  {
+						if(validConst){
+							table->addSymbol(constant);
+						}
+				  }
                      ysemicolon
                   |  ConstantDefList ConstantDef 
-                     {
-								if(validConst){
-									table->addSymbol(constant);
-								}
-							}
+                  {
+					    if(validConst){
+							table->addSymbol(constant);
+						}
+				  }
                      ysemicolon
                   ;
 TypeDefBlock      :  /*** empty ***/
@@ -237,26 +240,25 @@ TypeDefBlock      :  /*** empty ***/
                      }
                   ;
 TypeDefList       :  TypeDef ysemicolon
-                     { 
-								if(validType){
-									table->addSymbol(aType);
-                         }
-								else{
-								 cout<<"Error: "<< name <<" is an invalid type."<<endl;
-								}
-
-							}
+                  { 
+						if(validType){
+							table->addSymbol(aType);
+                        }
+					    
+                        else {
+						    cout<<"Error: "<< name <<" is an invalid type."<<endl;
+						} 
+				  }
                   |  TypeDefList TypeDef ysemicolon
-                     {
-								if(validType){
-									table->addSymbol(aType);
-                         }
+                  {
+						if(validType){
+							table->addSymbol(aType);
+                        }
 									
-								else{
-								 cout<<"Error: "<< name <<" already exists in this scope."<<endl;
-								}
-
-							}
+					    else{
+						    cout<<"Error: "<< name <<" already exists in this scope."<<endl;
+						} 
+				  }
                   ;
 VariableDeclBlock :  /*** empty ***/
                   |  yvar VariableDeclList
@@ -485,7 +487,7 @@ SubrangeList      :  Subrange
 
 Subrange          :  ConstFactor
                      {
-							if(validType){
+					    if(validType){
                         if(isArray){
                            if(constType == 0)
                                  array->setLowDimension(yylval.int_value);
@@ -654,11 +656,13 @@ RecordType        :  yrecord {
 
                      FieldListSequence {validType = true;} yend
                   ;
-SetType           :  yset {
-							set = new SetType("_set");
-							subTypes.push(set); 
-							isArray = false;
-							 } yof Subrange
+SetType           :  yset 
+                  {
+						set = new SetType("_set");
+					    subTypes.push(set); 
+						isArray = false;
+				  } 
+                     yof Subrange
                   ;
 PointerType       :  ycaret  Identifier 
                      {
@@ -693,9 +697,7 @@ PointerType       :  ycaret  Identifier
                            validType = false;
                            //aType->print(0);
 
-                          }
-
-
+                          } 
                      }
                   ;
 FieldListSequence :  FieldList
@@ -703,7 +705,7 @@ FieldListSequence :  FieldList
                   ;
 FieldList         :  IdentList 
                      ycolon  Type 
-							{	
+				  {	
                        if(table->lookup(subTypes.top()->getName())
                            || sitTable.lookup(subTypes.top()->getName()) || isFound){
                            while(!vars.empty()){
@@ -740,7 +742,7 @@ FieldList         :  IdentList
 											subTypes.top() = NULL;
                                  subTypes.pop();
                        }
-							}   
+				  }   
                   ;
 
 /***************************  Statements  ************************************/
@@ -765,48 +767,53 @@ Assignment        :
                   ;
 ProcedureCall     :
                      Identifier
-                     {if(!table->lookup(name))
-							    cout<< name <<" is not defined in this scope."<<endl;
-                     }
+                  {
+                        if (!table->lookup(name))
+						    cout << name << " is not defined in this scope." << endl;
+                  }
                   |
-                      Identifier
-						   {if(!table->lookup(name))
-							    cout<< name <<" is not defined in this scope."<<endl;
-                     }
-						   ActualParameters
+                     Identifier
+				  {
+                        if (!table->lookup(name))
+						    cout << name << " is not defined in this scope." << endl;
+                  }
+				     ActualParameters
                   ;
 IfStatement       :  yif 
                   {
-                     if(inElse)
-                        inElse = false;
+                        if (inElse)
+                            inElse = false;
 
-                     cout<<"  if( ";
+                        cout << "  if ( ";
                   }
                      Expression  
                   { 
-                     cout<<" ){"<<endl;
+                        cout << " ) {" << endl;
                   }
 
-                  ythen  Statement
-                  {cout<<"}"<<endl;
+                     ythen  Statement
+                  {
+                        cout << "}" << endl;
                   }
-                  ElsePart {
-                        if(countIfs == 0){
-                           cout<<"}"<<endl;}
+                     ElsePart 
+                  {
+                        if (countIfs == 0) {
+                           cout << "}" << endl;
+                        }
                   }
                   ;
 ElsePart          :  /*** empty ***/
                   |  yelse
                   {
-                     cout<< "else ";
-                     countIfs++;
-                     inElse = true;
+                        cout<< "else ";
+                        countIfs++;
+                        inElse = true;
                   }
-                     Statement
+                    Statement
                   {
-                     //if(inElse)
-                     //   cout<<"}"<<endl;
-                     countIfs--;
+                        //if(inElse)
+                        //   cout<<"}"<<endl;
+                        countIfs--;
                   }
                   ;
 CaseStatement     :  ycase  Expression  yof  CaseList  yend
@@ -820,32 +827,68 @@ CaseLabelList     :  ConstExpression
                   |  CaseLabelList  ycomma  ConstExpression
                   ;
 WhileStatement    :  ywhile 
-                  {  cout<<"while(";}
+                  {  
+                        cout << "while (";
+                  }
                      Expression  
-                  {  cout<<" ){" <<endl; }
-                  ydo  Statement {cout<< "}"<<endl;}
+                  {  
+                        cout << ") {" << endl; 
+                  }
+                    ydo  Statement 
+                  {
+                        cout << "}" << endl;
+                  }
                   ;
 RepeatStatement   :  yrepeat StatementSequence yuntil Expression
                   ;
 ForStatement      :  yfor Identifier yassign Expression WhichWay Expression
                            ydo Statement
                   ;
-WhichWay          : yto | ydownto
+WhichWay          : yto 
+                  | ydownto
                   ;
-IOStatement       : yread { cout<<"cin>>";} yleftparen DesignatorList yrightparen {cout<<";"<<endl;}
-                  | yreadln{ cout<<"cin>> ;";}
-                  | yreadln{ cout<<"cin>>";} yleftparen DesignatorList yrightparen
-                    {cout<<"; <<endl;"<<endl;}
+IOStatement       : yread 
+                  { 
+                        cout << "cin>>"; 
+                  } 
+                    yleftparen DesignatorList yrightparen 
+                  {
+                        cout << ";" << endl;
+                  }
+                  | yreadln 
+                  { 
+                        cout << "cin>> ;"; 
+                  }
+                  | yreadln
+                  { 
+                        cout << "cin>>";
+                  } 
+                    yleftparen DesignatorList yrightparen
+                  {
+                        cout << "; << endl;" << endl;
+                  }
                   | ywrite 
-                     { if(inElse)cout<<"{"<<endl;
-                       cout<<"   ";
-                       cout<<"cout<<";}yleftparen ExpList yrightparen{cout<<";";
-                     }
-
-                  | ywriteln {cout<<"cout<<endl;";}
-                  | ywriteln {cout<<"cout<<";}
+                  {  
+                       if (inElse) cout << "{" << endl;
+                       cout << "   ";
+                       cout << "cout <<";
+                  }
                     yleftparen ExpList yrightparen
-                  { cout<<"<<endl;"<<endl;}
+                  {
+                        cout << ";";
+                  } 
+                  | ywriteln 
+                  {
+                        cout << "cout << endl;";
+                  }
+                  | ywriteln 
+                  {
+                        cout << "cout <<";
+                  }
+                    yleftparen ExpList yrightparen
+                  { 
+                        cout << "<< endl;" << endl;
+                  }
                   ;
 
 /***************************  Designator Stuff  ******************************/
@@ -854,13 +897,14 @@ DesignatorList    : Designator
                   | DesignatorList ycomma Designator
                   ;
 Designator        : Identifier
-                     {if(table->lookup(name))
-                        cout<<name;
-                      else
-                        cout<<"Error: identifier " <<name<<" is invalid."<<endl;
-                     }
-
-                     DesignatorStuff
+                  {    
+                        if(table->lookup(name))
+                            cout << name;
+                        
+                        else
+                            cout << "Error: identifier " << name << " is invalid." << endl;
+                  } 
+                    DesignatorStuff
                   ;
 DesignatorStuff   : /*** empty ***/
                   | DesignatorStuff theDesignatorStuff
@@ -892,11 +936,17 @@ TermExpr          : Term
 Term              : Factor
                   | Term MultOperator Factor
                   ;
-Factor            : ynumber {cout<<yylval.int_value;}
+Factor            : ynumber 
+                  {     
+                        cout << yylval.int_value;
+                  }
                   | ytrue
                   | yfalse
                   | ynil
-                  | ystring {cout<<'"'<< yylval.str <<'"';}
+                  | ystring 
+                  {
+                        cout << '"' << yylval.str << '"';
+                  }
                   | Designator
                   | yleftparen Expression yrightparen
                   | ynot Factor
@@ -909,10 +959,10 @@ Factor            : ynumber {cout<<yylval.int_value;}
 /*  A FunctionCall has at least one parameter in parens, more are           */
 /*  separated with commas.                                                  */
 FunctionCall      : Identifier 
-					{
+				  {
                      	if(!table->lookup(aProcedure->getName())){}
                         /*throw an error*/
-                    }
+                  }
                     ActualParameters
                   ;
 Setvalue          : yleftbracket ElementList  yrightbracket
@@ -932,58 +982,60 @@ SubprogDeclList   : /*** empty ***/
                   | SubprogDeclList FunctionDecl ysemicolon
                   ;
 ProcedureDecl     : ProcedureHeading  ysemicolon  Block 
-                    {table->exitScope();}
+                  {
+                        table->exitScope();
+                  }
                   ;
-FunctionDecl      : FunctionHeading  ycolon  
-						  Identifier
-						  {
-                     if(sitTable.lookup(name)){
-                         if(name == "integer")
-                              aProcedure->setReturnType(anInt);
-                         else if(name == "real")
-                              aProcedure->setReturnType(aReal);
-                         else if(name == "boolean")
-                              aProcedure->setReturnType(aBool);
-                         else if(name == "char")
-                              aProcedure->setReturnType(aChar);
-                     }
+FunctionDecl      : FunctionHeading  ycolon  Identifier
+			      {
+                        if(sitTable.lookup(name)) {
+                             if(name == "integer")
+                                  aProcedure->setReturnType(anInt);
+                             else if(name == "real")
+                                  aProcedure->setReturnType(aReal);
+                             else if(name == "boolean")
+                                  aProcedure->setReturnType(aBool);
+                             else if(name == "char")
+                                  aProcedure->setReturnType(aChar);
+                        }
 
-							else if(table->lookup(name)){
-                        aType = table->retrieve(name);
-                        if(aType != NULL)
-                           aProcedure->setReturnType(aType);
-                     }
+					    else if(table->lookup(name)){
+                            aType = table->retrieve(name);
+                            if(aType != NULL)
+                               aProcedure->setReturnType(aType);
+                        }
 
-							else{
-                        cout<<"Error: Return type invalid"<<endl;
-                     }
-                    }
+					    else {
+                            cout<<"Error: Return type invalid"<<endl;
+                        }
+                  }
                     ysemicolon  Block 
-
-                    {table->exitScope();}
+                  {
+                        table->exitScope();
+                  }
                   ;
 ProcedureHeading  : yprocedure Identifier
-					     {
+				  {
                         aProcedure = new ProcedureRecord(name);
                         table ->enterScope(aProcedure);
-                    }
+                  }
                   | yprocedure Identifier
-                    {
+                  {
                         aProcedure = new ProcedureRecord(name);
                         table ->enterScope(aProcedure);
-                    }
+                  }
                     FormalParameters
                   ;
 FunctionHeading   : yfunction Identifier 
-					     {
+				  {
                         aProcedure = new ProcedureRecord(name);
                         table ->enterScope(aProcedure);
-                    }
+                  }
                   | yfunction Identifier 
-                  	{
+                  {
                         aProcedure = new ProcedureRecord(name);
                         table ->enterScope(aProcedure);
-                    }     
+                  }     
                     FormalParameters
                   ;
 FormalParameters  :  yleftparen FormalParamList yrightparen
@@ -1044,25 +1096,25 @@ OneFormalParam    :  yvar  IdentList  ycolon Identifier
 
 /***************************  More Operators  ********************************/
 
-UnaryOperator     :  yplus {uOperator = "+";}
-                  |  yminus {uOperator = "-";}
+UnaryOperator     : yplus           { uOperator = "+"; }
+                  | yminus          { uOperator = "-"; }
                   ;
-MultOperator      :  ymultiply { cout<<" * ";}
-                  | ydivide { cout<<" / ";}
+MultOperator      : ymultiply       { cout<<" * "; }
+                  | ydivide         { cout<<" / "; }
                   | ydiv
                   | ymod
-                  | yand  { cout<<" && ";}
+                  | yand            { cout<<" && "; }
                   ;
-AddOperator       :  yplus
+AddOperator       : yplus
                   | yminus
-                  | yor {cout<< " || ";}
+                  | yor             { cout<< " || "; }
                   ;
-Relation          :  yequal {cout<<" == ";}
-                  | ynotequal {cout<<" != ";}
-                  | yless {cout<< " < ";}
-                  | ygreater {cout<<" >";}
-                  |  ylessequal {cout<< " <= ";}
-                  | ygreaterequal {cout<< " >= ";}
+Relation          : yequal          { cout<<" == "; }
+                  | ynotequal       { cout<<" != "; }
+                  | yless           { cout<< " < "; }
+                  | ygreater        { cout<<" >"; }
+                  | ylessequal      { cout<< " <= "; }
+                  | ygreaterequal   { cout<< " >= "; }
                   | yin
                   ;
 %%

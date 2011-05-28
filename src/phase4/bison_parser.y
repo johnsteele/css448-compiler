@@ -300,7 +300,7 @@ TypeDef           :  Identifier
 							}
                      yequal 
                      Type 
-                     { if(!validType)
+                     {
                        if(validType && aType != NULL){
 							   aType->setType(subTypes.top());
                         subTypes.top() = NULL;

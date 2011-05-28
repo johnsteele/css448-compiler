@@ -128,6 +128,7 @@ COMMENT      {S_COMMENT}({WHITESPACE}|{CHARACTER}|{D_QUOTE}|{S_QUOTE}|\*)*\*\)
                                             /*next 2 lines remove quotes*/
                                             yytext++;
                                             yytext[yyleng - 2] = '\0';
+                                            yylval.str = strdup (yytext);
                                             return ystring;   
                                           }
 [tT][hH][eE][nN]                          { return ythen; }

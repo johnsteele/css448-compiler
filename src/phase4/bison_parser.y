@@ -167,7 +167,7 @@ IdentList          :  Identifier
                         else {
                           cout << "Error: (" << name << ") already exists in this scope." << endl;
                         }
-				   }
+				       }
                    |  IdentList ycomma Identifier
                    {
                         if(!table->lookupScope(name)){
@@ -178,8 +178,8 @@ IdentList          :  Identifier
 
                         else
                           cout<< "Error: (" <<name<<") already exists in this scope."<<endl;
-				   }
-				   ;
+				       }
+				       ;
 Identifier         :  yident
                    {
                         name = yylval.str;
@@ -203,6 +203,8 @@ ConstantDefList   :  ConstantDef
                   {
 						if(validConst){
 							table->addSymbol(constant);
+                     cout<<"const ";
+                     constant->print(0);
 						}
 				  }
                      ysemicolon
@@ -210,6 +212,8 @@ ConstantDefList   :  ConstantDef
                   {
 					    if(validConst){
 							table->addSymbol(constant);
+                     cout<<"const ";
+                     constant->print(0);
 						}
 				  }
                      ysemicolon
@@ -241,9 +245,10 @@ TypeDefBlock      :  /*** empty ***/
                   ;
 TypeDefList       :  TypeDef ysemicolon
                   { 
-						if(validType){
-							table->addSymbol(aType);
-                        }
+                     if(validType){
+                        table->addSymbol(aType);
+                        cout<< "typedef ";
+                     }
 					    
                         else {
 						    cout<<"Error: "<< name <<" is an invalid type."<<endl;
@@ -909,11 +914,23 @@ Designator        : Identifier
 DesignatorStuff   : /*** empty ***/
                   | DesignatorStuff theDesignatorStuff
                   ;
-theDesignatorStuff: ydot Identifier
-                  | yleftbracket ExpList yrightbracket
-                  | ycaret
+theDesignatorStuff: ydot {cout<< ".";}
+                    Identifier
+                  {
+                        if(table->lookup(name))
+                            cout << name;
+
+                        else
+                            cout << "Error: identifier " << name << " is invalid." << endl;
+                  }
+                  | yleftbracket {cout<< "[";}
+                    ExpList
+                    yrightbracket {cout<< "]";}
+                  | ycaret {cout<< "*";}
                   ;
-ActualParameters  : yleftparen ExpList yrightparen
+ActualParameters  : yleftparen {cout<<" ( ";}
+                    ExpList
+                    yrightparen {cout<<" ) ";}
                   ;
 ExpList           : Expression
                   | ExpList ycomma Expression
@@ -940,28 +957,36 @@ Factor            : ynumber
                   {     
                         cout << yylval.int_value;
                   }
-                  | ytrue
-                  | yfalse
-                  | ynil
+                  | ytrue {cout<<"true";}
+                  | yfalse {cout<<"false";}
+                  | ynil {cout<<"NULL";}
                   | ystring 
                   {
                         cout << '"' << yylval.str << '"';
                   }
                   | Designator
-                  | yleftparen Expression yrightparen
-                  | ynot Factor
+                  | yleftparen  {cout<<" ( ";}
+                    Expression
+                    yrightparen {cout<<" ) ";}
+                  | ynot {cout<<" !";}
+                    Factor
                   | Setvalue
-                  | FunctionCall {//if (!table->lookup(name))
-                  }
+                  | FunctionCall 
                   ;
 /*  Functions with no parameters have no parens, but you don't need         */
 /*  to handle that in FunctionCall because it is handled by Designator.     */
 /*  A FunctionCall has at least one parameter in parens, more are           */
 /*  separated with commas.                                                  */
 FunctionCall      : Identifier 
-				  {
-                     	if(!table->lookup(aProcedure->getName())){}
-                        /*throw an error*/
+                  {
+                    if(!table->lookup(name)) {
+                       cout<<"Error: Function does not exist";
+                    }
+
+                    else {
+                        cout<<name<<" ";
+                    }
+
                   }
                     ActualParameters
                   ;
@@ -972,7 +997,9 @@ ElementList       : Element
                   | ElementList  ycomma  Element
                   ;
 Element           : ConstExpression
-                  | ConstExpression  ydotdot  ConstExpression
+                  | ConstExpression  
+                    ydotdot {cout<<"..";}  //need type checking here
+                    ConstExpression
                   ;
 
 /***************************  Subprogram Stuff  ******************************/

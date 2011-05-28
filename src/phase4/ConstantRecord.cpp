@@ -62,6 +62,7 @@ ConstantRecord::~ConstantRecord() {
  */
 void ConstantRecord::print(int scope) const {
 	IdentifierRecord::print(scope);
+        cout<<"= "; //added so that we can use print for generating c++
 	if (isString == true) cout << str_const_factor;
 	else if (isBool == true)   cout << (int_const_factor == 1 ? "true" : "false");
 	else if (isIdent == true)  ident->print(0);

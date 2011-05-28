@@ -246,8 +246,15 @@ TypeDefBlock      :  /*** empty ***/
 TypeDefList       :  TypeDef ysemicolon
                   { 
                      if(validType){
-                        table->addSymbol(aType);
                         cout<< "typedef ";
+                        if(aType->type->name == "_array"){
+                           ArrayType &a = dynamic_cast<ArrayType &>(*aType->type);
+                           if(a.type->getName() == "integer")
+                              cout<< "int ";
+                           cout<<aType->name;
+                           a.print(0);
+                           cout<<";"<<endl;
+                        }
                      }
 					    
                         else {
@@ -555,14 +562,25 @@ Subrange          :  ConstFactor
                               array->setHighDimension(yylval.int_value);
 									}
 
-                        else if (constType == 4 && table->lookup(name)){
+                       else if (constType == 4 && table->lookup(name)){
+                             cout<<"high val is an ident"<<endl;
                             IdentifierRecord* temp = table->retrieve(name);
                             if(temp->recordType == 1){ //only if const record
+                              cout<<"ident was a const"<<endl;
                               ConstantRecord &c = dynamic_cast<ConstantRecord &>(*temp);
                                if(c.isString && c.str_const_factor.size() == 1
                                  && array->currentDimension!= NULL
-                                 && array->isChar)
+                                 && array->isChar){
+                                    cout<<"Trying to set up for char"<<endl;
                                     array->setHighDimension(c.str_const_factor);
+                               }
+
+                               else if (!c.isString && !c.isBool && !c.isNil
+                                 && array->currentDimension!= NULL
+                                 && c.int_const_factor > array->currentDimension->low
+                                 && array->isInt){
+                                    array->setHighDimension(c.int_const_factor);
+                               }
                                else{
                                  cout<<" Error: Invalid type for subrange."<<endl;
                                  validType = false;

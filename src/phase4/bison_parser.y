@@ -78,7 +78,7 @@ int indent = 0;
 int constType = -1;
 bool inElse = false;
 int countIfs = 0;
-
+string typeString = "";
 %}
 
 
@@ -203,8 +203,9 @@ ConstantDefList   :  ConstantDef
                   {
 						if(validConst){
 							table->addSymbol(constant);
-                     cout<<"const ";
+                     cout<<"const "<<typeString<<" ";
                      constant->print(0);
+                     cout<<";"<<endl;
 						}
 				  }
                      ysemicolon
@@ -212,8 +213,9 @@ ConstantDefList   :  ConstantDef
                   {
 					    if(validConst){
 							table->addSymbol(constant);
-                     cout<<"const ";
+                     cout<<"const "<<typeString<<" ";
                      constant->print(0);
+                     cout<<";"<<endl;
 						}
 				  }
                      ysemicolon
@@ -246,8 +248,10 @@ TypeDefBlock      :  /*** empty ***/
 TypeDefList       :  TypeDef ysemicolon
                   { 
                      if(validType){
+                        table->addSymbol(aType);
                         cout<< "typedef ";
                         if(aType->type->name == "_array"){
+
                            ArrayType &a = dynamic_cast<ArrayType &>(*aType->type);
                            if(a.type->getName() == "integer")
                               cout<< "int ";
@@ -347,17 +351,44 @@ ConstExpression   :  UnaryOperator ConstFactor
 								  if(constType == 0 && uOperator != "-")
 									{
 										int n = yylval.int_value;
+                              typeString = "int";
 										constant-> setConstFactor(n);
 										isNum = false;
 										uOperator = "";
+                              typeString = "int";
 									}
-									else if(constType == 1 && uOperator =="-")
+								  else if(constType == 0 && uOperator == "-")
 									{
 										int n = yylval.int_value * -1;
+                              typeString = "int";
 										constant-> setConstFactor(n);
+										isNum = false;
 										uOperator = "";
+                              typeString = "int";
 									}
-									
+									else if(constType == 1)
+									{
+                              constant->setIsBool();
+										constant-> setConstFactor(1);
+										uOperator = "";
+                              typeString = "bool";
+
+									}
+                           else if(constType == 2)
+									{
+                              constant->setIsBool();
+										constant-> setConstFactor(0);
+										uOperator = "";
+                              typeString = "bool";
+
+									}
+
+                           else if(constType == 3)
+                           {
+                              constant ->setConstFactor(nullPtr);
+										uOperator = "";
+                              typeString = "NULL";
+									}
 									else if (constType == 4){
 										if(table->lookup(name))
                             	  constant->setConstFactor(table->retrieve(name));
@@ -375,26 +406,42 @@ ConstExpression   :  UnaryOperator ConstFactor
 							   {
 							      int n = yylval.int_value;
 								   constant-> setConstFactor(n);
+                           typeString = "int";
 								}
 								else if(constType == 3)
 								{
 									constant ->setConstFactor(nullPtr);
+
 								}	
 								else if(constType == 1){
 								   constant-> setConstFactor(1);
 									constant->setIsBool();
+                           typeString = "bool";
 								}
 								
 								else if(constType == 2){
 									constant->setConstFactor(0);
 									constant->setIsBool();
+                           typeString = "bool";
 								}
 								
                         else if (constType == 4){
-									if(table->lookup(name))
+									if(table->lookup(name)){
+                             IdentifierRecord* temp = table->retrieve(name);
+                             if(temp->recordType = 1){
+                                ConstantRecord &c = dynamic_cast<ConstantRecord &>(*temp);
                             	  constant->setConstFactor(table->retrieve(name));
-								}
-
+                                if(c.isString)
+                                    typeString = "string";
+                                else if(c.isBool)
+                                    typeString = "bool";
+                                else if(c.isNil)
+                                    typeString = "";
+                                else
+                                    typeString = "int";
+                             }
+                           }
+                        }
                         else{
                            validConst = false;
                            cout<<" Error: invalid assignment of type: "; cout<< name<<endl;
@@ -405,6 +452,7 @@ ConstExpression   :  UnaryOperator ConstFactor
 								ystring 
                      {
                         if(validConst) {
+                            typeString = "string";
                             constant->setConstFactor(yylval.str);
                         }
                         else{
@@ -475,7 +523,7 @@ Type              :  Identifier
                   ;
 ArrayType         :  yarray 
                      { if(validType){
-								array = new ArrayType("_array"); 
+								array = new ArrayType("_array");
 								isArray = true;
 								subTypes.push(array);}
 							 }		  
@@ -483,6 +531,7 @@ ArrayType         :  yarray
                      Type
                      {
                        if(validType){
+
                           array->setType(subTypes.top());
 									subTypes.top() = NULL;
 									subTypes.pop();
@@ -562,16 +611,13 @@ Subrange          :  ConstFactor
                               array->setHighDimension(yylval.int_value);
 									}
 
-                       else if (constType == 4 && table->lookup(name)){
-                             cout<<"high val is an ident"<<endl;
+                        else if (constType == 4 && table->lookup(name)){
                             IdentifierRecord* temp = table->retrieve(name);
                             if(temp->recordType == 1){ //only if const record
-                              cout<<"ident was a const"<<endl;
                               ConstantRecord &c = dynamic_cast<ConstantRecord &>(*temp);
                                if(c.isString && c.str_const_factor.size() == 1
                                  && array->currentDimension!= NULL
                                  && array->isChar){
-                                    cout<<"Trying to set up for char"<<endl;
                                     array->setHighDimension(c.str_const_factor);
                                }
 

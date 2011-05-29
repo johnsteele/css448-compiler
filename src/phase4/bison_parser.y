@@ -79,6 +79,7 @@ int constType = -1;
 bool inElse = false;
 int countIfs = 0;
 string typeString = "";
+bool forUp = false;
 %}
 
 
@@ -325,8 +326,18 @@ VariableDecl      :  IdentList
                         if(validType){
                            while(!vars.empty()){
                                  vars.front()->setType(subTypes.top());
+
                                  if(vars.front()->getType()->getName() == "integer")
-                                    cout<< "int";
+                                   cout<< "int";
+                                 else if(subTypes.top()->getName() == "real")
+                                   cout<<"float";
+                                 else if(subTypes.top()->getName() == "char")
+                                    cout<<"char";
+                                 else if(subTypes.top()->getName() == "boolean")
+                                    cout<<"bool";
+                                 else
+                                    cout<<subTypes.top()->getName();
+
                                  cout<<" "<<vars.front()->getName()<<";"<<endl;
                                  table->addSymbol(vars.front());
                                  vars.front() = NULL;
@@ -910,11 +921,22 @@ WhileStatement    :  ywhile
                   ;
 RepeatStatement   :  yrepeat StatementSequence yuntil Expression
                   ;
-ForStatement      :  yfor Identifier yassign Expression WhichWay Expression
-                           ydo Statement
+ForStatement      :  yfor {cout<< "for (";}
+                     Identifier {cout<<name<<" ";}
+                     yassign {cout<<"= ";}
+                     Expression {cout<<"; ";}
+                     WhichWay  { if(forUp){ cout<<" "<<name<<" <= ";}}
+                     Expression
+                  {  cout<< "; "<<name;
+                     if(forUp)
+                        cout<<"++ ){"<<endl;
+                  }
+                     ydo
+                     Statement
+                  { cout<<endl<<"}"<<endl;}
                   ;
-WhichWay          : yto 
-                  | ydownto
+WhichWay          : yto {forUp = true;}
+                  | ydownto {forUp = false;}
                   ;
 IOStatement       : yread 
                   { 

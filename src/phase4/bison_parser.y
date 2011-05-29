@@ -843,21 +843,24 @@ Statement         :  Assignment
                   |  /*** empty ***/
                   ;
 Assignment        :
-                     Designator yassign Expression
+                     Designator yassign {cout<<" = ";}
+                     Expression
                   ;
 ProcedureCall     :
                      Identifier
                   {
+                        cout<<name<<endl;
                         if (!table->lookup(name))
 						    cout << name << " is not defined in this scope." << endl;
                   }
                   |
                      Identifier
 				  {
-                        if (!table->lookup(name))
-						    cout << name << " is not defined in this scope." << endl;
+                     cout<<name<<" ";
+                      //  if (!table->lookup(name)) //something's wrong with finding procedures in table
+						    //cout << name << " is not defined in this scope." << endl;
                   }
-				     ActualParameters
+				     ActualParameters {cout<<";"<<endl;}
                   ;
 IfStatement       :  yif 
                   {
@@ -1014,12 +1017,13 @@ theDesignatorStuff: ydot {cout<< ".";}
                     yrightbracket {cout<< "]";}
                   | ycaret {cout<< "*";}
                   ;
-ActualParameters  : yleftparen {cout<<" ( ";}
+ActualParameters  : yleftparen {cout<<"( ";}
                     ExpList
-                    yrightparen {cout<<" ) ";}
+                    yrightparen {cout<<" )";}
                   ;
 ExpList           : Expression
-                  | ExpList ycomma Expression
+                  | ExpList ycomma {cout<<", ";}
+                    Expression
                   ;
 MemoryStatement   : ynew yleftparen Identifier yrightparen
                   | ydispose yleftparen Identifier yrightparen
@@ -1128,7 +1132,7 @@ FunctionDecl      : FunctionHeading  ycolon  Identifier
                   }
                   ;
 ProcedureHeading  : yprocedure Identifier
-				  {
+                  {
                         aProcedure = new ProcedureRecord(name);
                         table ->enterScope(aProcedure);
                   }
@@ -1218,8 +1222,8 @@ MultOperator      : ymultiply       { cout<<" * "; }
                   | ymod
                   | yand            { cout<<" && "; }
                   ;
-AddOperator       : yplus
-                  | yminus
+AddOperator       : yplus           {cout<<" + ";}
+                  | yminus          {cout<<" - ";}
                   | yor             { cout<< " || "; }
                   ;
 Relation          : yequal          { cout<<" == "; }

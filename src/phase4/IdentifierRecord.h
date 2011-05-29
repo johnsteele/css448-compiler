@@ -167,7 +167,7 @@ public:
 /**
  * @private
  */
-private:
+//private:
 
 	/**
 	 * @brief The name of this identifier.

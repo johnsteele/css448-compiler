@@ -111,7 +111,7 @@ bool forUp = false;
 
 CompilationUnit    : ProgramModule
                    ;
-ProgramModule      : yprogram 
+ProgramModule      : yprogram
                    {
                         table = new SymbolTable();
                    }
@@ -144,7 +144,7 @@ ProgramModule      : yprogram
 ProgramParameters  : yleftparen  ParamList yrightparen //added paramlist to differentiate
                    ;
 ParamList          : ParamList ycomma Identifier
-                   { 
+                   {
                         param = new Parameter(name, false);
                         ProcedureRecord &r = dynamic_cast<ProcedureRecord &> (*program);
                         r.insertParam(param);
@@ -156,9 +156,10 @@ ParamList          : ParamList ycomma Identifier
                         r.insertParam(param);
                    }
                    ;
-IdentList          :  Identifier 
+IdentList          :  Identifier
                    {
                         if(!table->lookupScope(name)){
+
                           v = new Parameter(name, false );
 							     vars.push(v);
                           v = NULL;
@@ -210,7 +211,7 @@ ConstantDefList   :  ConstantDef
 						}
 				  }
                      ysemicolon
-                  |  ConstantDefList ConstantDef 
+                  |  ConstantDefList ConstantDef
                   {
 					    if(validConst){
 							table->addSymbol(constant);
@@ -232,6 +233,8 @@ TypeDefBlock      :  /*** empty ***/
 
                               p.setType(table->retrieve(p.getIdent()));
                               table->addSymbol(pointerHolder.front());
+                              cout<<pointerHolder.front()->type->type->name;
+                              cout <<" * "<<pointerHolder.front()->name<<";"<<endl;
                               pointerHolder.front() = NULL;
                               pointerHolder.pop();
                            }
@@ -247,8 +250,9 @@ TypeDefBlock      :  /*** empty ***/
                      }
                   ;
 TypeDefList       :  TypeDef ysemicolon
-                  { 
+                  {
                      if(validType){
+                        cout<<"I'm about to add a type here"<<endl;
                         table->addSymbol(aType);
                         cout<< "typedef ";
                         if(aType->type->name == "_array"){
@@ -260,21 +264,74 @@ TypeDefList       :  TypeDef ysemicolon
                            a.print(0);
                            cout<<";"<<endl;
                         }
+
+                        if(aType->type->name == "_record"){
+                           RecordType &r = dynamic_cast<RecordType &>(*aType->type);
+                           cout<<" struct "<<r.name<<"{"<<endl;
+                           for(int i = 0; i < r.field_list->size(); i++){
+                                 if(r.field_list->at(i)->type->name == "integer")
+                                   cout<< "int";
+                                 else if(r.field_list->at(i)->type->name == "real")
+                                   cout<<"float";
+                                 else if(r.field_list->at(i)->type->name == "char")
+                                    cout<<"char";
+                                 else if(r.field_list->at(i)->type->name == "boolean")
+                                    cout<<"bool";
+                                 else
+                                    cout<<r.field_list->at(i)->type->name;
+
+                                 cout<<" "<<r.field_list->at(i)->name<<";"<<endl;
+                           }
+
+                           cout<<"};"<<endl;
+                        }
                      }
-					    
+
                         else {
 						    cout<<"Error: "<< name <<" is an invalid type."<<endl;
-						} 
+						}
 				  }
                   |  TypeDefList TypeDef ysemicolon
                   {
-						if(validType){
-							table->addSymbol(aType);
+                     if(validType){
+                        cout<<"I'm about to add a type here"<<endl;
+                        table->addSymbol(aType);
+                        cout<< "typedef ";
+                        if(aType->type->name == "_array"){
+
+                           ArrayType &a = dynamic_cast<ArrayType &>(*aType->type);
+                           if(a.type->getName() == "integer")
+                              cout<< "int ";
+                           cout<<aType->name;
+                           a.print(0);
+                           cout<<";"<<endl;
                         }
-									
+
+                        if(aType->type->name == "_record"){
+                           RecordType &r = dynamic_cast<RecordType &>(*aType->type);
+                           cout<<" struct "<<aType->name<<"{"<<endl;
+                           for(int i = 0; i < r.field_list->size(); i++){
+                                 if(r.field_list->at(i)->type->name == "integer")
+                                   cout<< "int";
+                                 else if(r.field_list->at(i)->type->name == "real")
+                                   cout<<"float";
+                                 else if(r.field_list->at(i)->type->name == "char")
+                                    cout<<"char";
+                                 else if(r.field_list->at(i)->type->name == "boolean")
+                                    cout<<"bool";
+                                 else
+                                    cout<<r.field_list->at(i)->type->name;
+
+                                 cout<<" "<<r.field_list->at(i)->name<<";"<<endl;
+                           }
+
+                           cout<<"};"<<endl;
+                        }
+                     }
+
 					    else{
 						    cout<<"Error: "<< name <<" already exists in this scope."<<endl;
-						} 
+						}
 				  }
                   ;
 VariableDeclBlock :  /*** empty ***/
@@ -295,23 +352,23 @@ ConstantDef       :  Identifier
 							 }
 							}
                      yequal  ConstExpression
-                     
+
                   ;
 TypeDef           :  Identifier
 
-                     { 	
+                     {
                         if(!table->lookupScope(name)){
 								   aType = new TypeRecord(name);
 									validType = true;
 									}
-									
+
 								else{
 								   cout<< "Error: Type " << name <<" already exists in this scope." <<endl;
 									validType = false;
 								}
 							}
-                     yequal 
-                     Type 
+                     yequal
+                     Type
                      {
                        if(validType && aType != NULL){
 							   aType->setType(subTypes.top());
@@ -321,7 +378,7 @@ TypeDef           :  Identifier
 							}
                   ;
 VariableDecl      :  IdentList
-                     ycolon  Type 
+                     ycolon  Type
                      {
                         if(validType){
                            while(!vars.empty()){
@@ -335,9 +392,24 @@ VariableDecl      :  IdentList
                                     cout<<"char";
                                  else if(subTypes.top()->getName() == "boolean")
                                     cout<<"bool";
-                                 else
-                                    cout<<subTypes.top()->getName();
 
+                                 else if(subTypes.top()->name == "_ptr"){
+                                    if(vars.front()->type->type->name == "integer")
+                                       cout<< "int *";
+                                    else if(vars.front()->type->type->name == "real")
+                                      cout<<"float *";
+                                    else if(vars.front()->type->type->name == "char")
+                                       cout<<"char *";
+                                    else if(vars.front()->type->type->name == "boolean")
+                                       cout<<"bool *";
+                                    else
+                                       cout<<vars.front()->type->type->name<<" * ";
+                                    
+                                 }
+
+                                 else{
+                                    cout<<vars.front()->type->name<<" ";
+                                 }
                                  cout<<" "<<vars.front()->getName()<<";"<<endl;
                                  table->addSymbol(vars.front());
                                  vars.front() = NULL;
@@ -357,7 +429,7 @@ VariableDecl      :  IdentList
 
 /***************************  Const/Type Stuff  ******************************/
 
-ConstExpression   :  UnaryOperator ConstFactor 
+ConstExpression   :  UnaryOperator ConstFactor
 							{if(validConst){
 								  if(constType == 0 && uOperator != "-")
 									{
@@ -423,19 +495,19 @@ ConstExpression   :  UnaryOperator ConstFactor
 								{
 									constant ->setConstFactor(nullPtr);
 
-								}	
+								}
 								else if(constType == 1){
 								   constant-> setConstFactor(1);
 									constant->setIsBool();
                            typeString = "bool";
 								}
-								
+
 								else if(constType == 2){
 									constant->setConstFactor(0);
 									constant->setIsBool();
                            typeString = "bool";
 								}
-								
+
                         else if (constType == 4){
 									if(table->lookup(name)){
                              IdentifierRecord* temp = table->retrieve(name);
@@ -459,8 +531,8 @@ ConstExpression   :  UnaryOperator ConstFactor
                         }
 							}
 						}
-                  |  
-								ystring 
+                  |
+								ystring
                      {
                         if(validConst) {
                             typeString = "string";
@@ -480,7 +552,7 @@ ConstFactor       :  Identifier {constType = 4;}
                   |  yfalse  { constType = 2;}
                   |  ynil    { constType = 3;}
                   ;
-Type              :  Identifier 
+Type              :  Identifier
                      {
 							  if(sitTable.lookup(name)){
                            if(name == "integer"){
@@ -495,7 +567,7 @@ Type              :  Identifier
                           subTypes.push(subType);
                           subType = NULL;
                           validType = true;
-                          
+
 							  }
 							  else if(table->lookup(name) == true){
 								  IdentifierRecord* temp = table->retrieve(name);
@@ -527,18 +599,18 @@ Type              :  Identifier
                            }
                         }
                      }
-                  |  ArrayType 
+                  |  ArrayType
                   |  PointerType
-                  |  RecordType 
+                  |  RecordType
                   |  SetType
                   ;
-ArrayType         :  yarray 
+ArrayType         :  yarray
                      { if(validType){
 								array = new ArrayType("_array");
 								isArray = true;
 								subTypes.push(array);}
-							 }		  
-                     yleftbracket SubrangeList yrightbracket  yof 
+							 }
+                     yleftbracket SubrangeList yrightbracket  yof
                      Type
                      {
                        if(validType){
@@ -675,12 +747,12 @@ Subrange          :  ConstFactor
                            cout<<" Error: Invalid type for subrange."<<endl;
                            validType = false;
 								}
-							}							 
+							}
                     }
                   }
 
                   |  ystring
-                     {     
+                     {
 								if(validType){
 									string s(yylval.str);
 
@@ -700,8 +772,8 @@ Subrange          :  ConstFactor
                             validType = false;
                          }
                          delete yylval.str;
-									
-                      }  ydotdot  
+
+                      }  ydotdot
                       ystring
                       {
 								if(validType){
@@ -727,7 +799,6 @@ Subrange          :  ConstFactor
                   ;
 RecordType        :  yrecord {
                         if(validType){
-                           cout<<"record type is valid"<<endl;
                            isRecord = true;
                            rec = new RecordType("_record");
                            subTypes.push(rec);
@@ -736,15 +807,15 @@ RecordType        :  yrecord {
 
                      FieldListSequence {validType = true;} yend
                   ;
-SetType           :  yset 
+SetType           :  yset
                   {
 						set = new SetType("_set");
-					    subTypes.push(set); 
+					    subTypes.push(set);
 						isArray = false;
-				  } 
+				  }
                      yof Subrange
                   ;
-PointerType       :  ycaret  Identifier 
+PointerType       :  ycaret  Identifier
                      {
                       isPointer = true;
                       IdentifierRecord* pType;
@@ -777,15 +848,15 @@ PointerType       :  ycaret  Identifier
                            validType = false;
                            //aType->print(0);
 
-                          } 
+                          }
                      }
                   ;
 FieldListSequence :  FieldList
                   |  FieldListSequence  ysemicolon  FieldList
                   ;
-FieldList         :  IdentList 
-                     ycolon  Type 
-				  {	
+FieldList         :  IdentList
+                     ycolon  Type
+				  {
                        if(table->lookup(subTypes.top()->getName())
                            || sitTable.lookup(subTypes.top()->getName()) || isFound){
                            while(!vars.empty()){
@@ -800,7 +871,7 @@ FieldList         :  IdentList
 													isDup = true;
 													break;
 											  }
-												  
+
 											}
 											if(!isDup){
 												vars.front()->setType(subTypes.top());
@@ -811,7 +882,7 @@ FieldList         :  IdentList
 											}
 
                               }
-										
+
 										else{
 											cout<< "Error: " <<vars.front()->getName();
                                  cout<< "already exists" << endl;
@@ -822,7 +893,7 @@ FieldList         :  IdentList
 											subTypes.top() = NULL;
                                  subTypes.pop();
                        }
-				  }   
+				  }
                   ;
 
 /***************************  Statements  ************************************/
@@ -839,7 +910,9 @@ Statement         :  Assignment
                   |  ForStatement
                   |  IOStatement
                   |  MemoryStatement
-                  |  ybegin StatementSequence yend
+                  |  ybegin 
+                     StatementSequence 
+                     yend
                   |  /*** empty ***/
                   ;
 Assignment        :
@@ -862,44 +935,33 @@ ProcedureCall     :
                   }
 				     ActualParameters {cout<<";"<<endl;}
                   ;
-IfStatement       :  yif 
+IfStatement       :  yif
                   {
-                        if (inElse)
-                            inElse = false;
+                     if(inElse)
+                        inElse = false;
 
-                        cout << "  if ( ";
+                     cout<<"  if( ";
                   }
-                     Expression  
-                  { 
-                        cout << " ) {" << endl;
+                     Expression
+                  {  cout<<" ){"<<endl;}
+                  ythen  Statement {cout<<"} ended if statement"<<endl; }
+                  ElsePart
+                  ;
+ElsePart          : /*** empty ***/ | yelse
+                  {   
+                     cout<< "else ";
+                     countIfs++;
+                     inElse = true;
                   }
-
-                     ythen  Statement
+                     Statement
                   {
-                        cout << "}" << endl;
-                  }
-                     ElsePart 
-                  {
-                        if (countIfs == 0) {
-                           cout << "}" << endl;
-                        }
+                     countIfs--;
+                     if(countIfs == 0) cout<<"}"<<endl;
                   }
                   ;
-ElsePart          :  /*** empty ***/
-                  |  yelse
-                  {
-                        cout<< "else ";
-                        countIfs++;
-                        inElse = true;
-                  }
-                    Statement
-                  {
-                        //if(inElse)
-                        //   cout<<"}"<<endl;
-                        countIfs--;
-                  }
-                  ;
-CaseStatement     :  ycase  Expression  yof  CaseList  yend
+CaseStatement     :  ycase{cout<<"switch(";}
+                     Expression  {cout<<") {";}
+                     yof  CaseList  yend
                   ;
 CaseList          :  Case
                   |  CaseList  ysemicolon  Case
@@ -909,20 +971,23 @@ Case              :  CaseLabelList  ycolon  Statement
 CaseLabelList     :  ConstExpression
                   |  CaseLabelList  ycomma  ConstExpression
                   ;
-WhileStatement    :  ywhile 
-                  {  
+WhileStatement    :  ywhile
+                  {
                         cout << "while (";
                   }
-                     Expression  
-                  {  
-                        cout << ") {" << endl; 
+                     Expression
+                  {
+                        cout << ") {" << endl;
                   }
-                    ydo  Statement 
+                    ydo  Statement
                   {
                         cout << "}" << endl;
                   }
                   ;
-RepeatStatement   :  yrepeat StatementSequence yuntil Expression
+RepeatStatement   :  yrepeat {cout<<"do{"<<endl;}
+                     StatementSequence
+                     yuntil{cout<<"} while (";}
+                     Expression {cout<<"}"<<endl;}
                   ;
 ForStatement      :  yfor {cout<< "for (";}
                      Identifier {cout<<name<<" ";}
@@ -934,35 +999,34 @@ ForStatement      :  yfor {cout<< "for (";}
                      if(forUp)
                         cout<<"++ ){"<<endl;
                   }
-                     ydo
-                     Statement
+                     ydo Statement
                   { cout<<endl<<"}"<<endl;}
                   ;
 WhichWay          : yto {forUp = true;}
                   | ydownto {forUp = false;}
                   ;
-IOStatement       : yread 
-                  { 
-                        cout << "cin>>"; 
-                  } 
-                    yleftparen DesignatorList yrightparen 
+IOStatement       : yread
+                  {
+                        cout << "cin>>";
+                  }
+                    yleftparen DesignatorList yrightparen
                   {
                         cout << ";" << endl;
                   }
-                  | yreadln 
-                  { 
-                        cout << "cin>> ;"; 
+                  | yreadln
+                  {
+                        cout << "cin>> ;";
                   }
                   | yreadln
-                  { 
+                  {
                         cout << "cin>>";
-                  } 
+                  }
                     yleftparen DesignatorList yrightparen
                   {
                         cout << "; << endl;" << endl;
                   }
-                  | ywrite 
-                  {  
+                  | ywrite
+                  {
                        if (inElse) cout << "{" << endl;
                        cout << "   ";
                        cout << "cout <<";
@@ -970,17 +1034,17 @@ IOStatement       : yread
                     yleftparen ExpList yrightparen
                   {
                         cout << ";";
-                  } 
-                  | ywriteln 
+                  }
+                  | ywriteln
                   {
                         cout << "cout << endl;";
                   }
-                  | ywriteln 
+                  | ywriteln
                   {
                         cout << "cout <<";
                   }
                     yleftparen ExpList yrightparen
-                  { 
+                  {
                         cout << "<< endl;" << endl;
                   }
                   ;
@@ -991,13 +1055,13 @@ DesignatorList    : Designator
                   | DesignatorList ycomma Designator
                   ;
 Designator        : Identifier
-                  {    
+                  {
                         if(table->lookup(name))
                             cout << name;
-                        
+
                         else
                             cout << "Error: identifier " << name << " is invalid." << endl;
-                  } 
+                  }
                     DesignatorStuff
                   ;
 DesignatorStuff   : /*** empty ***/
@@ -1043,14 +1107,14 @@ TermExpr          : Term
 Term              : Factor
                   | Term MultOperator Factor
                   ;
-Factor            : ynumber 
-                  {     
+Factor            : ynumber
+                  {
                         cout << yylval.int_value;
                   }
                   | ytrue {cout<<"true";}
                   | yfalse {cout<<"false";}
                   | ynil {cout<<"NULL";}
-                  | ystring 
+                  | ystring
                   {
                         cout << '"' << yylval.str << '"';
                   }
@@ -1061,13 +1125,13 @@ Factor            : ynumber
                   | ynot {cout<<" !";}
                     Factor
                   | Setvalue
-                  | FunctionCall 
+                  | FunctionCall
                   ;
 /*  Functions with no parameters have no parens, but you don't need         */
 /*  to handle that in FunctionCall because it is handled by Designator.     */
 /*  A FunctionCall has at least one parameter in parens, more are           */
 /*  separated with commas.                                                  */
-FunctionCall      : Identifier 
+FunctionCall      : Identifier
                   {
                     if(!table->lookup(name)) {
                        cout<<"Error: Function does not exist";
@@ -1087,7 +1151,7 @@ ElementList       : Element
                   | ElementList  ycomma  Element
                   ;
 Element           : ConstExpression
-                  | ConstExpression  
+                  | ConstExpression
                     ydotdot {cout<<"..";}  //need type checking here
                     ConstExpression
                   ;
@@ -1098,7 +1162,7 @@ SubprogDeclList   : /*** empty ***/
                   | SubprogDeclList ProcedureDecl ysemicolon
                   | SubprogDeclList FunctionDecl ysemicolon
                   ;
-ProcedureDecl     : ProcedureHeading  ysemicolon  Block 
+ProcedureDecl     : ProcedureHeading  ysemicolon  Block
                   {
                         table->exitScope();
                   }
@@ -1126,7 +1190,7 @@ FunctionDecl      : FunctionHeading  ycolon  Identifier
                             cout<<"Error: Return type invalid"<<endl;
                         }
                   }
-                    ysemicolon  Block 
+                    ysemicolon  Block
                   {
                         table->exitScope();
                   }
@@ -1143,16 +1207,16 @@ ProcedureHeading  : yprocedure Identifier
                   }
                     FormalParameters
                   ;
-FunctionHeading   : yfunction Identifier 
+FunctionHeading   : yfunction Identifier
 				  {
                         aProcedure = new ProcedureRecord(name);
                         table ->enterScope(aProcedure);
                   }
-                  | yfunction Identifier 
+                  | yfunction Identifier
                   {
                         aProcedure = new ProcedureRecord(name);
                         table ->enterScope(aProcedure);
-                  }     
+                  }
                     FormalParameters
                   ;
 FormalParameters  :  yleftparen FormalParamList yrightparen
@@ -1160,7 +1224,7 @@ FormalParameters  :  yleftparen FormalParamList yrightparen
 FormalParamList   :  OneFormalParam
                   |  FormalParamList ysemicolon OneFormalParam
                   ;
-OneFormalParam    :  yvar  IdentList  ycolon Identifier 
+OneFormalParam    :  yvar  IdentList  ycolon Identifier
                      {
                        if(table->lookup(name)){
                           subTypes.push(table->retrieve(name));
@@ -1179,13 +1243,13 @@ OneFormalParam    :  yvar  IdentList  ycolon Identifier
 										   vars.pop();
 									   }
                            }
-									
+
 									subTypes.top() = NULL;
                            subTypes.pop();
                         }
-				
+
 						   }
-                  |  IdentList ycolon Identifier 
+                  |  IdentList ycolon Identifier
                      {
                        if(table->lookup(name)){
                           subTypes.push(table->retrieve(name));
@@ -1204,7 +1268,7 @@ OneFormalParam    :  yvar  IdentList  ycolon Identifier
 										   vars.pop();
 									   }
                            }
-									
+
 									subTypes.top() = NULL;
                            subTypes.pop();
                         }

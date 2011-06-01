@@ -103,7 +103,7 @@ public:
 	int getFieldSize () const;
 
 
-private:
+//private:
 
 	/**
 	 * @brief A field in the Record.

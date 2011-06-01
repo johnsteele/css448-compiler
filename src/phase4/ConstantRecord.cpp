@@ -32,6 +32,7 @@ ConstantRecord::ConstantRecord(string name) : IdentifierRecord (name) {
 	isNil            = false;
 	isIdent          = false;
 	ident            = NULL;
+        recordType = 1;
 }
 
 
